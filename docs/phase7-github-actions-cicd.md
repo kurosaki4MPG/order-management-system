@@ -77,6 +77,18 @@
 完了条件:
 - PR の品質が守られる
 
+### 59.1 Pull Request 運用手順
+
+1. 作業ブランチで変更を行う
+2. `npm run verify:ci` を実行して、ローカルで CI 相当の確認を通す
+3. 変更を push して Pull Request を作成する
+4. PR テンプレートに沿って、変更内容・検証内容・チェック項目を埋める
+5. GitHub Actions の `CI` が green になるまで待つ
+6. `lint / test / build / npm audit / secret scan` の結果を確認する
+7. 必要なレビューを依頼する
+8. 指摘があれば修正し、再度 `verify:ci` を通してから push する
+9. 必須チェックと review が揃ったらマージする
+
 ## STEP60 AWS認証（GitHub OIDC）
 
 実施内容:

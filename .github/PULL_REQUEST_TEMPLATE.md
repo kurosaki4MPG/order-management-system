@@ -1,20 +1,32 @@
-## Summary
+## 概要
 
-- What changed:
-- Why:
+- 変更内容:
+- 変更理由:
+- 関連 Issue:
 
-## Verification
+## ブランチ
 
-- [ ] `npm run verify:ci`
-- [ ] `npm run lint`
-- [ ] `npm run test`
-- [ ] `npm run build`
+- ブランチ名:
+- ベースブランチ:
 
-## Checklist
+## 検証
 
-- [ ] CI が green になっている
+- [ ] [Pull Request 運用手順](../docs/phase7-github-actions-cicd.md#591-pull-request-運用手順) を確認した
+- [ ] `npm run verify:ci` を実行した
+- [ ] `npm run lint` を実行した
+- [ ] `npm run test` を実行した
+- [ ] `npm run build` を実行した
+- [ ] GitHub Actions の `CI` が green になっている
+
+## 確認項目
+
 - [ ] `lint / test / build` が通っている
 - [ ] `npm audit` の高リスク脆弱性がない
 - [ ] secret-like pattern の検査で問題がない
 - [ ] 必要なドキュメントを更新した
-- [ ] レビューを依頼した
+- [ ] レビュー依頼前にローカル確認を済ませた
+
+## レビュー
+
+- レビュアー:
+- レビューで確認してほしい点:
