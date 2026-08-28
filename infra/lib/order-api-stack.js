@@ -28,13 +28,15 @@ function resolveEnvironmentConfig(stage, corsOrigins) {
 
   if (isProd && (!corsOrigins || corsOrigins.length === 0)) {
     throw new Error(
-      "prod stage requires corsOrigins. Pass -c corsOrigins=https://app.example.com or the production frontend URL."
+      "prod stage requires corsOrigins. Pass -c corsOrigins=https://app.example.com or the production frontend URL.",
     );
   }
 
   return {
     corsOrigins: resolvedCorsOrigins,
-    removalPolicy: isProd ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY,
+    removalPolicy: isProd
+      ? cdk.RemovalPolicy.RETAIN
+      : cdk.RemovalPolicy.DESTROY,
     stage: normalizedStage,
   };
 }
@@ -46,7 +48,7 @@ class OrderApiStack extends cdk.Stack {
     // 注文API、通知、非同期処理を 1 つのスタックとしてまとめる。
     const { stage, corsOrigins, removalPolicy } = resolveEnvironmentConfig(
       props.stage,
-      props.corsOrigins
+      props.corsOrigins,
     );
     const tableName = `oms-${stage}-orders`;
     const orderApiFunctionName = `oms-${stage}-order-api`;
@@ -71,7 +73,10 @@ class OrderApiStack extends cdk.Stack {
       "OrderApiFunction",
       {
         // API Gateway の入り口を受ける Lambda。業務ロジックの起点になる。
-        entry: path.join(__dirname, "../../src/lambda/order-api-gateway-handler.ts"),
+        entry: path.join(
+          __dirname,
+          "../../src/lambda/order-api-gateway-handler.ts",
+        ),
         environment: {
           ORDERS_TABLE_NAME: ordersTable.tableName,
           ORDER_EVENTS_BUS_NAME: orderEventsBus.eventBusName,
@@ -81,15 +86,19 @@ class OrderApiStack extends cdk.Stack {
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_22_X,
         timeout: cdk.Duration.seconds(10),
-      }
+      },
     );
 
     ordersTable.grantReadWriteData(orderApiFunction);
     orderEventsBus.grantPutEventsTo(orderApiFunction);
 
-    const orderNotificationsTopic = new sns.Topic(this, "OrderNotificationsTopic", {
-      topicName: `oms-${stage}-order-notifications`,
-    });
+    const orderNotificationsTopic = new sns.Topic(
+      this,
+      "OrderNotificationsTopic",
+      {
+        topicName: `oms-${stage}-order-notifications`,
+      },
+    );
 
     const orderNotificationFunction = new lambdaNodejs.NodejsFunction(
       this,
@@ -98,7 +107,7 @@ class OrderApiStack extends cdk.Stack {
         // EventBridge イベントを SNS 向けメッセージに変換する通知専用 Lambda。
         entry: path.join(
           __dirname,
-          "../../src/lambda/order-notification-handler.ts"
+          "../../src/lambda/order-notification-handler.ts",
         ),
         environment: {
           ORDER_NOTIFICATIONS_TOPIC_ARN: orderNotificationsTopic.topicArn,
@@ -107,13 +116,13 @@ class OrderApiStack extends cdk.Stack {
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_22_X,
         timeout: cdk.Duration.seconds(10),
-      }
+      },
     );
 
     orderNotificationsTopic.grantPublish(orderNotificationFunction);
 
     const notificationRuleTarget = new eventTargets.LambdaFunction(
-      orderNotificationFunction
+      orderNotificationFunction,
     );
 
     const notificationRuleConfigs = [
@@ -181,37 +190,40 @@ class OrderApiStack extends cdk.Stack {
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_22_X,
         timeout: cdk.Duration.seconds(30),
-      }
+      },
     );
 
     orderQueueConsumerFunction.addEventSource(
       new lambdaEventSources.SqsEventSource(orderProcessingQueue, {
         batchSize: 1,
-      })
+      }),
     );
 
-    const orderProcessingRule = new events.Rule(this, "OrderProcessingQueueRule", {
-      // 同じ業務イベントを通知系と非同期処理系に分岐させる。
-      description: `Send order events to SQS for ${stage}`,
-      eventBus: orderEventsBus,
-      eventPattern: {
-        detailType: [
-          "OrderCreated",
-          "OrderUpdated",
-          "OrderDeleted",
-          "OrderStatusChanged",
-        ],
-        source: ["oms.orders"],
+    const orderProcessingRule = new events.Rule(
+      this,
+      "OrderProcessingQueueRule",
+      {
+        // 同じ業務イベントを通知系と非同期処理系に分岐させる。
+        description: `Send order events to SQS for ${stage}`,
+        eventBus: orderEventsBus,
+        eventPattern: {
+          detailType: [
+            "OrderCreated",
+            "OrderUpdated",
+            "OrderDeleted",
+            "OrderStatusChanged",
+          ],
+          source: ["oms.orders"],
+        },
+        ruleName: `oms-${stage}-order-processing-queue`,
+        targets: [new eventTargets.SqsQueue(orderProcessingQueue)],
       },
-      ruleName: `oms-${stage}-order-processing-queue`,
-      targets: [new eventTargets.SqsQueue(orderProcessingQueue)],
-    });
+    );
 
     orderProcessingQueue.grantConsumeMessages(orderQueueConsumerFunction);
 
     const invoicePdfBucket = new s3.Bucket(this, "InvoicePdfBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      bucketName: `oms-${stage}-invoice-pdfs`,
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,
       removalPolicy,
@@ -224,12 +236,15 @@ class OrderApiStack extends cdk.Stack {
       "OrderWorkflowTaskFunction",
       {
         // Step Functions の各タスクで呼び出す最小ワークフロー用 Lambda。
-        entry: path.join(__dirname, "../../src/lambda/order-workflow-handler.ts"),
+        entry: path.join(
+          __dirname,
+          "../../src/lambda/order-workflow-handler.ts",
+        ),
         functionName: `oms-${stage}-order-workflow-task`,
         handler: "handler",
         runtime: lambda.Runtime.NODEJS_22_X,
         timeout: cdk.Duration.seconds(30),
-      }
+      },
     );
 
     const orderWorkflowLogs = new logs.LogGroup(this, "OrderWorkflowLogGroup", {
@@ -243,12 +258,12 @@ class OrderApiStack extends cdk.Stack {
       {
         cause: "The order workflow task reported an error",
         error: "OrderWorkflowFailed",
-      }
+      },
     );
 
     const workflowSucceeded = new stepfunctions.Succeed(
       this,
-      "OrderWorkflowSucceeded"
+      "OrderWorkflowSucceeded",
     );
 
     const orderInvoiceGenerationFunction = new lambdaNodejs.NodejsFunction(
@@ -258,7 +273,7 @@ class OrderApiStack extends cdk.Stack {
         // Step Functions の最後で請求書 PDF を生成し、S3 と署名付き URL を返す。
         entry: path.join(
           __dirname,
-          "../../src/lambda/order-invoice-generation-handler.ts"
+          "../../src/lambda/order-invoice-generation-handler.ts",
         ),
         environment: {
           ORDERS_TABLE_NAME: ordersTable.tableName,
@@ -286,7 +301,7 @@ class OrderApiStack extends cdk.Stack {
             },
           },
         },
-      }
+      },
     );
 
     const prepareOrderWorkflowTask = new stepfunctionsTasks.LambdaInvoke(
@@ -311,7 +326,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         payloadResponseOnly: true,
         retryOnServiceExceptions: true,
-      }
+      },
     );
 
     const finalizeOrderWorkflowTask = new stepfunctionsTasks.LambdaInvoke(
@@ -327,7 +342,7 @@ class OrderApiStack extends cdk.Stack {
           orderId: stepfunctions.JsonPath.stringAt("$.orderId"),
           paymentMethod: stepfunctions.JsonPath.stringAt("$.paymentMethod"),
           prepareCompletedAt: stepfunctions.JsonPath.stringAt(
-            "$.prepareCompletedAt"
+            "$.prepareCompletedAt",
           ),
           shippingAddress: stepfunctions.JsonPath.stringAt("$.shippingAddress"),
           shouldFail: stepfunctions.JsonPath.stringAt("$.shouldFail"),
@@ -339,7 +354,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         payloadResponseOnly: true,
         retryOnServiceExceptions: true,
-      }
+      },
     );
 
     const generateInvoiceWorkflowTask = new stepfunctionsTasks.LambdaInvoke(
@@ -356,7 +371,7 @@ class OrderApiStack extends cdk.Stack {
           orderId: stepfunctions.JsonPath.stringAt("$.orderId"),
           paymentMethod: stepfunctions.JsonPath.stringAt("$.paymentMethod"),
           prepareCompletedAt: stepfunctions.JsonPath.stringAt(
-            "$.prepareCompletedAt"
+            "$.prepareCompletedAt",
           ),
           shippingAddress: stepfunctions.JsonPath.stringAt("$.shippingAddress"),
           shouldFail: stepfunctions.JsonPath.stringAt("$.shouldFail"),
@@ -368,7 +383,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         payloadResponseOnly: true,
         retryOnServiceExceptions: true,
-      }
+      },
     );
 
     prepareOrderWorkflowTask.addCatch(workflowFailure, {
@@ -382,7 +397,7 @@ class OrderApiStack extends cdk.Stack {
     });
 
     const orderWorkflowDefinition = stepfunctions.Chain.start(
-      prepareOrderWorkflowTask
+      prepareOrderWorkflowTask,
     )
       .next(finalizeOrderWorkflowTask)
       .next(generateInvoiceWorkflowTask)
@@ -392,8 +407,9 @@ class OrderApiStack extends cdk.Stack {
       this,
       "OrderWorkflowStateMachine",
       {
-        definitionBody:
-          stepfunctions.DefinitionBody.fromChainable(orderWorkflowDefinition),
+        definitionBody: stepfunctions.DefinitionBody.fromChainable(
+          orderWorkflowDefinition,
+        ),
         stateMachineName: `oms-${stage}-order-processing-workflow`,
         logs: {
           destination: orderWorkflowLogs,
@@ -402,7 +418,7 @@ class OrderApiStack extends cdk.Stack {
         },
         timeout: cdk.Duration.minutes(5),
         tracingEnabled: true,
-      }
+      },
     );
 
     orderWorkflowTaskFunction.grantInvoke(orderWorkflowStateMachine);
@@ -424,13 +440,19 @@ class OrderApiStack extends cdk.Stack {
         targets: [
           new eventTargets.SfnStateMachine(orderWorkflowStateMachine, {
             input: events.RuleTargetInput.fromObject({
-              customerEmail: events.EventField.fromPath("$.detail.customerEmail"),
+              customerEmail: events.EventField.fromPath(
+                "$.detail.customerEmail",
+              ),
               customerName: events.EventField.fromPath("$.detail.customerName"),
               detailType: events.EventField.detailType,
               eventId: events.EventField.fromPath("$.detail.eventId"),
               orderId: events.EventField.fromPath("$.detail.orderId"),
-              paymentMethod: events.EventField.fromPath("$.detail.paymentMethod"),
-              shippingAddress: events.EventField.fromPath("$.detail.shippingAddress"),
+              paymentMethod: events.EventField.fromPath(
+                "$.detail.paymentMethod",
+              ),
+              shippingAddress: events.EventField.fromPath(
+                "$.detail.shippingAddress",
+              ),
               shouldFail: false,
               source: events.EventField.source,
               status: events.EventField.fromPath("$.detail.status"),
@@ -439,7 +461,7 @@ class OrderApiStack extends cdk.Stack {
             }),
           }),
         ],
-      }
+      },
     );
 
     const orderProcessingDlqAlarm = new cloudwatch.Alarm(
@@ -457,7 +479,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         threshold: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
+      },
     );
 
     const orderProcessingBacklogAlarm = new cloudwatch.Alarm(
@@ -475,7 +497,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         threshold: 300,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
+      },
     );
 
     const orderWorkflowFailedAlarm = new cloudwatch.Alarm(
@@ -493,7 +515,7 @@ class OrderApiStack extends cdk.Stack {
         }),
         threshold: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
+      },
     );
 
     const orderApi = new apigwv2.HttpApi(this, "OrderHttpApi", {
@@ -518,7 +540,7 @@ class OrderApiStack extends cdk.Stack {
       {
         // HTTP 情報は Lambda proxy としてそのまま渡す。
         payloadFormatVersion: apigwv2.PayloadFormatVersion.VERSION_1_0,
-      }
+      },
     );
 
     orderApi.addRoutes({
