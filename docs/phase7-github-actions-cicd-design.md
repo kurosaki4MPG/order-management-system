@@ -66,6 +66,10 @@
 - test が通る
 - build が通る
 - 必要なら review 必須
+- `npm audit --audit-level=high --omit=dev` が通る
+- secret-like pattern チェックが通る
+- GitHub の branch protection で `CI / lint / test / build` を必須チェックにする
+- GitHub の branch protection で review required を有効にする
 
 ---
 

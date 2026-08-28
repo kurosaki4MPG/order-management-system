@@ -66,6 +66,11 @@
 - 必須チェックを定義する
 - マージ条件を設定する
 
+実施結果:
+- [`.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md) を追加し、PR 作成時に `verify:ci` とレビュー依頼を確認できるようにした
+- `CI` workflow を PR 時に実行し、`lint / test / build / npm audit / secret scan` を品質ゲートとして扱うようにした
+- GitHub 側では `main` ブランチに対して CI 成功と review 必須を branch protection で有効化する前提にした
+
 確認観点:
 - 重要チェックなしでマージできない
 
