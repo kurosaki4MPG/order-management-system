@@ -5,6 +5,7 @@
 注文管理システムのビルド、テスト、デプロイを GitHub Actions で自動化する。
 
 対象STEP:
+
 - STEP56 基本CI
 - STEP57 依存関係キャッシュ
 - STEP58 セキュリティチェック
@@ -85,6 +86,11 @@
 - GitHub OIDC を使う
 - 長期アクセスキーを持たない
 - 環境ごとにロールを分ける
+- `token.actions.githubusercontent.com` を信頼する IAM role を dev / prod で分ける
+- trust policy は `repo:kurosaki4MPG/order-management-system:environment:dev` / `prod` に限定する
+- GitHub repository variables に role ARN を保持し、workflow から参照する
+- workflow 側は GitHub Environment を使い、`environment: dev` / `environment: prod` で role の subject と揃える
+- `aws sts get-caller-identity` で認証の成功を確認する
 
 ---
 
