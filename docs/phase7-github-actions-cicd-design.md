@@ -48,13 +48,14 @@
 - npm キャッシュを使う
 - 依存解決時間を短縮する
 - CI の再実行コストを下げる
+- GitHub Actions では `actions/setup-node` の `npm` キャッシュと `actions/cache` の `.next/cache` を使う
 
 ---
 
 ## 5. セキュリティチェック
 
-- `npm audit`
-- 秘密情報チェック
+- `npm audit --audit-level=high --omit=dev`
+- 追跡済みのコード・設定ファイルに対する secret-like pattern チェック
 - 必要に応じてコードスキャン
 
 ---
