@@ -143,6 +143,16 @@
 3. `stage=prod` でも同様に成功することを確認する
 4. 失敗した場合は role ARN、trust policy、repository variables を見直す
 
+### 60.3 実施まとめ
+
+- AWS 側は CDK で GitHub OIDC provider と `dev` / `prod` の IAM role を作成した
+- GitHub 側は repository variables に `AWS_ROLE_ARN_DEV` / `AWS_ROLE_ARN_PROD` を登録し、workflow で参照するようにした
+- workflow は `environment: dev` / `environment: prod` を使って subject を role の trust policy と一致させた
+- `AWS OIDC Check` を `stage=dev` / `stage=prod` の両方で実行し、`aws sts get-caller-identity` の成功を確認した
+- 最終的な role ARN は次のとおり
+  - `AWS_ROLE_ARN_DEV = arn:aws:iam::686910912663:role/oms-github-actions-dev`
+  - `AWS_ROLE_ARN_PROD = arn:aws:iam::686910912663:role/oms-github-actions-prod`
+
 確認観点:
 
 - 長期キーなしで認証できる
