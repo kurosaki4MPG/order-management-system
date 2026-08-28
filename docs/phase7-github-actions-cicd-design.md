@@ -71,6 +71,13 @@
 - GitHub の branch protection で `CI / lint / test / build` を必須チェックにする
 - GitHub の branch protection で review required を有効にする
 
+### 6.1 Pull Request 運用手順
+
+- 変更前に `npm run verify:ci` を実行する
+- PR にはテンプレートを使い、変更内容と検証内容を残す
+- PR 作成後は CI の完了を待ち、失敗があれば修正して再実行する
+- 必須チェックと review が揃ってからマージする
+
 ---
 
 ## 7. AWS 認証
