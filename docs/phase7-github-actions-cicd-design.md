@@ -103,6 +103,7 @@
 - `main` への push で dev を自動デプロイし、prod は `workflow_dispatch` で手動デプロイする
 - `aws sts get-caller-identity` で認証を先に確認してから `cdk deploy` を実行する
 - CDK CLI は devDependency として固定し、GitHub Actions でも同じバージョンを使う
+- S3 のような既存リソースと衝突しやすいものは、必要がなければ固定名を持たせず CDK 管理に寄せる
 
 ---
 

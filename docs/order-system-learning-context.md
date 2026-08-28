@@ -872,6 +872,7 @@ STEP61で学んだもの:
 - `main` push で dev を自動デプロイし、prod は手動デプロイに分けること
 - デプロイ前に `aws sts get-caller-identity` で認証確認を挟むこと
 - `cdk deploy` の前に `npm ci` で依存関係を揃えること
+- 既存リソースと衝突しやすい S3 バケットは固定名を避け、CDK 管理に寄せること
 
 ---
 

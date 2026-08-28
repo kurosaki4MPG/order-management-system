@@ -175,6 +175,7 @@
 - GitHub Environment `dev` / `prod` と `AWS_ROLE_ARN_DEV` / `AWS_ROLE_ARN_PROD` を使って、deploy 先と OIDC の trust policy を揃えるようにした
 - `npm ci` の後に `aws sts get-caller-identity` を確認し、その後 `npx cdk deploy` で `OmsdevOrderApiStack` / `OmsprodOrderApiStack` を反映するようにした
 - `aws-cdk` を devDependency に追加し、GitHub Actions でも同じ CLI を使えるようにした
+- `InvoicePdfBucket` は固定 bucket 名をやめ、CDK 管理の自動生成名に切り替えた。既存バケットとの衝突で `AWS::S3::Bucket` の作成に失敗していたためである
 
 ### 61.1 デプロイ手順
 
