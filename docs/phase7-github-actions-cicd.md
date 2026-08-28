@@ -168,6 +168,21 @@
 - `cdk deploy` を workflow 化する
 - stage ごとに切り替える
 
+実施結果:
+
+- [`.github/workflows/cdk-deploy.yml`](../.github/workflows/cdk-deploy.yml) を追加し、`main` への push で `dev` を自動デプロイするようにした
+- `workflow_dispatch` でも起動できるようにし、`stage=prod` の手動デプロイに対応した
+- GitHub Environment `dev` / `prod` と `AWS_ROLE_ARN_DEV` / `AWS_ROLE_ARN_PROD` を使って、deploy 先と OIDC の trust policy を揃えるようにした
+- `npm ci` の後に `aws sts get-caller-identity` を確認し、その後 `npx cdk deploy` で `OmsdevOrderApiStack` / `OmsprodOrderApiStack` を反映するようにした
+- `aws-cdk` を devDependency に追加し、GitHub Actions でも同じ CLI を使えるようにした
+
+### 61.1 デプロイ手順
+
+1. `main` に push すると `dev` が自動デプロイされる
+2. `workflow_dispatch` で `stage=prod` を選ぶと `prod` を手動デプロイできる
+3. `prod` は `cors_origins` を指定する
+4. どちらの環境でも `aws sts get-caller-identity` で認証確認を行う
+
 確認観点:
 
 - 自動でインフラ更新できる
