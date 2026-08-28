@@ -51,6 +51,26 @@ class GithubOidcStack extends cdk.Stack {
         roleName,
       });
 
+      // CDK deploy で bootstrap の版数確認と publish/deploy role の引き受けができるようにする。
+      role.addToPolicy(
+        new iam.PolicyStatement({
+          actions: ["ssm:GetParameter"],
+          resources: [
+            `arn:aws:ssm:${this.region}:${this.account}:parameter/cdk-bootstrap/hnb659fds/version`,
+          ],
+        }),
+      );
+      role.addToPolicy(
+        new iam.PolicyStatement({
+          actions: ["sts:AssumeRole"],
+          resources: [
+            `arn:aws:iam::${this.account}:role/cdk-hnb659fds-file-publishing-role-${this.account}-${this.region}`,
+            `arn:aws:iam::${this.account}:role/cdk-hnb659fds-deploy-role-${this.account}-${this.region}`,
+            `arn:aws:iam::${this.account}:role/cdk-hnb659fds-lookup-role-${this.account}-${this.region}`,
+          ],
+        }),
+      );
+
       new cdk.CfnOutput(this, `${environmentName}GithubActionsRoleArn`, {
         value: role.roleArn,
       });
