@@ -35,6 +35,9 @@
 - npm キャッシュを設定する
 - 実行時間を短縮する
 
+実施結果:
+- [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) に `actions/setup-node` の `npm` キャッシュと `actions/cache` の `.next/cache` を追加した
+
 確認観点:
 - 2回目以降が速くなる
 
@@ -47,6 +50,9 @@
 - `npm audit` を確認する
 - 秘密情報の漏れをチェックする
 - 依存関係の脆弱性を確認する
+
+実施結果:
+- [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) に `npm audit --audit-level=high --omit=dev` と、コード・設定ファイルに対する secret-like pattern 検査を追加した
 
 確認観点:
 - 危険な変更が検知される
