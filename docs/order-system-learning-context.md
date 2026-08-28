@@ -874,6 +874,14 @@ STEP61で学んだもの:
 - `cdk deploy` の前に `npm ci` で依存関係を揃えること
 - 既存リソースと衝突しやすい S3 バケットは固定名を避け、CDK 管理に寄せること
 
+STEP62で学んだもの:
+
+- dev は自動、prod は手動という運用に分けること
+- GitHub Environment の reviewer で prod 承認を挟むこと
+- workflow_dispatch で明示的に stage を選ばせること
+- 環境ごとのデプロイ先と OIDC subject を揃えること
+- 2026-08-28 に `workflow_dispatch` の `stage=prod` 実行が成功し、本番デプロイの運用確認まで完了したこと
+
 ---
 
 # 12. 学習上の方針

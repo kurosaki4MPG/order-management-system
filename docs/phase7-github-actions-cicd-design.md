@@ -101,9 +101,11 @@
 - `cdk deploy` を workflow に組み込む
 - 必要なら manual approval を挟む
 - `main` への push で dev を自動デプロイし、prod は `workflow_dispatch` で手動デプロイする
+- prod は GitHub Environment の reviewer で承認を入れる
 - `aws sts get-caller-identity` で認証を先に確認してから `cdk deploy` を実行する
 - CDK CLI は devDependency として固定し、GitHub Actions でも同じバージョンを使う
 - S3 のような既存リソースと衝突しやすいものは、必要がなければ固定名を持たせず CDK 管理に寄せる
+- 2026-08-28 に `workflow_dispatch` の `stage=prod` 実行が成功し、prod デプロイの動作確認が完了した
 
 ---
 
