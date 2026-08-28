@@ -199,13 +199,38 @@
 - dev / prod を分ける
 - 手動承認の要否を決める
 
+実施結果:
+
+- [`.github/workflows/cdk-deploy.yml`](../.github/workflows/cdk-deploy.yml) で `main` push は `dev`、`workflow_dispatch` の `stage=prod` は `prod` に分けた
+- GitHub Environment `dev` / `prod` を使って、環境ごとの OIDC subject とデプロイ先を一致させた
+- `prod` は GitHub Environment の保護ルールでレビュー承認を入れる前提にし、workflow 側は手動起動にした
+- `dev` は自動、`prod` は手動という運用により、誤って本番へ流すリスクを減らした
+- 2026-08-28 に `workflow_dispatch` で `stage=prod` と `cors_origins=https://app.example.com` を指定して本番デプロイを実行し、`deploy-prod` が成功した
+
+### 62.1 環境設定
+
+1. GitHub で `dev` と `prod` の Environment を作成する
+2. `prod` Environment には必要に応じて reviewer を設定する
+3. `dev` Environment は自動実行を前提にする
+4. `prod` は `workflow_dispatch` で明示的に選んだ場合のみ実行する
+
+### 62.2 運用手順
+
+1. 通常の変更は `main` への push で `dev` に反映される
+2. `prod` へ反映する場合は workflow を手動起動し、`stage=prod` を選ぶ
+3. `cors_origins` を本番 URL に設定する
+4. 必要なら GitHub Environment の承認後にデプロイを進める
+5. 2026-08-28 時点で `stage=prod` の本番デプロイが成功している
+
 確認観点:
 
 - 誤デプロイを防げる
+- 本番デプロイを GitHub Actions から実行できる
 
 完了条件:
 
 - 環境ごとのフローができる
+- `dev` と `prod` の workflow が実際に成功する
 
 ## STEP63 フロントエンドデプロイ
 
