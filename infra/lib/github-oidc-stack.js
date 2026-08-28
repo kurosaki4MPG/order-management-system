@@ -32,11 +32,18 @@ class GithubOidcStack extends cdk.Stack {
     ];
 
     for (const { environmentName, roleName } of stages) {
+      const standardSubject = `repo:${repositoryFullName}:environment:${environmentName}`;
+      const immutableSubject = `repo:${repositoryOwner}@*/${repositoryName}@*:environment:${environmentName}`;
       const role = new iam.Role(this, `GithubActions${environmentName}Role`, {
         assumedBy: new iam.OpenIdConnectPrincipal(oidcProvider, {
           StringEquals: {
             "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-            "token.actions.githubusercontent.com:sub": `repo:${repositoryFullName}:environment:${environmentName}`,
+          },
+          StringLike: {
+            "token.actions.githubusercontent.com:sub": [
+              standardSubject,
+              immutableSubject,
+            ],
           },
         }),
         description: `GitHub Actions OIDC role for ${environmentName} workflows in ${repositoryFullName}`,

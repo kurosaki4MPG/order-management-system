@@ -91,6 +91,7 @@
 - GitHub repository variables に role ARN を保持し、workflow から参照する
 - workflow 側は GitHub Environment を使い、`environment: dev` / `environment: prod` で role の subject と揃える
 - `aws sts get-caller-identity` で認証の成功を確認する
+- すでに `OmsGithubOidcStack` をデプロイし、dev / prod の role ARN を取得済みである
 
 ---
 
