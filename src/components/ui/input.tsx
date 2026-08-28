@@ -1,3 +1,4 @@
+// 入力欄の基本スタイルを統一し、フォームごとの差分を最小限にする。
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
 

@@ -1,0 +1,131 @@
+{
+    "Items": [
+        {
+            "customerName": {
+                "S": "検証太郎"
+            },
+            "totalAmount": {
+                "N": "1000"
+            },
+            "shippingAddress": {
+                "S": "神奈川県横浜市西区みなとみらい2-2-1-30"
+            },
+            "orderedAt": {
+                "S": "2026-08-25T04:18:15.601Z"
+            },
+            "orderId": {
+                "S": "ORD-20260825-495601"
+            },
+            "status": {
+                "S": "pending"
+            },
+            "paymentMethod": {
+                "S": "cash-on-delivery"
+            },
+            "customerEmail": {
+                "S": "taro.kensho@hoge.com"
+            },
+            "id": {
+                "S": "ORD-20260825-495601"
+            },
+            "items": {
+                "L": [
+                    {
+                        "M": {
+                            "unitPrice": {
+                                "N": "1000"
+                            },
+                            "productName": {
+                                "S": "テスター"
+                            },
+                            "quantity": {
+                                "N": "1"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "customerName": {
+                "S": "ほげ"
+            },
+            "totalAmount": {
+                "N": "500"
+            },
+            "shippingAddress": {
+                "S": "神奈川県横浜市西区みなとみらい2-2-1"
+            },
+            "orderedAt": {
+                "S": "2026-08-21T09:02:24.313Z"
+            },
+            "orderId": {
+                "S": "ORD-20260821-944313"
+            },
+            "status": {
+                "S": "pending"
+            },
+            "paymentMethod": {
+                "S": "credit-card"
+            },
+            "customerEmail": {
+                "S": "hoge@hoge.com"
+            },
+            "id": {
+                "S": "ORD-20260821-944313"
+            },
+            "items": {
+                "L": [
+                    {
+                        "M": {
+                            "unitPrice": {
+                                "N": "500"
+                            },
+                            "productName": {
+                                "S": "ワッパー"
+                            },
+                            "quantity": {
+                                "N": "1"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "customerName": {
+                "S": "テスト顧客"
+            },
+            "totalAmount": {
+                "N": "12000"
+            },
+            "shippingAddress": {
+                "S": "東京都千代田区1-1-1"
+            },
+            "orderedAt": {
+                "S": "2026-08-21T00:00:00.000Z"
+            },
+            "orderId": {
+                "S": "ORD-DEV-001"
+            },
+            "updatedAt": {
+                "S": "2026-08-21T00:00:00.000Z"
+            },
+            "status": {
+                "S": "processing"
+            },
+            "createdAt": {
+                "S": "2026-08-21T00:00:00.000Z"
+            },
+            "paymentMethod": {
+                "S": "credit-card"
+            },
+            "customerEmail": {
+                "S": "test@example.com"
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 3,
+    "ConsumedCapacity": null
+}

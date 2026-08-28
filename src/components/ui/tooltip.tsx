@@ -1,5 +1,6 @@
 "use client"
 
+// ツールチップは遅延表示や配置調整をまとめて面倒見る。
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
 
 import { cn } from "@/lib/utils"
