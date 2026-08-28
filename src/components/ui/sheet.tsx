@@ -1,5 +1,6 @@
 "use client"
 
+// Sheet はモバイル向けの補助パネルとして使うため、開閉周りをまとめる。
 import * as React from "react"
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 

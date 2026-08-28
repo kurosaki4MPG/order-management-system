@@ -1,5 +1,6 @@
 "use client"
 
+// アバター表示の共通スタイルを定義し、画像・フォールバックを同じ枠に載せる。
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 

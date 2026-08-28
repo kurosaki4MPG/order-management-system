@@ -1,5 +1,6 @@
 "use client"
 
+// サイドバーはデスクトップ/モバイル両対応のナビゲーション基盤として扱う。
 import * as React from "react"
 import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"

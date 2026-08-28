@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+// ダッシュボードは現状の概要だけを示し、詳細操作は注文画面に集約する。
 const summaryItems = [
   {
     title: "本日の注文",

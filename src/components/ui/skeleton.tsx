@@ -1,3 +1,4 @@
+// 読み込み中のプレースホルダーを、最小の実装で再利用できるようにする。
 import { cn } from "@/lib/utils"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {

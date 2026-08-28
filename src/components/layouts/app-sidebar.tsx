@@ -2,6 +2,7 @@
 
 import {
   FilePlus2,
+  FileText,
   LayoutDashboard,
   PackageSearch,
   ShoppingCart,
@@ -22,6 +23,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+// サイドバーは主要画面の導線をまとめるだけにして、表示項目を固定する。
 const menuItems = [
   {
     title: "ダッシュボード",
@@ -37,6 +39,11 @@ const menuItems = [
     title: "注文登録",
     href: "/orders/new",
     icon: FilePlus2,
+  },
+  {
+    title: "帳票プレビュー",
+    href: "/pdf-preview",
+    icon: FileText,
   },
 ] as const;
 

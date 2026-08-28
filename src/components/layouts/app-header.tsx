@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
+// ヘッダーは画面タイトルと操作入口だけに絞り、画面ごとの差分を作らない。
 export function AppHeader() {
   return (
     <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b bg-background/95 px-4 backdrop-blur">

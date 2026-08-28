@@ -1,3 +1,4 @@
+// カード系レイアウトの共通コンテナ。見出し・本文の余白を統一する。
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

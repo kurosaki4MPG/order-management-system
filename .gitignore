@@ -17,6 +17,12 @@
 /.next/
 /out/
 
+# cdk
+/cdk.out/
+/cdk.out-*/
+/cdk.context.json
+/.cdk.staging/
+
 # production
 /build
 

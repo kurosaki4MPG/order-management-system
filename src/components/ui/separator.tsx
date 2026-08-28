@@ -1,5 +1,6 @@
 "use client"
 
+// 見た目だけの区切り線を、向き違いでも同じコンポーネントで扱う。
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
 
 import { cn } from "@/lib/utils"

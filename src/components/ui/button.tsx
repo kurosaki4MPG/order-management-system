@@ -1,3 +1,4 @@
+// ボタンの見た目とバリアントを共通化し、画面全体で操作感を揃える。
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
