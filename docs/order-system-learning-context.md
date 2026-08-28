@@ -866,6 +866,13 @@ STEP60で学んだもの:
 - 環境ごとに IAM role を分け、GitHub Environment と repository variables で参照先を切り替えること
 - `aws sts get-caller-identity` で認証成功を手早く確認すること
 
+STEP61で学んだもの:
+
+- CDK CLI を devDependency に固定し、GitHub Actions でも同じバージョンを使うこと
+- `main` push で dev を自動デプロイし、prod は手動デプロイに分けること
+- デプロイ前に `aws sts get-caller-identity` で認証確認を挟むこと
+- `cdk deploy` の前に `npm ci` で依存関係を揃えること
+
 ---
 
 # 12. 学習上の方針

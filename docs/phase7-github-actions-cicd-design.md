@@ -100,6 +100,9 @@
 - dev と prod を分ける
 - `cdk deploy` を workflow に組み込む
 - 必要なら manual approval を挟む
+- `main` への push で dev を自動デプロイし、prod は `workflow_dispatch` で手動デプロイする
+- `aws sts get-caller-identity` で認証を先に確認してから `cdk deploy` を実行する
+- CDK CLI は devDependency として固定し、GitHub Actions でも同じバージョンを使う
 
 ---
 

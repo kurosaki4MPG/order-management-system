@@ -1,0 +1,108 @@
+name: CDK Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Deploy target stage
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - prod
+      cors_origins:
+        description: Comma-separated CORS origins for prod
+        required: false
+        default: ""
+
+jobs:
+  deploy-dev:
+    if: ${{ github.event_name == 'push' || github.event.inputs.stage == 'dev' }}
+    environment: dev
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cdk-deploy-dev
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-1
+          role-session-name: github-actions-cdk-dev
+          role-to-assume: ${{ vars.AWS_ROLE_ARN_DEV }}
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Deploy dev stack
+        run: npx cdk deploy OmsdevOrderApiStack -c stage=dev --require-approval never
+
+  deploy-prod:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'prod' }}
+    environment: prod
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cdk-deploy-prod
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CORS_ORIGINS: ${{ github.event.inputs.cors_origins }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-1
+          role-session-name: github-actions-cdk-prod
+          role-to-assume: ${{ vars.AWS_ROLE_ARN_PROD }}
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Deploy prod stack
+        run: |
+          set -euo pipefail
+
+          if [ -z "${CORS_ORIGINS}" ]; then
+            echo "cors_origins is required when deploying prod."
+            exit 1
+          fi
+
+          npx cdk deploy OmsprodOrderApiStack \
+            -c stage=prod \
+            -c corsOrigins="${CORS_ORIGINS}" \
+            --require-approval never
