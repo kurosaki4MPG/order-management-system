@@ -15,6 +15,7 @@ const s3 = require("aws-cdk-lib/aws-s3");
 const stepfunctions = require("aws-cdk-lib/aws-stepfunctions");
 const stepfunctionsTasks = require("aws-cdk-lib/aws-stepfunctions-tasks");
 const logs = require("aws-cdk-lib/aws-logs");
+const cognito = require("aws-cdk-lib/aws-cognito");
 
 // 環境差分は stage と CORS に閉じ込め、他の構成はできるだけ固定にする。
 function resolveEnvironmentConfig(stage, corsOrigins) {
@@ -52,6 +53,53 @@ class OrderApiStack extends cdk.Stack {
     );
     const tableName = `oms-${stage}-orders`;
     const orderApiFunctionName = `oms-${stage}-order-api`;
+    const cognitoCallbackUrls =
+      stage === "prod"
+        ? ["https://app.example.com/api/auth/callback"]
+        : ["http://localhost:3000/api/auth/callback"]
+    const cognitoLogoutUrls =
+      stage === "prod"
+        ? ["https://app.example.com/login"]
+        : ["http://localhost:3000/login"]
+    const cognitoDomainPrefix = `oms-${stage}-order-auth-${this.account}`
+
+    const authUserPool = new cognito.UserPool(this, "AuthUserPool", {
+      autoVerify: {
+        email: true,
+      },
+      selfSignUpEnabled: true,
+      signInAliases: {
+        email: true,
+      },
+      userPoolName: `oms-${stage}-auth-users`,
+    })
+
+    const authUserPoolClient = authUserPool.addClient("AuthUserPoolClient", {
+      authFlows: {
+        userPassword: true,
+        userSrp: true,
+      },
+      oAuth: {
+        callbackUrls: cognitoCallbackUrls,
+        defaultRedirectUri: cognitoCallbackUrls[0],
+        flows: {
+          authorizationCodeGrant: true,
+        },
+        logoutUrls: cognitoLogoutUrls,
+        scopes: [
+          cognito.OAuthScope.EMAIL,
+          cognito.OAuthScope.OPENID,
+          cognito.OAuthScope.PROFILE,
+        ],
+      },
+      userPoolClientName: `oms-${stage}-web-client`,
+    })
+
+    const authUserPoolDomain = authUserPool.addDomain("AuthUserPoolDomain", {
+      cognitoDomain: {
+        domainPrefix: cognitoDomainPrefix,
+      },
+    })
 
     const orderEventsBus = new events.EventBus(this, "OrderEventsBus", {
       eventBusName: `oms-${stage}-order-events`,
@@ -687,6 +735,28 @@ class OrderApiStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "OrderApiUrl", {
       value: orderApi.apiEndpoint,
+    });
+
+    new cdk.CfnOutput(this, "CognitoUserPoolId", {
+      value: authUserPool.userPoolId,
+    });
+
+    new cdk.CfnOutput(this, "CognitoUserPoolClientId", {
+      value: authUserPoolClient.userPoolClientId,
+    });
+
+    new cdk.CfnOutput(this, "CognitoHostedUiBaseUrl", {
+      value: authUserPoolDomain.baseUrl(),
+    });
+
+    new cdk.CfnOutput(this, "CognitoSignInUrl", {
+      value: authUserPoolDomain.signInUrl(authUserPoolClient, {
+        redirectUri: cognitoCallbackUrls[0],
+      }),
+    });
+
+    new cdk.CfnOutput(this, "CognitoLogoutUrl", {
+      value: `${authUserPoolDomain.baseUrl()}/logout?client_id=${authUserPoolClient.userPoolClientId}&logout_uri=${encodeURIComponent(cognitoLogoutUrls[0])}`,
     });
   }
 }
