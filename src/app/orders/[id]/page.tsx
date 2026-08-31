@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
+import { getAuthSession } from "@/features/auth/cognito-auth.server";
+import {
+  canDeleteOrders,
+  canUpdateOrderStatus,
+} from "@/features/auth/authorization.server";
 import { OrderDetail } from "@/features/orders/components/order-detail";
 
 type OrderDetailPageProps = {
@@ -21,7 +27,18 @@ export async function generateMetadata({
 }
 
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
+  const session = await getAuthSession();
+  if (!session) {
+    redirect("/login");
+  }
+
   const { id } = await params;
 
-  return <OrderDetail orderId={id} />;
+  return (
+    <OrderDetail
+      orderId={id}
+      canDeleteOrder={canDeleteOrders(session)}
+      canUpdateStatus={canUpdateOrderStatus(session)}
+    />
+  );
 }

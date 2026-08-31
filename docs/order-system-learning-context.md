@@ -907,6 +907,12 @@ STEP66で学んだもの:
 - route handler で code を token に交換し、httpOnly cookie に保存するとセッション管理を単純にできること
 - `proxy.ts` で未ログイン時の画面アクセスをまとめてログインへ誘導できること
 
+STEP67で学んだもの:
+
+- Cognito グループを `admin` / `operator` / `viewer` に分けると、役割の説明がしやすいこと
+- API と UI の両方で同じ認可 helper を使うと、権限の出し分けを揃えやすいこと
+- 403 用の `forbidden` 画面を用意すると、権限不足時の導線が分かりやすいこと
+
 ---
 
 # 12. 学習上の方針

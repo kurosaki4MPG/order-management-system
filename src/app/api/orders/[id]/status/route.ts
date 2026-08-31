@@ -1,3 +1,8 @@
+import { getAuthSession } from "@/features/auth/cognito-auth.server";
+import {
+  canUpdateOrderStatus,
+  createAuthorizationResponse,
+} from "@/features/auth/authorization.server";
 import { updateOrderStatusSchema } from "@/features/orders/schemas/order-schema";
 import {
   getOrderById,
@@ -15,6 +20,15 @@ export async function PATCH(
   request: Request,
   { params }: OrderStatusRouteContext
 ) {
+  const session = await getAuthSession();
+  if (!session) {
+    return createAuthorizationResponse("Authentication required", 401);
+  }
+
+  if (!canUpdateOrderStatus(session)) {
+    return createAuthorizationResponse("Operator or admin role required");
+  }
+
   // body は status のみを受け取り、専用スキーマで検証する。
   const { id } = await params;
   const body: unknown = await request.json();
@@ -50,6 +64,11 @@ export async function GET(
   _request: Request,
   { params }: OrderStatusRouteContext
 ) {
+  const session = await getAuthSession();
+  if (!session) {
+    return createAuthorizationResponse("Authentication required", 401);
+  }
+
   // ステータス確認だけを必要とする画面向けに、軽いレスポンスを返す。
   const { id } = await params;
   const order = await getOrderById(id);

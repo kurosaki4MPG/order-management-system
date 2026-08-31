@@ -32,9 +32,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 type OrderDetailProps = {
   initialOrder?: Order;
   orderId: string;
+  canDeleteOrder?: boolean;
+  canUpdateStatus?: boolean;
 };
 
-export function OrderDetail({ initialOrder, orderId }: OrderDetailProps) {
+export function OrderDetail({
+  canDeleteOrder = true,
+  canUpdateStatus = true,
+  initialOrder,
+  orderId,
+}: OrderDetailProps) {
   const router = useRouter();
   const { data: currentOrder, isFetching, isLoading, isError } = useOrderQuery(
     orderId,
@@ -117,20 +124,26 @@ export function OrderDetail({ initialOrder, orderId }: OrderDetailProps) {
             </span>
           )}
           <OrderStatusBadge status={resolvedOrder.status} />
-          <Button
-            type="button"
-            variant="outline"
-            className="gap-2"
-            disabled={deleteOrderMutation.isPending}
-            onClick={() => void handleDeleteOrder()}
-          >
-            {deleteOrderMutation.isPending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Trash2 className="size-4" />
-            )}
-            削除
-          </Button>
+          {canDeleteOrder ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2"
+              disabled={deleteOrderMutation.isPending}
+              onClick={() => void handleDeleteOrder()}
+            >
+              {deleteOrderMutation.isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
+              削除
+            </Button>
+          ) : (
+            <span className="inline-flex h-9 items-center border px-3 text-xs text-muted-foreground">
+              閲覧専用
+            </span>
+          )}
           <div className="text-right">
             <p className="text-xs font-semibold text-muted-foreground">合計</p>
             <p className="text-2xl font-bold">
@@ -205,6 +218,7 @@ export function OrderDetail({ initialOrder, orderId }: OrderDetailProps) {
               <OrderStatusManager
                 initialStatus={resolvedOrder.status}
                 orderId={resolvedOrder.id}
+                readOnly={!canUpdateStatus}
               />
             </CardContent>
           </Card>

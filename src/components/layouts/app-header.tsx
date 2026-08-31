@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import type { AuthSession } from "@/features/auth/cognito-auth.server";
+import { getHighestRoleLabel } from "@/features/auth/authorization.server";
 
 // ヘッダーは画面タイトルと操作入口だけに絞り、画面ごとの差分を作らない。
 type AppHeaderProps = {
@@ -34,7 +35,7 @@ export function AppHeader({ session }: AppHeaderProps) {
               {session ? session.displayName : "未ログイン"}
             </p>
             <p className="text-[11px] text-muted-foreground">
-              {session ? session.email ?? session.username : "Cognito"}
+              {session ? getHighestRoleLabel(session) : "Cognito"}
             </p>
           </div>
           <Button

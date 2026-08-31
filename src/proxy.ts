@@ -5,6 +5,7 @@ const AUTH_COOKIE_NAME = "oms_auth_id_token"
 
 const PUBLIC_PATH_PREFIXES = [
   "/api/auth",
+  "/forbidden",
   "/login",
   "/_next",
   "/favicon.ico",

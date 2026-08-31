@@ -1,13 +1,24 @@
-import type { Metadata } from "next";
+import type { Metadata } from "next"
+import { redirect } from "next/navigation"
 
-import { OrderForm } from "@/features/orders/components/order-form";
+import { getAuthSession } from "@/features/auth/cognito-auth.server"
+import { canCreateOrders } from "@/features/auth/authorization.server"
+import { OrderForm } from "@/features/orders/components/order-form"
 
-// 注文登録画面はフォームの責務だけを持ち、入力と送信に集中する。
 export const metadata: Metadata = {
   title: "注文登録",
-};
+}
 
-export default function NewOrderPage() {
+export default async function NewOrderPage() {
+  const session = await getAuthSession()
+  if (!session) {
+    redirect("/login")
+  }
+
+  if (!canCreateOrders(session)) {
+    redirect("/forbidden")
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -19,5 +30,5 @@ export default function NewOrderPage() {
 
       <OrderForm />
     </div>
-  );
+  )
 }

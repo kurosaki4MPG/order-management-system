@@ -32,7 +32,7 @@
 - 未ログイン時に保護画面へ入れない
 
 確認結果:
-- `npm run test` で既存テストを含め 24 ファイル / 138 テストが成功した
+- `npm run test` で既存テストを含め 26 ファイル / 144 テストが成功した
 - Cognito ヘルパーの単体テストで authorize URL、logout URL、PKCE、JWT セッション読み取りを確認した
 
 確認観点:
@@ -46,6 +46,23 @@
 実施内容:
 - 権限グループを定義する
 - 画面表示とAPIアクセスを制御する
+
+実施結果:
+- [`infra/lib/order-api-stack.js`](/home/kurosaki/order-management-system/infra/lib/order-api-stack.js) で Cognito User Pool に `admin` / `operator` / `viewer` の 3 グループを追加し、操作権限の土台を作った
+- [`src/features/auth/authorization.server.ts`](/home/kurosaki/order-management-system/src/features/auth/authorization.server.ts) を追加し、`admin` は削除まで、`operator` は登録と更新まで、`viewer` は閲覧のみ、という判定を共通化した
+- [`src/app/api/orders/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/route.ts) と [`src/app/api/orders/[id]/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/[id]/route.ts) と [`src/app/api/orders/[id]/status/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/[id]/status/route.ts) に認可チェックを入れ、未認証は 401、権限不足は 403 を返すようにした
+- [`src/app/orders/new/page.tsx`](/home/kurosaki/order-management-system/src/app/orders/new/page.tsx) で登録画面を `operator` / `admin` のみに制限し、[`src/app/orders/[id]/page.tsx`](/home/kurosaki/order-management-system/src/app/orders/[id]/page.tsx) と各注文コンポーネントで削除・ステータス更新の表示を出し分けた
+- [`src/app/forbidden/page.tsx`](/home/kurosaki/order-management-system/src/app/forbidden/page.tsx) を追加し、権限不足時の行き先を明示した
+- [`src/features/auth/authorization.server.test.ts`](/home/kurosaki/order-management-system/src/features/auth/authorization.server.test.ts) を追加し、各ロールの許可範囲を単体で確認した
+
+確認観点:
+- 役割ごとにできる操作が分かれる
+- UI から不要な操作が見えない
+- API でも権限不足が止まる
+
+確認結果:
+- `npm run test` で 26 ファイル / 144 テストが成功した
+- `npm run build` でも認証・認可を含めて production build が成功した
 
 確認観点:
 - 権限のない操作ができない
