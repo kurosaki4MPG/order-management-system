@@ -98,8 +98,20 @@
 - 環境変数と秘密情報を分ける
 - SSM / Secrets Manager の使い分けを決める
 
+実施結果:
+- [`src/lib/runtime-config.server.ts`](/home/kurosaki/order-management-system/src/lib/runtime-config.server.ts) を追加し、サーバー側で使う設定値の取得口を 1 か所に集約した
+- [`src/features/orders/repositories/dynamo-db-order-repository.ts`](/home/kurosaki/order-management-system/src/features/orders/repositories/dynamo-db-order-repository.ts)、[`src/features/orders/events/order-event-publisher.ts`](/home/kurosaki/order-management-system/src/features/orders/events/order-event-publisher.ts)、[`src/lambda/order-notification-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-notification-handler.ts)、[`src/features/pdf/invoice-artifacts.server.ts`](/home/kurosaki/order-management-system/src/features/pdf/invoice-artifacts.server.ts) から、設定値取得の重複を減らして役割を揃えた
+- [`.env.example`](/home/kurosaki/order-management-system/.env.example) に公開設定、非機密の実行設定、秘密情報の置き場所を追記し、混在しないようにした
+- [`src/lib/runtime-config.server.test.ts`](/home/kurosaki/order-management-system/src/lib/runtime-config.server.test.ts) を追加し、設定取得と必須値のエラーが意図どおりに動くことを確認した
+
 確認観点:
 - 秘密情報がコードに入らない
+
+確認結果:
+- 秘密そのものはコードに持たず、必要な実行設定のみを共通ヘルパーから読む構成に寄せた
+- 実際に秘匿すべき値は `.env.example` ではなく Secrets Manager / GitHub Secrets に置く前提を明文化した
+- `npm run test` で 27 ファイル / 147 テストが成功した
+- `npm run build` で production build が成功した
 
 完了条件:
 - 安全な設定管理ができる

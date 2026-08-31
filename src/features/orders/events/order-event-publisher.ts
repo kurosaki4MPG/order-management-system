@@ -3,10 +3,11 @@ import { randomUUID } from "crypto";
 import { EventBridgeClient, PutEventsCommand } from "@aws-sdk/client-eventbridge";
 
 import type { Order } from "@/features/orders/types/order";
+import { getAwsRegion, getOrderEventsBusName } from "@/lib/runtime-config.server";
 
 // 注文の保存結果を EventBridge へ流し、通知や後続処理の起点にする。
 const eventBridgeClient = new EventBridgeClient({
-  region: process.env.AWS_REGION ?? "ap-northeast-1",
+  region: getAwsRegion(),
 });
 
 type OrderCreatedEventDetail = {
@@ -88,11 +89,7 @@ function buildStatusChangedEventDetail(
 
 async function publishEvent(detailType: string, detail: unknown) {
   // イベントバス名は環境変数で与え、送信先をコードから切り離す。
-  const eventBusName = process.env.ORDER_EVENTS_BUS_NAME;
-
-  if (!eventBusName) {
-    throw new Error("ORDER_EVENTS_BUS_NAME is required");
-  }
+  const eventBusName = getOrderEventsBusName();
 
   await eventBridgeClient.send(
     new PutEventsCommand({

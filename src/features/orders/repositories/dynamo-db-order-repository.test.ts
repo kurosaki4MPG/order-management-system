@@ -168,7 +168,7 @@ describe("dynamoDbOrderRepository", () => {
 
     // 必須環境変数がないときは保存処理に進まないことを確認する。
     await expect(dynamoDbOrderRepository.create(baseValues)).rejects.toThrow(
-      "ORDERS_TABLE_NAME is required for DynamoDB repository"
+      "ORDERS_TABLE_NAME is required for the DynamoDB order repository"
     )
   })
 

@@ -1,5 +1,10 @@
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 
+import {
+  getAwsRegion,
+  getOrderNotificationsTopicArn,
+} from "@/lib/runtime-config.server";
+
 // EventBridge の注文イベントを、人が読める通知文に整形して SNS に流す。
 type EventBridgeOrderEvent<TDetail extends Record<string, unknown>> = {
   account?: string;
@@ -35,17 +40,11 @@ type NotificationPayload = {
 };
 
 const snsClient = new SNSClient({
-  region: process.env.AWS_REGION ?? "ap-northeast-1",
+  region: getAwsRegion(),
 });
 
 function assertTopicArn() {
-  const topicArn = process.env.ORDER_NOTIFICATIONS_TOPIC_ARN;
-
-  if (!topicArn) {
-    throw new Error("ORDER_NOTIFICATIONS_TOPIC_ARN is required");
-  }
-
-  return topicArn;
+  return getOrderNotificationsTopicArn();
 }
 
 function formatCurrency(value?: number) {
