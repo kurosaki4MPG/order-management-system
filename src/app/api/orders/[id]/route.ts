@@ -5,6 +5,7 @@ import {
   canDeleteOrders,
   createAuthorizationResponse,
 } from "@/features/auth/authorization.server";
+import { assertSameOriginRequest } from "@/lib/api-security.server";
 import {
   deleteOrder,
   getOrderById,
@@ -42,6 +43,11 @@ export async function GET(_request: Request, { params }: OrderRouteContext) {
 }
 
 export async function DELETE(_request: Request, { params }: OrderRouteContext) {
+  const originError = assertSameOriginRequest(_request, "Order deletion");
+  if (originError) {
+    return originError;
+  }
+
   const session = await getAuthSession();
   if (!session) {
     return createAuthorizationResponse("Authentication required", 401);

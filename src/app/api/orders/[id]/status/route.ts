@@ -3,6 +3,10 @@ import {
   canUpdateOrderStatus,
   createAuthorizationResponse,
 } from "@/features/auth/authorization.server";
+import {
+  assertJsonRequest,
+  assertSameOriginRequest,
+} from "@/lib/api-security.server";
 import { updateOrderStatusSchema } from "@/features/orders/schemas/order-schema";
 import {
   getOrderById,
@@ -20,6 +24,11 @@ export async function PATCH(
   request: Request,
   { params }: OrderStatusRouteContext
 ) {
+  const originError = assertSameOriginRequest(request, "Order status update");
+  if (originError) {
+    return originError;
+  }
+
   const session = await getAuthSession();
   if (!session) {
     return createAuthorizationResponse("Authentication required", 401);
@@ -27,6 +36,11 @@ export async function PATCH(
 
   if (!canUpdateOrderStatus(session)) {
     return createAuthorizationResponse("Operator or admin role required");
+  }
+
+  const contentTypeError = assertJsonRequest(request, "Order status update");
+  if (contentTypeError) {
+    return contentTypeError;
   }
 
   // body は status のみを受け取り、専用スキーマで検証する。
