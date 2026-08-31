@@ -50,13 +50,12 @@ API と UI の両方で権限を意識する。
 
 ## 4. IAM 最小権限
 
-- Lambda
-- CI/CD
-- 運用者
+- Lambda は必要な `grant*` だけを持たせる
+- CI/CD は CDK deploy に必要な `file-publishing-role` と `deploy-role` のみに絞る
+- 運用者の権限は SSO / IAM ロールごとに分ける
+- bootstrap の lookup role など、実運用で不要な引き受け権限は外す
 
-を分けて権限を絞る。
-
-過剰権限は監査対象とする。
+過剰権限は監査対象とし、`cdk diff` と実際の deploy 成功で確認する。
 
 ---
 

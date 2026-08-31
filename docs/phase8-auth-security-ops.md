@@ -76,8 +76,18 @@
 - Lambda / CI / 運用ロールの権限を絞る
 - いらない権限を削る
 
+実施結果:
+- [`infra/lib/github-oidc-stack.js`](/home/kurosaki/order-management-system/infra/lib/github-oidc-stack.js) で GitHub Actions の OIDC role から `cdk-hnb659fds-lookup-role` への `sts:AssumeRole` 権限を外し、CDK deploy に必要な `file-publishing-role` と `deploy-role` だけを許可する形に整理した
+- `OmsGithubOidcStack` を `AWS_PROFILE=oms-dev AWS_SDK_LOAD_CONFIG=1 npx cdk deploy OmsGithubOidcStack --require-approval never` で再デプロイし、`no changes` で通ることを確認した
+- 既存の Orders / PDF / Auth 周辺の権限は、CDK の `grant*` を使った resource-scoped な設定になっていることを再確認した
+- この時点でアプリの実行に不要な CI 側の引き受け権限を一段減らせた
+
 確認観点:
 - 必要最小限で動く
+
+確認結果:
+- GitHub Actions の OIDC role が bootstrap の lookup role まで引き受ける必要がなくなった
+- CDK deploy の動作は維持したまま、引き受け対象を最小限に絞れた
 
 完了条件:
 - IAM の過剰権限を減らせる
