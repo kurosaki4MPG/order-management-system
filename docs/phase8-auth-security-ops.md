@@ -148,8 +148,39 @@
 - 追跡ID を入れる
 - 調査しやすい情報を残す
 
+実施結果:
+- [`src/lib/logging.server.ts`](/home/kurosaki/order-management-system/src/lib/logging.server.ts) を追加し、CloudWatch Logs で追いやすい 1 行 JSON の構造化ログを共通化した
+- [`src/lambda/order-api-gateway-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-api-gateway-handler.ts) で `requestId` と `orderId` を残し、イベント配信失敗時も追跡できるようにした
+- [`src/lambda/order-create-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-create-handler.ts)、[`src/lambda/order-workflow-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-workflow-handler.ts)、[`src/lambda/order-invoice-generation-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-invoice-generation-handler.ts)、[`src/lambda/order-queue-consumer.ts`](/home/kurosaki/order-management-system/src/lambda/order-queue-consumer.ts)、[`src/lambda/order-notification-handler.ts`](/home/kurosaki/order-management-system/src/lambda/order-notification-handler.ts) で、`requestId` / `eventId` / `orderId` / `workflow` を揃えた
+- [`src/lib/logging.server.test.ts`](/home/kurosaki/order-management-system/src/lib/logging.server.test.ts) を追加し、info / warn / error の JSON ログが期待どおり出ることを確認した
+
+確認手順:
+1. ローカル確認
+   - `npm run test -- src/lib/logging.server.test.ts` で JSON ログの形を確認する
+   - `npm run test` で主要ハンドラの回帰をまとめて確認する
+2. AWS での追跡
+   - `aws logs tail /aws/lambda/oms-dev-order-api --follow --since 1h --profile oms-dev --region ap-northeast-1`
+   - `aws logs tail /aws/lambda/oms-dev-order-workflow-task --follow --since 1h --profile oms-dev --region ap-northeast-1`
+   - `requestId`、`eventId`、`orderId` を含む行を見て、1 件の注文の流れを追う
+3. CloudWatch Logs Insights
+   - まずロググループを 1 つ選ぶ
+   - 次のように絞る
+     ```sql
+     fields @timestamp, level, message, requestId, eventId, orderId, workflow
+     | sort @timestamp desc
+     | limit 50
+     ```
+   - 注文 ID で絞るときは `filter orderId = "ORD-TEST-001"` を足す
+   - 失敗調査では `filter level = "error"` を使う
+
 確認観点:
 - 障害時に追える
+
+確認結果:
+- ログに `requestId` / `eventId` / `orderId` / `userId` を載せる土台を作れた
+- 業務イベントの成功・失敗を構造化ログで追えるようになった
+- `npm run test` で 29 ファイル / 155 テストが成功した
+- `npm run build` で production build が成功した
 
 完了条件:
 - ログの基盤が整う

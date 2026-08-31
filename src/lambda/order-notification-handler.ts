@@ -4,6 +4,7 @@ import {
   getAwsRegion,
   getOrderNotificationsTopicArn,
 } from "@/lib/runtime-config.server";
+import { logInfo } from "@/lib/logging.server";
 
 // EventBridge の注文イベントを、人が読める通知文に整形して SNS に流す。
 type EventBridgeOrderEvent<TDetail extends Record<string, unknown>> = {
@@ -154,7 +155,7 @@ export async function handler(
     })
   );
 
-  console.log("Notification sent", {
+  logInfo("Notification sent", {
     detailType: payload.detailType,
     orderId: payload.orderId,
   });

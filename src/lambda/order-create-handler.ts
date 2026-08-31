@@ -1,6 +1,7 @@
 // 学習段階の注文登録ハンドラ。API Gateway の POST を受けて注文を組み立てる最小実装。
 import { orderFormSchema } from "@/features/orders/schemas/order-schema";
 import type { Order } from "@/features/orders/types/order";
+import { logInfo } from "@/lib/logging.server";
 
 type ApiGatewayEvent = {
   body?: string | null;
@@ -98,6 +99,11 @@ export async function handler(event: ApiGatewayEvent): Promise<LambdaResponse> {
     items: parsed.data.items,
     totalAmount,
   };
+
+  logInfo("Order draft created", {
+    orderId: order.id,
+    requestId: extractRequestId(event.headers),
+  });
 
   return response(201, {
     order,

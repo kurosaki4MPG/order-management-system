@@ -17,6 +17,7 @@ import {
   updateOrderStatus,
 } from "@/features/orders/services/order-service";
 import type { OrderStatus, PaymentMethod } from "@/features/orders/types/order";
+import { logError, logInfo } from "@/lib/logging.server";
 
 // API Gateway のイベントを受けて、注文 CRUD とステータス変更を 1 本にまとめて処理する。
 type ApiGatewayProxyEvent = {
@@ -151,11 +152,16 @@ export async function handler(
       await publishOrderCreated(order);
     } catch (error) {
       // 後続イベントはログに残し、注文登録自体は成功で返す。
-      console.error("Failed to publish OrderCreated event", {
-        error,
+      logError("Failed to publish OrderCreated event", error, {
         orderId: order.id,
+        requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
       });
     }
+
+    logInfo("Order created", {
+      orderId: order.id,
+      requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
+    });
 
     return response(201, {
       order,
@@ -234,11 +240,17 @@ export async function handler(
         await publishOrderStatusChanged(updatedOrder);
       } catch (error) {
         // イベント発行失敗は追跡しつつ、更新結果は返す。
-        console.error("Failed to publish OrderStatusChanged event", {
-          error,
+        logError("Failed to publish OrderStatusChanged event", error, {
           orderId,
+          requestId:
+            event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
         });
       }
+
+      logInfo("Order status updated", {
+        orderId,
+        requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
+      });
 
       return response(200, {
         order: updatedOrder,
@@ -266,11 +278,16 @@ export async function handler(
       await publishOrderUpdated(updatedOrder);
     } catch (error) {
       // 更新後スナップショットの通知失敗は、更新結果の返却と切り離す。
-      console.error("Failed to publish OrderUpdated event", {
-        error,
+      logError("Failed to publish OrderUpdated event", error, {
         orderId,
+        requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
       });
     }
+
+    logInfo("Order updated", {
+      orderId,
+      requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
+    });
 
     return response(200, {
       order: updatedOrder,
@@ -290,11 +307,16 @@ export async function handler(
       await publishOrderDeleted(orderId);
     } catch (error) {
       // 削除イベントも業務本体とは独立して扱う。
-      console.error("Failed to publish OrderDeleted event", {
-        error,
+      logError("Failed to publish OrderDeleted event", error, {
         orderId,
+        requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
       });
     }
+
+    logInfo("Order deleted", {
+      orderId,
+      requestId: event.headers?.["x-request-id"] ?? event.headers?.["X-Request-Id"],
+    });
 
     return response(200, {
       deleted: true,
