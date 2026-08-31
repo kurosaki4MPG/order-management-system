@@ -111,15 +111,20 @@
 
 ## 9. フロントエンドデプロイ
 
-- ビルドして静的配信またはホスト先へ反映する
-- API URL を環境変数で切り替える
+- Next.js は `standalone` 出力でビルドする
+- Docker image として配信する
+- GitHub Actions で GHCR に publish する
+- `NEXT_PUBLIC_API_BASE_URL` を環境ごとに変えてビルドする
+- 配信先ホストは GHCR の image を実行して Next.js server を起動する
 
 ---
 
 ## 10. ロールバック
 
-- 直前の安定版へ戻せるようにする
-- デプロイ単位とバージョンを明示する
+- frontend は GHCR の `stage-latest` を安定 tag に戻せるようにする
+- `prod-<sha>` のような immutable tag を切り戻しの基準にする
+- infrastructure は `git revert` と CDK 再デプロイで戻せるようにする
+- どの commit / image tag に戻したかを残す
 
 ---
 

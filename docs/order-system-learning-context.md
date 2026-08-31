@@ -882,6 +882,19 @@ STEP62で学んだもの:
 - 環境ごとのデプロイ先と OIDC subject を揃えること
 - 2026-08-28 に `workflow_dispatch` の `stage=prod` 実行が成功し、本番デプロイの運用確認まで完了したこと
 
+STEP63で学んだもの:
+
+- Next.js は `standalone` 出力にすると Node.js サーバーとして配信しやすいこと
+- `NEXT_PUBLIC_API_BASE_URL` は build 時に注入して環境ごとに切り替えること
+- frontend の配信は Docker image として publish すると扱いやすいこと
+- GitHub Actions で GHCR に publish すると dev / prod の配布を整理しやすいこと
+
+STEP64で学んだもの:
+
+- frontend の rollback は immutable tag を基準にして `stage-latest` を戻すと分かりやすいこと
+- infrastructure の rollback は `git revert` と再 deploy に分けると整理しやすいこと
+- どの tag / commit に戻したかを記録すると、復旧手順が追いやすいこと
+
 ---
 
 # 12. 学習上の方針

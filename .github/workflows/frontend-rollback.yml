@@ -1,0 +1,63 @@
+name: Frontend Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Rollback target stage
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+        default: prod
+      source_tag:
+        description: "Rollback source image tag (for example: prod-<sha>)"
+        required: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/order-management-system-frontend
+
+jobs:
+  rollback:
+    name: rollback
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
+    concurrency:
+      group: frontend-rollback-${{ github.event.inputs.stage }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate rollback target
+        env:
+          SOURCE_TAG: ${{ github.event.inputs.source_tag }}
+        run: |
+          if [ -z "${SOURCE_TAG}" ]; then
+            echo "source_tag is required."
+            exit 1
+          fi
+
+      - name: Inspect source image
+        env:
+          SOURCE_TAG: ${{ github.event.inputs.source_tag }}
+        run: |
+          docker buildx imagetools inspect "${IMAGE_NAME}:${SOURCE_TAG}"
+
+      - name: Retag latest pointer
+        env:
+          SOURCE_TAG: ${{ github.event.inputs.source_tag }}
+        run: |
+          docker buildx imagetools create \
+            --tag "${IMAGE_NAME}:${{ github.event.inputs.stage }}-latest" \
+            "${IMAGE_NAME}:${SOURCE_TAG}"
