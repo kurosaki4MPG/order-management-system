@@ -19,7 +19,7 @@ export default async function AppShell({ children }: AppShellProps) {
     <QueryProvider>
       <TooltipProvider>
         <SidebarProvider>
-          <AppSidebar />
+          <AppSidebar session={session} />
           <SidebarInset>
             <AppHeader session={session} />
             <div className="flex-1 bg-muted/30">

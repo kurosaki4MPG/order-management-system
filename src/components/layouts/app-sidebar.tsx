@@ -22,6 +22,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import type { AuthSession } from "@/features/auth/cognito-auth.server";
+import { canAccessOrdersNav, canCreateOrders } from "@/features/auth/authorization.server";
+
+type AppSidebarProps = {
+  session: AuthSession | null;
+};
 
 // サイドバーは主要画面の導線をまとめるだけにして、表示項目を固定する。
 const menuItems = [
@@ -47,8 +53,15 @@ const menuItems = [
   },
 ] as const;
 
-export function AppSidebar() {
+export function AppSidebar({ session }: AppSidebarProps) {
   const pathname = usePathname();
+  const visibleMenuItems = menuItems.filter((item) => {
+    if (item.href === "/orders/new") {
+      return canCreateOrders(session);
+    }
+
+    return canAccessOrdersNav(session);
+  });
 
   return (
     <Sidebar>
@@ -70,7 +83,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>メニュー</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
+              {visibleMenuItems.map((item) => {
                 const isActive =
                   item.href === "/"
                     ? pathname === "/"

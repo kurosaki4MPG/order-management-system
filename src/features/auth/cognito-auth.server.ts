@@ -9,11 +9,14 @@ export const AUTH_COOKIE_NAMES = {
   refreshToken: "oms_auth_refresh_token",
 } as const
 
+export type AuthRole = "admin" | "operator" | "viewer"
+
 export type AuthSession = {
   authenticated: true
   displayName: string
   email?: string
   groups: string[]
+  role: AuthRole
   subject: string
   username: string
 }
@@ -125,6 +128,11 @@ export function readAuthSessionFromIdToken(idToken: string): AuthSession {
   const groups = Array.isArray(claims["cognito:groups"])
     ? claims["cognito:groups"].filter((group): group is string => typeof group === "string")
     : []
+  const role: AuthRole = groups.includes("admin")
+    ? "admin"
+    : groups.includes("operator")
+      ? "operator"
+      : "viewer"
 
   const email =
     typeof claims.email === "string" ? claims.email : undefined
@@ -143,6 +151,7 @@ export function readAuthSessionFromIdToken(idToken: string): AuthSession {
       email ?? (typeof claims.name === "string" ? claims.name : username),
     email,
     groups,
+    role,
     subject: typeof claims.sub === "string" ? claims.sub : username,
     username,
   }

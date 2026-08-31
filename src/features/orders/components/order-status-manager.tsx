@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 type OrderStatusManagerProps = {
   initialStatus: OrderStatus;
   orderId: string;
+  readOnly?: boolean;
 };
 
 type StatusHistoryItem = {
@@ -33,6 +34,7 @@ const timeFormatter = new Intl.DateTimeFormat("ja-JP", {
 export function OrderStatusManager({
   initialStatus,
   orderId,
+  readOnly = false,
 }: OrderStatusManagerProps) {
   const [selectedStatus, setSelectedStatus] =
     useState<OrderStatus>(initialStatus);
@@ -93,6 +95,12 @@ export function OrderStatusManager({
 
   return (
     <div className="space-y-4">
+      {readOnly ? (
+        <div className="border border-muted-foreground/20 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+          閲覧専用のためステータスは変更できません。
+        </div>
+      ) : null}
+
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold text-muted-foreground">
@@ -109,49 +117,53 @@ export function OrderStatusManager({
         )}
       </div>
 
-      <label className="block">
-        <span className="text-sm font-semibold">変更後ステータス</span>
-        <select
-          aria-label="変更後ステータス"
-          value={selectedStatus}
-          onChange={(event) =>
-            setSelectedStatus(event.target.value as OrderStatus)
-          }
-          className="mt-1 h-10 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
-        >
-          {statusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
+      {!readOnly && (
+        <>
+          <label className="block">
+            <span className="text-sm font-semibold">変更後ステータス</span>
+            <select
+              aria-label="変更後ステータス"
+              value={selectedStatus}
+              onChange={(event) =>
+                setSelectedStatus(event.target.value as OrderStatus)
+              }
+              className="mt-1 h-10 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
+            >
+              {statusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-      <div className="grid gap-2 sm:grid-cols-2">
-        <Button
-          type="button"
-          className="gap-2"
-          onClick={applyStatus}
-          disabled={!hasChange || isUpdating}
-        >
-          {isUpdating ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <CheckCircle2 className="size-4" />
-          )}
-          更新
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="gap-2"
-          onClick={resetStatus}
-          disabled={!hasChange || isUpdating}
-        >
-          <RotateCcw className="size-4" />
-          戻す
-        </Button>
-      </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Button
+              type="button"
+              className="gap-2"
+              onClick={applyStatus}
+              disabled={!hasChange || isUpdating}
+            >
+              {isUpdating ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="size-4" />
+              )}
+              更新
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2"
+              onClick={resetStatus}
+              disabled={!hasChange || isUpdating}
+            >
+              <RotateCcw className="size-4" />
+              戻す
+            </Button>
+          </div>
+        </>
+      )}
 
       {errorMessage && (
         <div className="flex items-start gap-2 border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">

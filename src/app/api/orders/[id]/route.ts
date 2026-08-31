@@ -1,4 +1,11 @@
 import {
+  getAuthSession,
+} from "@/features/auth/cognito-auth.server";
+import {
+  canDeleteOrders,
+  createAuthorizationResponse,
+} from "@/features/auth/authorization.server";
+import {
   deleteOrder,
   getOrderById,
 } from "@/features/orders/services/order-service";
@@ -11,6 +18,11 @@ type OrderRouteContext = {
 };
 
 export async function GET(_request: Request, { params }: OrderRouteContext) {
+  const session = await getAuthSession();
+  if (!session) {
+    return createAuthorizationResponse("Authentication required", 401);
+  }
+
   // 詳細は存在確認込みで返し、見つからない場合は 404 にする。
   const { id } = await params;
   const order = await getOrderById(id);
@@ -30,6 +42,15 @@ export async function GET(_request: Request, { params }: OrderRouteContext) {
 }
 
 export async function DELETE(_request: Request, { params }: OrderRouteContext) {
+  const session = await getAuthSession();
+  if (!session) {
+    return createAuthorizationResponse("Authentication required", 401);
+  }
+
+  if (!canDeleteOrders(session)) {
+    return createAuthorizationResponse("Admin role required");
+  }
+
   // 削除は成否だけを返し、UI 側は削除結果で遷移する。
   const { id } = await params;
   const deleted = await deleteOrder(id);

@@ -35,9 +35,13 @@ type PaymentFilter = "all" | PaymentMethod;
 
 type OrderListProps = {
   initialOrders: Order[];
+  canDeleteOrder?: boolean;
 };
 
-export function OrderList({ initialOrders }: OrderListProps) {
+export function OrderList({
+  canDeleteOrder = true,
+  initialOrders,
+}: OrderListProps) {
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [paymentFilter, setPaymentFilter] = useState<PaymentFilter>("all");
@@ -265,27 +269,29 @@ export function OrderList({ initialOrders }: OrderListProps) {
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex justify-end gap-2">
-                          <Link
-                            href={`/orders/${order.id}`}
-                            className="inline-flex h-9 items-center justify-center gap-2 border border-input px-3 text-xs font-semibold transition-colors hover:bg-muted"
-                          >
-                            <Eye className="size-4" />
-                            詳細
-                          </Link>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            aria-label={`${order.id} を削除`}
-                            disabled={deletingOrderId === order.id}
-                            onClick={() => void handleDeleteOrder(order)}
-                          >
-                            {deletingOrderId === order.id ? (
-                              <Loader2 className="size-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="size-4" />
+                            <Link
+                              href={`/orders/${order.id}`}
+                              className="inline-flex h-9 items-center justify-center gap-2 border border-input px-3 text-xs font-semibold transition-colors hover:bg-muted"
+                            >
+                              <Eye className="size-4" />
+                              詳細
+                            </Link>
+                            {canDeleteOrder && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                aria-label={`${order.id} を削除`}
+                                disabled={deletingOrderId === order.id}
+                                onClick={() => void handleDeleteOrder(order)}
+                              >
+                                {deletingOrderId === order.id ? (
+                                  <Loader2 className="size-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="size-4" />
+                                )}
+                              </Button>
                             )}
-                          </Button>
                           </div>
                         </td>
                       </tr>

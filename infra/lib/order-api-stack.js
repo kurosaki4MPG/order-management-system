@@ -74,6 +74,24 @@ class OrderApiStack extends cdk.Stack {
       userPoolName: `oms-${stage}-auth-users`,
     })
 
+    authUserPool.addGroup("AdminGroup", {
+      description: "Full access to the order management system",
+      groupName: "admin",
+      precedence: 1,
+    })
+
+    authUserPool.addGroup("OperatorGroup", {
+      description: "Create and update orders without deletion",
+      groupName: "operator",
+      precedence: 2,
+    })
+
+    authUserPool.addGroup("ViewerGroup", {
+      description: "Read-only access to the order management system",
+      groupName: "viewer",
+      precedence: 3,
+    })
+
     const authUserPoolClient = authUserPool.addClient("AuthUserPoolClient", {
       authFlows: {
         userPassword: true,

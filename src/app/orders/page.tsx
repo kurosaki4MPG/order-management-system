@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
+import { getAuthSession } from "@/features/auth/cognito-auth.server";
 import { OrderList } from "@/features/orders/components/order-list";
 import { getOrders } from "@/features/orders/services/order-service";
 
@@ -12,6 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function OrdersPage() {
+  const session = await getAuthSession();
+  if (!session) {
+    redirect("/login");
+  }
+
   const orders = await getOrders();
 
   return (
@@ -23,7 +30,7 @@ export default async function OrdersPage() {
         </p>
       </div>
 
-      <OrderList initialOrders={orders} />
+      <OrderList initialOrders={orders} canDeleteOrder={session.role === "admin"} />
     </div>
   );
 }
