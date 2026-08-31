@@ -2,6 +2,10 @@ import { GetObjectCommand, S3Client, PutObjectCommand } from "@aws-sdk/client-s3
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 import type { InvoiceDocumentProps } from "@/features/pdf/invoice-document"
+import {
+  getPdfInvoiceBucketName,
+  getPdfInvoiceRegion,
+} from "@/lib/runtime-config.server"
 
 type InvoiceArtifactInput = {
   invoiceNumber: string
@@ -37,25 +41,15 @@ type SignedInvoiceUrlResult =
 
 type SignedInvoiceUrlSuccess = Extract<SignedInvoiceUrlResult, { enabled: true }>
 
-const DEFAULT_REGION = "ap-northeast-1"
 const DEFAULT_EXPIRES_IN_SECONDS = 900
 const s3ClientCache = new Map<string, S3Client>()
 
 function getBucketName() {
-  return process.env.PDF_INVOICE_BUCKET_NAME?.trim() || null
-}
-
-function getRegion() {
-  return (
-    process.env.PDF_INVOICE_AWS_REGION?.trim() ||
-    process.env.AWS_REGION?.trim() ||
-    process.env.AWS_DEFAULT_REGION?.trim() ||
-    DEFAULT_REGION
-  )
+  return getPdfInvoiceBucketName()
 }
 
 function getS3Client() {
-  const region = getRegion()
+  const region = getPdfInvoiceRegion()
   const cachedClient = s3ClientCache.get(region)
 
   if (cachedClient) {

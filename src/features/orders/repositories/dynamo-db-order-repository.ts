@@ -21,6 +21,10 @@ import type {
   OrderQueryFilters,
   OrderRepository,
 } from "@/features/orders/repositories/order-repository";
+import {
+  getAwsRegion,
+  getOrdersTableName,
+} from "@/lib/runtime-config.server";
 
 type DynamoDbOrderItem = {
   customerEmail?: string;
@@ -35,21 +39,15 @@ type DynamoDbOrderItem = {
   totalAmount?: number;
 };
 
-const tableName = process.env.ORDERS_TABLE_NAME;
-
 const documentClient = DynamoDBDocumentClient.from(
   new DynamoDBClient({
-    region: process.env.AWS_REGION ?? "ap-northeast-1",
+    region: getAwsRegion(),
   })
 );
 
 function assertTableName() {
   // テーブル名が未設定なら、DynamoDB 実装としては続行できない。
-  if (!tableName) {
-    throw new Error("ORDERS_TABLE_NAME is required for DynamoDB repository");
-  }
-
-  return tableName;
+  return getOrdersTableName();
 }
 
 function calculateTotalAmount(items: OrderItem[]) {
