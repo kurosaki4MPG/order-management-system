@@ -1,0 +1,85 @@
+name: CI/CD Notifications
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+      - CDK Deploy
+      - Frontend Deploy
+      - Frontend Rollback
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  notify:
+    name: notify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post notification to the repository issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflowRun = context.payload.workflow_run;
+            const workflowName = workflowRun.name;
+            const conclusion = workflowRun.conclusion ?? "unknown";
+            const branch = workflowRun.head_branch ?? "unknown";
+            const sha = workflowRun.head_sha ?? "unknown";
+            const runUrl = workflowRun.html_url;
+            const issueTitle = "CI/CD 通知ログ";
+            const issueLabel = "ci-cd-notification";
+
+            const statusEmoji =
+              conclusion === "success" ? "✅" : conclusion === "failure" ? "❌" : "⚠️";
+
+            const issueBody = [
+              "# CI/CD 通知ログ",
+              "",
+              "この issue は GitHub Actions の通知先です。",
+              "CI / デプロイ / ロールバック の完了結果をコメントで残します。",
+              "",
+              `- 対象 workflow: ${workflowName}`,
+              `- 対象 branch: ${branch}`,
+              `- 直近 run: ${runUrl}`,
+            ].join("\n");
+
+            const { data: existingIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: issueLabel,
+              per_page: 100,
+            });
+
+            let issue = existingIssues.find((candidate) => candidate.title === issueTitle);
+
+            if (!issue) {
+              const { data: createdIssue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: issueTitle,
+                body: issueBody,
+                labels: [issueLabel],
+              });
+              issue = createdIssue;
+            }
+
+            const commentBody = [
+              `${statusEmoji} **${workflowName}** が完了しました`,
+              "",
+              `- 結果: **${conclusion}**`,
+              `- ブランチ: \`${branch}\``,
+              `- SHA: \`${sha}\``,
+              `- 実行 URL: ${runUrl}`,
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: commentBody,
+            });
