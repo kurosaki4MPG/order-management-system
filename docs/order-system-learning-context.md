@@ -901,6 +901,12 @@ STEP65で学んだもの:
 - 成功/失敗の両方を workflow_run で拾い、同じ形式で記録すると追いやすいこと
 - workflow 名、branch、SHA、run URL を残すと後から復旧や調査がしやすいこと
 
+STEP66で学んだもの:
+
+- Cognito Hosted UI と PKCE を組み合わせると、Next.js 側に認証状態の入口を作りやすいこと
+- route handler で code を token に交換し、httpOnly cookie に保存するとセッション管理を単純にできること
+- `proxy.ts` で未ログイン時の画面アクセスをまとめてログインへ誘導できること
+
 ---
 
 # 12. 学習上の方針

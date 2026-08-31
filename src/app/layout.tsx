@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/components/layouts/app-shell";
+import AppShell from "@/components/layouts/app-shell";
 
 // ルートレイアウトでフォントと共通シェルをまとめ、全ページの見た目の土台を作る。
 export const metadata: Metadata = {
