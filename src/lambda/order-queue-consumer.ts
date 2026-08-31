@@ -1,3 +1,5 @@
+import { logInfo } from "@/lib/logging.server";
+
 type SqsMessage = {
   body?: string;
   messageId?: string;
@@ -58,7 +60,7 @@ export async function handler(event: SqsEvent): Promise<{ ok: true }> {
     const payload = parseBody(record.body);
     const { detailType, eventId, orderId } = assertEventBridgeDetail(payload);
 
-    console.log("SQS message received", {
+    logInfo("SQS message received", {
       detailType,
       eventId,
       messageId: record.messageId,

@@ -89,7 +89,10 @@ API と UI の両方で権限を意識する。
 
 を追えるようにする。
 
-ログは人が調査しやすい構造にする。
+ログは 1 行 JSON の構造化ログにして、人が調査しやすい形にする。
+API Gateway / Lambda / Workflow で同じキーを使い、CloudWatch Logs Insights で横断しやすくする。
+
+確認時は `aws logs tail` で直近の出力を追い、CloudWatch Logs Insights で `requestId` / `eventId` / `orderId` を軸に絞る。
 
 ---
 

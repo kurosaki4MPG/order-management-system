@@ -1,3 +1,5 @@
+import { logInfo } from "@/lib/logging.server";
+
 type WorkflowStepEvent = {
   customerEmail?: string;
   customerName?: string;
@@ -69,7 +71,7 @@ export async function handler(
 
   const completedAt = new Date().toISOString();
 
-  console.log("Order workflow step executed", {
+  logInfo("Order workflow step executed", {
     customerEmail: input.customerEmail ?? "unknown",
     customerName: input.customerName ?? "unknown",
     detailType: input.detailType,

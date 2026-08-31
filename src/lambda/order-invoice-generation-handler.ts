@@ -5,6 +5,7 @@ import {
 import { buildInvoiceDocumentFromOrder } from "@/features/pdf/invoice-order.server"
 import { renderInvoicePdf } from "@/features/pdf/invoice-pdf.server"
 import { getOrderById } from "@/features/orders/services/order-service"
+import { logInfo } from "@/lib/logging.server"
 
 type WorkflowInvoiceEvent = {
   completedAt?: string;
@@ -80,7 +81,7 @@ export async function handler(
 
   const signedUrl = await createInvoiceSignedUrlFromSavedObject(saved)
 
-  console.log("Invoice generated for workflow", {
+  logInfo("Invoice generated for workflow", {
     invoiceBucket: signedUrl.bucket,
     invoiceKey: signedUrl.key,
     invoiceNumber: invoice.invoiceNumber,
