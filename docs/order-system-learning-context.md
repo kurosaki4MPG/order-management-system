@@ -913,6 +913,14 @@ STEP67で学んだもの:
 - API と UI の両方で同じ認可 helper を使うと、権限の出し分けを揃えやすいこと
 - 403 用の `forbidden` 画面を用意すると、権限不足時の導線が分かりやすいこと
 
+STEP68で学んだもの:
+
+- GitHub Actions の OIDC role には CDK deploy に必要な権限だけを持たせること
+- `cdk-hnb659fds-lookup-role` のような bootstrap の lookup 用権限は、実運用で不要なら外してよいこと
+- 既存の Lambda / API / S3 / EventBridge の権限は CDK の `grant*` を使うと resource-scoped に保ちやすいこと
+- `cdk deploy` が `no changes` で通ることも、権限整理後の確認材料になること
+- 2026-08-31 に GitHub OIDC role の最小権限化を確認したこと
+
 ---
 
 # 12. 学習上の方針
