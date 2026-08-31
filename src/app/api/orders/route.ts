@@ -5,6 +5,7 @@ import {
   canCreateOrders,
   createAuthorizationResponse,
 } from "@/features/auth/authorization.server";
+import { assertJsonRequest, assertSameOriginRequest } from "@/lib/api-security.server";
 import { orderFormSchema } from "@/features/orders/schemas/order-schema";
 import {
   createOrder,
@@ -66,6 +67,16 @@ export async function POST(request: Request) {
 
   if (!canCreateOrders(session)) {
     return createAuthorizationResponse("Operator or admin role required");
+  }
+
+  const originError = assertSameOriginRequest(request, "Order creation");
+  if (originError) {
+    return originError;
+  }
+
+  const contentTypeError = assertJsonRequest(request, "Order creation");
+  if (contentTypeError) {
+    return contentTypeError;
   }
 
   // 入力検証は Zod に任せ、業務ロジックに入る前に不正値を弾く。

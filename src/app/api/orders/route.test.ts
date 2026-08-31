@@ -55,6 +55,49 @@ describe("/api/orders authorization", () => {
     expect(response.status).toBe(403)
   })
 
+  it("returns 403 when the request comes from a cross-site origin", async () => {
+    getAuthSessionMock.mockResolvedValue(buildSession("operator"))
+
+    const response = await POST(
+      new Request("http://localhost/api/orders", {
+        body: JSON.stringify({
+          customerEmail: "operator@example.com",
+          customerName: "Operator User",
+          items: [{ productName: "商品A", quantity: 1, unitPrice: 1000 }],
+          paymentMethod: "credit-card",
+          shippingAddress: "東京都千代田区1-1-1",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Origin: "https://evil.example.com",
+          "Sec-Fetch-Site": "cross-site",
+        },
+        method: "POST",
+      }) as never,
+    )
+
+    expect(response.status).toBe(403)
+  })
+
+  it("returns 415 when JSON content type is missing", async () => {
+    getAuthSessionMock.mockResolvedValue(buildSession("operator"))
+
+    const response = await POST(
+      new Request("http://localhost/api/orders", {
+        body: JSON.stringify({
+          customerEmail: "operator@example.com",
+          customerName: "Operator User",
+          items: [{ productName: "商品A", quantity: 1, unitPrice: 1000 }],
+          paymentMethod: "credit-card",
+          shippingAddress: "東京都千代田区1-1-1",
+        }),
+        method: "POST",
+      }) as never,
+    )
+
+    expect(response.status).toBe(415)
+  })
+
   it("allows operators to create orders", async () => {
     getAuthSessionMock.mockResolvedValue(buildSession("operator"))
     createOrderMock.mockResolvedValue({
@@ -72,6 +115,9 @@ describe("/api/orders authorization", () => {
           paymentMethod: "credit-card",
           shippingAddress: "東京都千代田区1-1-1",
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
         method: "POST",
       }) as never,
     )

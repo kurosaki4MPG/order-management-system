@@ -8,6 +8,7 @@ import {
   createInvoiceSignedUrlFromSavedObject,
   saveInvoicePdfToS3,
 } from "@/features/pdf/invoice-artifacts.server"
+import { assertSameOriginRequest } from "@/lib/api-security.server"
 import { renderInvoicePdf } from "@/features/pdf/invoice-pdf.server"
 
 export const runtime = "nodejs"
@@ -19,6 +20,11 @@ const invoiceQuerySchema = z.object({
 })
 
 export async function GET(request: Request) {
+  const originError = assertSameOriginRequest(request, "PDF signed URL generation")
+  if (originError) {
+    return originError
+  }
+
   const url = new URL(request.url)
   const query = Object.fromEntries(url.searchParams.entries())
   const result = invoiceQuerySchema.safeParse(query)

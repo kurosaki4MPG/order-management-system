@@ -122,8 +122,21 @@
 - 認証必須のAPIを決める
 - CORS と入力検証を見直す
 
+実施結果:
+- [`src/lib/api-security.server.ts`](/home/kurosaki/order-management-system/src/lib/api-security.server.ts) を追加し、変更系 API の同一オリジン確認と JSON 受付条件を共通化した
+- [`src/app/api/orders/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/route.ts) で注文作成時に同一オリジンかつ `application/json` のみ受け付けるようにした
+- [`src/app/api/orders/[id]/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/[id]/route.ts) と [`src/app/api/orders/[id]/status/route.ts`](/home/kurosaki/order-management-system/src/app/api/orders/[id]/status/route.ts) で削除とステータス更新の同一オリジン確認を入れた
+- [`src/app/api/pdf/invoice/store/route.ts`](/home/kurosaki/order-management-system/src/app/api/pdf/invoice/store/route.ts) と [`src/app/api/pdf/invoice/signed-url/route.ts`](/home/kurosaki/order-management-system/src/app/api/pdf/invoice/signed-url/route.ts) でも同一オリジン確認を入れ、S3 への保存系 API をブラウザ外から雑に叩けないようにした
+- [`src/app/api/orders/route.test.ts`](/home/kurosaki/order-management-system/src/app/api/orders/route.test.ts) と [`src/lib/api-security.server.test.ts`](/home/kurosaki/order-management-system/src/lib/api-security.server.test.ts) を追加し、403 / 415 の境界を確認した
+
 確認観点:
 - 不正呼び出しを抑えられる
+
+確認結果:
+- cross-site のリクエストは 403 で止まる
+- JSON を要求する API は `Content-Type` が不足すると 415 で止まる
+- `npm run test` で 28 ファイル / 152 テストが成功した
+- `npm run build` で production build が成功した
 
 完了条件:
 - API の防御線が整う
