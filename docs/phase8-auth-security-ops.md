@@ -164,14 +164,46 @@
    - `requestId`、`eventId`、`orderId` を含む行を見て、1 件の注文の流れを追う
 3. CloudWatch Logs Insights
    - まずロググループを 1 つ選ぶ
-   - 次のように絞る
+   - まず全体を見る
      ```sql
      fields @timestamp, level, message, requestId, eventId, orderId, workflow
      | sort @timestamp desc
      | limit 50
      ```
-   - 注文 ID で絞るときは `filter orderId = "ORD-TEST-001"` を足す
-   - 失敗調査では `filter level = "error"` を使う
+   - 1 件のリクエストを追う
+     ```sql
+     fields @timestamp, level, message, requestId, eventId, orderId, workflow
+     | filter requestId = "req-001"
+     | sort @timestamp asc
+     ```
+   - 1 件の注文を追う
+     ```sql
+     fields @timestamp, level, message, requestId, eventId, orderId, workflow
+     | filter orderId = "ORD-TEST-001"
+     | sort @timestamp asc
+     ```
+   - エラーだけを見る
+     ```sql
+     fields @timestamp, level, message, requestId, eventId, orderId, workflow, error.message
+     | filter level = "error"
+     | sort @timestamp desc
+     | limit 50
+     ```
+   - ワークフローだけを見る
+     ```sql
+     fields @timestamp, level, message, requestId, eventId, orderId, workflow, step
+     | filter workflow = "order-processing"
+     | sort @timestamp asc
+     ```
+4. すぐ使える tail コマンド
+   - `aws logs tail /aws/lambda/oms-dev-order-api --profile oms-dev --region ap-northeast-1 --since 1h --follow`
+   - `aws logs tail /aws/lambda/oms-dev-order-workflow-task --profile oms-dev --region ap-northeast-1 --since 1h --follow`
+   - `aws logs tail /aws/lambda/oms-dev-order-invoice-generation --profile oms-dev --region ap-northeast-1 --since 1h --follow`
+   - `aws logs tail /aws/lambda/oms-dev-order-queue-consumer --profile oms-dev --region ap-northeast-1 --since 1h --follow`
+   - `aws logs tail /aws/lambda/oms-dev-order-notification --profile oms-dev --region ap-northeast-1 --since 1h --follow`
+   - prod を見る場合は `oms-dev` を `oms-prod` に置き換える
+   - `--filter-pattern '"orderId"'` を足すと、注文追跡向けの行だけに寄せやすい
+   - `--filter-pattern '"level":"error"'` を足すと、失敗ログだけ追いやすい
 
 確認観点:
 - 障害時に追える

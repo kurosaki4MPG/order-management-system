@@ -93,6 +93,8 @@ API と UI の両方で権限を意識する。
 API Gateway / Lambda / Workflow で同じキーを使い、CloudWatch Logs Insights で横断しやすくする。
 
 確認時は `aws logs tail` で直近の出力を追い、CloudWatch Logs Insights で `requestId` / `eventId` / `orderId` を軸に絞る。
+`aws logs tail /aws/lambda/oms-dev-order-api --since 1h --follow` のように Lambda 単位で追うと、画面操作とログの対応が見やすい。
+Logs Insights では `requestId` で 1 回の処理を追い、`orderId` で注文単位を追い、`level = "error"` で失敗だけを見る。
 
 ---
 
