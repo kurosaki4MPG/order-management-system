@@ -239,13 +239,37 @@
 - フロントエンドのビルドと配信を定義する
 - API URL を環境ごとに切り替える
 
+実施結果:
+
+- [`next.config.ts`](../next.config.ts) で `output: "standalone"` を有効にし、Next.js を Node.js サーバーとして配信できるようにした
+- [`Dockerfile`](../Dockerfile) を追加し、`NEXT_PUBLIC_API_BASE_URL` を build 時に注入して環境ごとに異なる frontend image を作れるようにした
+- [`.github/workflows/frontend-deploy.yml`](../.github/workflows/frontend-deploy.yml) を追加し、`main` push では `dev`、`workflow_dispatch` の `stage=prod` では `prod` の frontend image を GHCR に publish するようにした
+- GitHub Environment `dev` / `prod` の `NEXT_PUBLIC_API_BASE_URL` を使い、API URL を環境別に切り替える構成にした
+
+### 63.1 配信方式
+
+1. Next.js は `standalone` 出力でビルドする
+2. Docker image として配信する
+3. GitHub Actions で image を GHCR に push する
+4. `dev` と `prod` は異なる `NEXT_PUBLIC_API_BASE_URL` でビルドする
+
+### 63.2 運用手順
+
+1. GitHub Environment `dev` に開発用 API URL を設定する
+2. GitHub Environment `prod` に本番用 API URL を設定する
+3. `main` push で `dev` image が自動更新されることを確認する
+4. `workflow_dispatch` で `stage=prod` を選ぶと本番 image が更新される
+5. 配信先ホストは GHCR の image を実行して Next.js サーバーを起動する
+
 確認観点:
 
 - 画面を公開できる
+- 環境ごとに正しい API URL を参照できる
 
 完了条件:
 
 - UI の配信が自動化される
+- frontend image の publish が自動化される
 
 ## STEP64 ロールバック
 
@@ -254,13 +278,35 @@
 - 障害時の戻し方を決める
 - バージョンの切り戻し手順を作る
 
+実施結果:
+
+- [`.github/workflows/frontend-rollback.yml`](../.github/workflows/frontend-rollback.yml) を追加し、`workflow_dispatch` で指定した `source_tag` を `dev-latest` / `prod-latest` に付け替えられるようにした
+- frontend の本番復旧は、安定していた `prod-<sha>` を再指定して `prod-latest` を戻す手順にした
+- CDK のロールバックは、直前の安定コミットへ `git revert` して `CDK Deploy` を再実行する運用にした
+
+### 64.1 ロールバック手順
+
+1. まず復旧対象を frontend か infrastructure かで分ける
+2. frontend の場合は GHCR の安定 tag `dev-<sha>` または `prod-<sha>` を選ぶ
+3. `frontend-rollback` workflow を手動起動し、`stage` と `source_tag` を指定する
+4. `stage-latest` が安定 tag に付け替わったことを確認する
+5. infrastructure の場合は `git revert` で戻し、`CDK Deploy` を再実行する
+
+### 64.2 確認方法
+
+1. GHCR 上で `stage-latest` が選んだ `source_tag` を参照していることを確認する
+2. 実行中のアプリで戻したバージョンの画面が出ることを確認する
+3. CDK の場合は `cdk deploy` 後に対象リソースが期待値へ戻ったことを確認する
+
 確認観点:
 
 - 失敗時に戻せる
+- どの tag に戻したか追える
 
 完了条件:
 
 - 復旧手順が定義される
+- frontend の切り戻し workflow がある
 
 ## STEP65 通知
 

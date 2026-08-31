@@ -1,0 +1,17 @@
+.git
+.agents
+.codex
+.github
+.next
+.playwright-coverage
+coverage
+cdk.out
+cdk.out-prod
+cdk.out-verify
+node_modules
+test-results
+docs
+e2e
+oms-dev-orders-backup.json
+*.log
+*.tmp
