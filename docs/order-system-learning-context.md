@@ -944,6 +944,8 @@ STEP71で学んだもの:
 - 成功ログと失敗ログを同じ helper で出すと、CloudWatch での見え方を揃えやすいこと
 - Lambda や Workflow の業務ログを helper に寄せると、実装ごとの差が減ること
 - `aws logs tail` と Logs Insights を組み合わせると、直近の流れと過去の絞り込みを分けて確認しやすいこと
+- Lambda 単位の `aws logs tail /aws/lambda/... --follow` は、画面操作とログを対応づけるときに有効なこと
+- Logs Insights では `requestId` は 1 回の操作、`orderId` は 1 件の注文、`level = "error"` は異常系の確認に向くこと
 - 2026-08-31 に構造化ログの共通化を実装したこと
 
 ---
