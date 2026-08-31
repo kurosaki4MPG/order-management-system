@@ -895,6 +895,12 @@ STEP64で学んだもの:
 - infrastructure の rollback は `git revert` と再 deploy に分けると整理しやすいこと
 - どの tag / commit に戻したかを記録すると、復旧手順が追いやすいこと
 
+STEP65で学んだもの:
+
+- CI/CD の通知先は GitHub Issue に固定すると、外部サービスなしでも履歴を残せること
+- 成功/失敗の両方を workflow_run で拾い、同じ形式で記録すると追いやすいこと
+- workflow 名、branch、SHA、run URL を残すと後から復旧や調査がしやすいこと
+
 ---
 
 # 12. 学習上の方針

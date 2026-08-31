@@ -315,10 +315,32 @@
 - 成功/失敗を通知する
 - 通知先を決める
 
+実施結果:
+
+- [`.github/workflows/ci-cd-notifications.yml`](../.github/workflows/ci-cd-notifications.yml) を追加し、`CI` / `CDK Deploy` / `Frontend Deploy` / `Frontend Rollback` の完了結果を GitHub Issue のコメントへ残すようにした
+- 通知先は GitHub Issue `CI/CD 通知ログ` にし、リポジトリのメンテナとウォッチャーが履歴を追えるようにした
+- 成功時と失敗時の両方を、workflow 名・branch・SHA・run URL とともに記録するようにした
+
+### 65.1 通知先
+
+1. GitHub Issue `CI/CD 通知ログ` を運用通知の集約先にする
+2. issue のコメントで成功/失敗を残す
+3. issue を watch しているメンバーが通知を受け取れるようにする
+
+### 65.2 通知内容
+
+1. workflow 名
+2. 結果
+3. branch
+4. SHA
+5. run URL
+
 確認観点:
 
 - CI/CD の状態が見える
+- 成功/失敗が分かる
 
 完了条件:
 
 - 運用通知が届く
+- 通知先が固定される
