@@ -1,4 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest"
+import { createSign, generateKeyPairSync } from "node:crypto"
+
+import { cookies } from "next/headers"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
   AUTH_COOKIE_NAMES,
@@ -6,11 +9,31 @@ import {
   buildLogoutUrl,
   createPkceChallenge,
   createPkceVerifier,
+  getAuthSession,
   getCognitoAuthConfig,
   parseIdTokenClaims,
   readAuthSessionFromIdToken,
   sanitizeReturnTo,
+  verifyAndReadAuthSessionFromIdToken,
 } from "@/features/auth/cognito-auth.server"
+
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(),
+}))
+
+const { privateKey, publicKey } = generateKeyPairSync("rsa", {
+  modulusLength: 2048,
+})
+
+const authJwk = publicKey.export({ format: "jwk" }) as JsonWebKey & {
+  alg?: string
+  kid?: string
+  use?: string
+}
+
+authJwk.alg = "RS256"
+authJwk.kid = "test-kid"
+authJwk.use = "sig"
 
 function encodeBase64Url(input: string) {
   return Buffer.from(input)
@@ -28,8 +51,39 @@ function buildTestJwt(payload: Record<string, unknown>) {
   ].join(".")
 }
 
+function buildSignedTestJwt(payload: Record<string, unknown>) {
+  const header = {
+    alg: "RS256",
+    kid: "test-kid",
+    typ: "JWT",
+  }
+  const signingInput = [
+    encodeBase64Url(JSON.stringify(header)),
+    encodeBase64Url(JSON.stringify(payload)),
+  ].join(".")
+  const signature = createSign("RSA-SHA256")
+    .update(signingInput)
+    .sign(privateKey)
+
+  return `${signingInput}.${signature.toString("base64url")}`
+}
+
+const mockedCookies = vi.mocked(cookies)
+
+beforeEach(() => {
+  vi.stubEnv("AWS_REGION", "ap-northeast-1")
+  vi.stubEnv("COGNITO_USER_POOL_CLIENT_ID", "client-123")
+  vi.stubEnv("COGNITO_USER_POOL_ID", "ap-northeast-1_testpool")
+  vi.stubEnv("COGNITO_DOMAIN_BASE_URL", "https://auth.example.com/")
+  vi.stubEnv("COGNITO_LOGOUT_URI", "http://localhost:3000/login")
+  vi.stubEnv("COGNITO_REDIRECT_URI", "http://localhost:3000/api/auth/callback")
+  mockedCookies.mockReset()
+  vi.unstubAllGlobals()
+})
+
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
 })
 
 describe("cognito auth helpers", () => {
@@ -56,11 +110,6 @@ describe("cognito auth helpers", () => {
   })
 
   it("builds Cognito authorize and logout URLs from the shared config", () => {
-    vi.stubEnv("COGNITO_USER_POOL_CLIENT_ID", "client-123")
-    vi.stubEnv("COGNITO_DOMAIN_BASE_URL", "https://auth.example.com/")
-    vi.stubEnv("COGNITO_LOGOUT_URI", "http://localhost:3000/login")
-    vi.stubEnv("COGNITO_REDIRECT_URI", "http://localhost:3000/api/auth/callback")
-
     const config = getCognitoAuthConfig()
 
     const authorizeUrl = new URL(
@@ -80,6 +129,13 @@ describe("cognito auth helpers", () => {
     expect(authorizeUrl.searchParams.get("response_type")).toBe("code")
     expect(authorizeUrl.searchParams.get("scope")).toBe("openid email profile")
     expect(authorizeUrl.searchParams.get("state")).toBe("/orders")
+    expect(config.userPoolId).toBe("ap-northeast-1_testpool")
+    expect(config.issuerUrl).toBe(
+      "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_testpool",
+    )
+    expect(config.jwksUrl).toBe(
+      "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_testpool/.well-known/jwks.json",
+    )
 
     const logoutUrl = new URL(buildLogoutUrl(config))
     // ログアウト URL も Cognito Hosted UI の形式になっていることを確認する。
@@ -111,6 +167,71 @@ describe("cognito auth helpers", () => {
     expect(session.username).toBe("test-user")
     expect(session.subject).toBe("sub-123")
     expect(session.groups).toEqual(["admin", "operator"])
+  })
+
+  it("verifies a signed id token before creating a session", async () => {
+    const token = buildSignedTestJwt({
+      aud: "client-123",
+      email: "test@example.com",
+      exp: Math.floor(Date.now() / 1000) + 60,
+      iss: "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_testpool",
+      sub: "sub-123",
+      token_use: "id",
+      "cognito:groups": ["admin"],
+      "cognito:username": "test-user",
+      name: "Test User",
+    })
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+          new Response(JSON.stringify({ keys: [authJwk] }), {
+          status: 200,
+        }),
+      ),
+    )
+
+    mockedCookies.mockResolvedValue({
+      get(name: string) {
+        if (name === AUTH_COOKIE_NAMES.idToken) {
+          return { value: token }
+        }
+
+        return undefined
+      },
+    } as never)
+
+    const session = await getAuthSession()
+
+    // 署名とクレームの検証を通過したトークンだけがセッションになることを確認する。
+    expect(session).not.toBeNull()
+    expect(session?.role).toBe("admin")
+    expect(session?.username).toBe("test-user")
+    expect(session?.displayName).toBe("test@example.com")
+  })
+
+  it("rejects expired signed id tokens", async () => {
+    const token = buildSignedTestJwt({
+      aud: "client-123",
+      email: "test@example.com",
+      exp: Math.floor(Date.now() / 1000) - 60,
+      iss: "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_testpool",
+      sub: "sub-123",
+      token_use: "id",
+    })
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+          new Response(JSON.stringify({ keys: [authJwk] }), {
+          status: 200,
+        }),
+      ),
+    )
+
+    await expect(verifyAndReadAuthSessionFromIdToken(token)).rejects.toThrow(
+      "Expired id_token",
+    )
   })
 
   it("exposes the cookie names used by the auth flow", () => {

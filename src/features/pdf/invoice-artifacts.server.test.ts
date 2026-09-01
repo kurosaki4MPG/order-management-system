@@ -124,15 +124,15 @@ describe("saveInvoicePdfToS3", () => {
   it("returns disabled when the bucket is missing", async () => {
     const { saveInvoicePdfToS3 } = await loadSubject()
 
-    await expect(
-      saveInvoicePdfToS3(
-        {
-          invoiceNumber: "INV-20260827-ABC123",
-          orderId: "ORD-TEST-001",
-        },
-        new Uint8Array([1, 2, 3])
-      )
-    ).resolves.toMatchObject({
+    const result = await saveInvoicePdfToS3(
+      {
+        invoiceNumber: "INV-20260827-ABC123",
+        orderId: "ORD-TEST-001",
+      },
+      new Uint8Array([1, 2, 3])
+    )
+
+    expect(result).toMatchObject({
       enabled: false,
       reason: "missing_bucket",
     })
@@ -155,6 +155,9 @@ describe("saveInvoicePdfToS3", () => {
 
     // バケットが有効なときだけ保存処理に進むことを確認する。
     expect(result.enabled).toBe(true)
+    if (!result.enabled) {
+      throw new Error("expected saved invoice result to be enabled")
+    }
     expect(result).toMatchObject({
       bucket: "invoice-bucket",
       key: "orders/ORD-TEST-001/invoice-INV-20260827-ABC123.pdf",

@@ -1,6 +1,13 @@
-import { createHash, randomBytes } from "node:crypto"
+import {
+  createHash,
+  createPublicKey,
+  createVerify,
+  randomBytes,
+} from "node:crypto"
 
 import { cookies } from "next/headers"
+
+import { getAwsRegion } from "@/lib/runtime-config.server"
 
 export const AUTH_COOKIE_NAMES = {
   accessToken: "oms_auth_access_token",
@@ -24,7 +31,10 @@ export type AuthSession = {
 type CognitoAuthConfig = {
   clientId: string
   domainBaseUrl: string
+  issuerUrl: string
   logoutUri: string
+  jwksUrl: string
+  userPoolId: string
   redirectUri: string
 }
 
@@ -36,6 +46,26 @@ type TokenResponse = {
   token_type?: string
 }
 
+type CognitoJwks = {
+  keys: CognitoJwk[]
+}
+
+type JwtParts = {
+  header: Record<string, unknown>
+  payload: Record<string, unknown>
+  signature: Buffer
+  signingInput: string
+}
+
+type CognitoJwk = {
+  [key: string]: string | undefined
+  alg?: string
+  kid?: string
+  use?: string
+}
+
+const cognitoJwksCache = new Map<string, Promise<CognitoJwks>>()
+
 function requireEnv(name: string) {
   const value = process.env[name]?.trim()
   if (!value) {
@@ -46,10 +76,16 @@ function requireEnv(name: string) {
 }
 
 export function getCognitoAuthConfig(): CognitoAuthConfig {
+  const userPoolId = requireEnv("COGNITO_USER_POOL_ID")
+  const issuerUrl = `https://cognito-idp.${getAwsRegion()}.amazonaws.com/${userPoolId}`
+
   return {
     clientId: requireEnv("COGNITO_USER_POOL_CLIENT_ID"),
     domainBaseUrl: requireEnv("COGNITO_DOMAIN_BASE_URL").replace(/\/+$/, ""),
+    issuerUrl,
+    jwksUrl: `${issuerUrl}/.well-known/jwks.json`,
     logoutUri: requireEnv("COGNITO_LOGOUT_URI"),
+    userPoolId,
     redirectUri: requireEnv("COGNITO_REDIRECT_URI"),
   }
 }
@@ -65,6 +101,15 @@ function decodeBase64Url(input: string) {
     remainder === 0 ? padded : padded + "=".repeat(4 - remainder)
 
   return Buffer.from(normalized, "base64").toString("utf8")
+}
+
+function decodeBase64UrlToBuffer(input: string) {
+  const padded = input.replace(/-/g, "+").replace(/_/g, "/")
+  const remainder = padded.length % 4
+  const normalized =
+    remainder === 0 ? padded : padded + "=".repeat(4 - remainder)
+
+  return Buffer.from(normalized, "base64")
 }
 
 export function sanitizeReturnTo(value: string | null | undefined) {
@@ -123,8 +168,7 @@ export function parseIdTokenClaims(idToken: string) {
   return JSON.parse(decodeBase64Url(parts[1])) as Record<string, unknown>
 }
 
-export function readAuthSessionFromIdToken(idToken: string): AuthSession {
-  const claims = parseIdTokenClaims(idToken)
+function buildAuthSessionFromClaims(claims: Record<string, unknown>): AuthSession {
   const groups = Array.isArray(claims["cognito:groups"])
     ? claims["cognito:groups"].filter((group): group is string => typeof group === "string")
     : []
@@ -157,6 +201,136 @@ export function readAuthSessionFromIdToken(idToken: string): AuthSession {
   }
 }
 
+export function readAuthSessionFromIdToken(idToken: string): AuthSession {
+  return buildAuthSessionFromClaims(parseIdTokenClaims(idToken))
+}
+
+function parseJwt(idToken: string): JwtParts {
+  const parts = idToken.split(".")
+  if (parts.length !== 3) {
+    throw new Error("Invalid id_token format")
+  }
+
+  return {
+    header: JSON.parse(decodeBase64Url(parts[0])) as Record<string, unknown>,
+    payload: JSON.parse(decodeBase64Url(parts[1])) as Record<string, unknown>,
+    signature: decodeBase64UrlToBuffer(parts[2]),
+    signingInput: `${parts[0]}.${parts[1]}`,
+  }
+}
+
+async function fetchCognitoJwks(jwksUrl: string) {
+  const cached = cognitoJwksCache.get(jwksUrl)
+  if (cached) {
+    return cached
+  }
+
+  const promise = (async () => {
+    const response = await fetch(jwksUrl)
+
+    if (!response.ok) {
+      throw new Error(`Cognito JWKS fetch failed with ${response.status}`)
+    }
+
+    const payload = (await response.json()) as CognitoJwks
+
+    if (!payload || !Array.isArray(payload.keys)) {
+      throw new Error("Invalid Cognito JWKS payload")
+    }
+
+    return payload
+  })()
+
+  cognitoJwksCache.set(jwksUrl, promise)
+
+  return promise
+}
+
+function getVerifiedJwtHeader(jwtParts: JwtParts) {
+  const alg = jwtParts.header.alg
+  const kid = jwtParts.header.kid
+
+  if (alg !== "RS256") {
+    throw new Error("Unsupported id_token algorithm")
+  }
+
+  if (typeof kid !== "string" || !kid) {
+    throw new Error("Missing id_token kid")
+  }
+
+  return {
+    kid,
+  }
+}
+
+async function verifyIdTokenSignature(idToken: string, jwksUrl: string) {
+  const jwtParts = parseJwt(idToken)
+  const { kid } = getVerifiedJwtHeader(jwtParts)
+  const jwks = await fetchCognitoJwks(jwksUrl)
+  const jwk = jwks.keys.find((key) => key.kid === kid)
+
+  if (!jwk) {
+    throw new Error("Cognito signing key not found")
+  }
+
+  const publicKey = createPublicKey({
+    key: jwk as import("node:crypto").JsonWebKey,
+    format: "jwk",
+  })
+
+  const verifier = createVerify("RSA-SHA256")
+  verifier.update(jwtParts.signingInput)
+  verifier.end()
+
+  if (!verifier.verify(publicKey, jwtParts.signature)) {
+    throw new Error("Invalid id_token signature")
+  }
+
+  return jwtParts.payload
+}
+
+function assertVerifiedIdTokenClaims(
+  claims: Record<string, unknown>,
+  config: CognitoAuthConfig
+) {
+  const issuer = typeof claims.iss === "string" ? claims.iss : undefined
+  const audience = typeof claims.aud === "string" ? claims.aud : undefined
+  const tokenUse = typeof claims.token_use === "string" ? claims.token_use : undefined
+  const exp = typeof claims.exp === "number" ? claims.exp : undefined
+  const nbf = typeof claims.nbf === "number" ? claims.nbf : undefined
+  const now = Math.floor(Date.now() / 1000)
+
+  if (issuer !== config.issuerUrl) {
+    throw new Error("Invalid id_token issuer")
+  }
+
+  if (audience !== config.clientId) {
+    throw new Error("Invalid id_token audience")
+  }
+
+  if (tokenUse !== "id") {
+    throw new Error("Invalid id_token usage")
+  }
+
+  if (!exp || exp <= now) {
+    throw new Error("Expired id_token")
+  }
+
+  if (nbf !== undefined && nbf > now) {
+    throw new Error("id_token is not valid yet")
+  }
+}
+
+export async function verifyAndReadAuthSessionFromIdToken(
+  idToken: string,
+  config = getCognitoAuthConfig()
+) {
+  const claims = await verifyIdTokenSignature(idToken, config.jwksUrl)
+  assertVerifiedIdTokenClaims(claims, config)
+
+  return buildAuthSessionFromClaims(claims)
+}
+
 export async function getAuthSession(): Promise<AuthSession | null> {
   const cookieStore = await cookies()
   const idToken = cookieStore.get(AUTH_COOKIE_NAMES.idToken)?.value
@@ -165,7 +339,7 @@ export async function getAuthSession(): Promise<AuthSession | null> {
   }
 
   try {
-    return readAuthSessionFromIdToken(idToken)
+    return await verifyAndReadAuthSessionFromIdToken(idToken)
   } catch {
     return null
   }
