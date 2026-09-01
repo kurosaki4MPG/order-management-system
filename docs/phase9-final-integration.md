@@ -11,6 +11,8 @@
 
 ## STEP74 全機能統合
 
+STEP74 の詳細実施手順は [phase9-step74-full-integration.md](./phase9-step74-full-integration.md) を参照する。
+
 実施内容:
 - Next.js の画面、API Gateway / Lambda、DynamoDB、EventBridge、SQS / DLQ、Step Functions、Cognito、CloudWatch を一連の流れとして確認する
 - 注文登録から一覧、詳細、更新、削除、帳票プレビュー、S3 保存、署名付き URL、通知までを通して確認する
