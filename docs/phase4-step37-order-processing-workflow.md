@@ -67,6 +67,7 @@ EventBridge の `detail` に入っている注文スナップショットを、�
   "status": "pending",
   "totalAmount": 5000,
   "shouldFail": false,
+  "shouldFailInvoice": false,
   "source": "oms.orders"
 }
 ```
@@ -86,6 +87,7 @@ EventBridge の `detail` に入っている注文スナップショットを、�
 - `shippingAddress`
 - `status`
 - `totalAmount`
+- `shouldFailInvoice`
 
 ### 確認ポイント
 
@@ -115,6 +117,7 @@ EventBridge の `detail` に入っている注文スナップショットを、�
   "status": "pending",
   "totalAmount": 5000,
   "shouldFail": false,
+  "shouldFailInvoice": false,
   "source": "oms.orders"
 }
 ```
@@ -179,6 +182,7 @@ aws events put-events \
 - EventBridge rule の input mapping が正しいか
 - `detail` に `orderId` や `eventId` が含まれているか
 - Lambda 側で必要な注文情報を返しているか
+- `shouldFailInvoice` が通常経路で `false` に補われているか
 
 ### 実行は始まるが内容が空
 
@@ -194,6 +198,7 @@ aws events put-events \
 - `OrderCreated` を受けて Step Functions が自動起動する
 - 注文スナップショットが workflow input として残る
 - コンソール実行と EventBridge 起動の両方を確認できる
+- 通常経路では `shouldFailInvoice` 不足による失敗が起きない
 - 実行ログから注文処理の流れを追える
 
 ## 7. 次のSTEP

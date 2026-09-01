@@ -536,6 +536,7 @@ class OrderApiStack extends cdk.Stack {
                 "$.detail.shippingAddress",
               ),
               shouldFail: false,
+              shouldFailInvoice: false,
               source: events.EventField.source,
               status: events.EventField.fromPath("$.detail.status"),
               totalAmount: events.EventField.fromPath("$.detail.totalAmount"),
