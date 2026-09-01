@@ -117,12 +117,14 @@ Logs Insights では `requestId` で 1 回の処理を追い、`orderId` で注�
 
 ## 9. 障害対応
 
-- どこを見るか
-- どの順で切り分けるか
-- どこで再実行するか
-- 復旧後に何を確認するか
-
-を定義する。
+- 障害対応は「認証」「API」「非同期処理」「帳票生成」の 4 つに分けて考える
+- まず CloudWatch Alarm の名前で対象サービスを特定する
+- 次に CloudWatch Logs で `requestId` / `eventId` / `orderId` を追う
+- Step Functions の障害は `Executions` と入力値を確認し、SQS / DLQ の滞留と合わせて見る
+- 認証・認可の障害は `/login`、`/forbidden`、API の 401 / 403 を確認する
+- 帳票生成の障害は `shouldFailInvoice` の有無と invoice generation Lambda のログを確認する
+- 復旧後は関連アラームが `OK` に戻り、同じ入力で再実行したときに成功することを確認する
+- 障害の再発防止として、原因・修正内容・確認手順を STEP ごとの記録に残す
 
 ---
 

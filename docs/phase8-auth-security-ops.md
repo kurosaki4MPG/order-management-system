@@ -274,8 +274,39 @@
 - 切り分け方法を定義する
 - 復旧後の確認を決める
 
+実施結果:
+- 監視アラーム、CloudWatch Logs、Step Functions 実行履歴、SQS/DLQ を使った切り分け順を整理した
+- 障害を `認証`, `API`, `非同期処理`, `帳票生成` に分け、まず見る対象を固定した
+- 復旧後はアラームが `OK` に戻ること、再実行や再取得で業務影響が解消することを確認する流れにした
+
+障害の入口:
+- CloudWatch Alarm が `ALARM` になる
+- 画面で 401 / 403 / 500 が返る
+- SQS の backlog や DLQ にメッセージが残る
+- Step Functions の実行が失敗する
+- `Simulated invoice generation failure for order ...` のような意図的な失敗ログが出る
+
+切り分け順:
+1. まず CloudWatch のアラーム名を確認し、対象サービスを特定する
+2. 次に CloudWatch Logs で `requestId` / `eventId` / `orderId` を追う
+3. 非同期処理の場合は Step Functions の `Executions` と SQS / DLQ を見る
+4. 認証・認可の場合は `/login`、`/forbidden`、API の 401 / 403 を確認する
+5. 帳票生成の場合は `shouldFailInvoice` の有無と invoice generation Lambda のログを確認する
+
+復旧時の確認:
+- 変更後の再デプロイが成功している
+- 関連アラームが `OK` に戻る
+- 同じ入力で再実行したときに期待どおり成功する
+- SQS / DLQ に滞留が残っていない
+- CloudWatch Logs に想定外の error が残っていない
+
 確認観点:
 - 何を見ればよいか明確
 
 完了条件:
 - 運用対応ができる
+
+補足:
+- 障害対応は「どのレイヤーで止まったか」を先に決めると切り分けやすい
+- 認証・認可・API・非同期処理・帳票の順で見ると、ユーザー影響の大きい箇所から追える
+- `shouldFailInvoice` のような意図的な失敗入力は、監視確認と復旧手順の再現に使える
