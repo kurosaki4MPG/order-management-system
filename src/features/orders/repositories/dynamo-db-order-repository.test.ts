@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 const awsMocks = vi.hoisted(() => {
   const sendMock = vi.fn()
-  const fromMock = vi.fn(() => ({ send: sendMock }))
+  const fromMock = vi.fn((client: unknown) => ({ client, send: sendMock }))
 
   class DynamoDBClient {
     config: { region: string }

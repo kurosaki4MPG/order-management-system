@@ -23,9 +23,10 @@
 - `/api/auth/login` で Cognito へ遷移する
 - `/api/auth/callback` で code を token に交換する
 - `/api/auth/logout` でセッションを破棄する
+- `id_token` は署名、issuer、audience、exp を確認してからセッション化する
 - `proxy.ts` で未ログイン時の画面アクセスをログインへ誘導する
 - フロントエンドと API の両方でトークンを扱う
-- セッション管理の責務を整理する
+- セッション管理の責務を整理し、JWT の検証を通ったものだけを受け入れる
 
 ---
 
@@ -66,6 +67,7 @@ API と UI の両方で権限を意識する。
 - Secrets Manager は、パスワードや API キーのような秘匿情報に使う
 - `.env.example` には秘密情報を置かず、設定値の種類だけを示す
 - サーバー側の設定取得は 1 か所に集約し、どこで何を読んでいるか分かるようにする
+- Cognito の検証に必要な `COGNITO_USER_POOL_ID` は非機密の実行設定として扱う
 
 ---
 

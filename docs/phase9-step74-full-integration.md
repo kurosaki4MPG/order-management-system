@@ -151,7 +151,7 @@ CloudWatch の観点で、失敗と復旧が追えることを確認する。
 確認すること:
 
 - Cognito の callback URL が一致しているか
-- `COGNITO_USER_POOL_CLIENT_ID` などの設定値が入っているか
+- `COGNITO_USER_POOL_ID`、`COGNITO_USER_POOL_CLIENT_ID` などの設定値が入っているか
 - `proxy.ts` の未ログインリダイレクトが正しいか
 
 ### 注文登録後に一覧へ戻らない

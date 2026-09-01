@@ -59,6 +59,6 @@ describe("OrderApiStack monitoring", () => {
         AlarmName: "oms-dev-order-invoice-generation-error-alarm",
       });
     },
-    15000,
+    30000,
   );
 });

@@ -44,6 +44,8 @@ STEP75 の詳細実施手順は [phase9-step75-order-management-workflow.md](./p
 
 ## STEP76 非機能要件確認
 
+STEP76 の詳細実施手順は [phase9-step76-nonfunctional-review.md](./phase9-step76-nonfunctional-review.md) を参照する。
+
 実施内容:
 - 性能、可用性、保守性、運用性、セキュリティを確認する
 - どこがボトルネックになりやすいかを洗い出す
