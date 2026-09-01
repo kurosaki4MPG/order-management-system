@@ -539,13 +539,13 @@ STEP52で決めたこと:
 
 STEP1で学んだもの:
 
-- Node.js / npm / Git / エディタの最低限の開発環境を整えること
-- 以後の実装確認を安定して進めるための前提を揃えること
+- Node.js / npm / Git / VS Code を使って実装できる最低限の開発環境を整えること
+- 以後の実装確認を安定して進めるための前提を先に揃えること
 
 STEP2で学んだもの:
 
-- Next.js を App Router / TypeScript / Tailwind 前提で立ち上げること
-- 初期状態から動作確認を行い、土台を早めに固めること
+- Next.js を App Router / TypeScript / Tailwind CSS 前提で立ち上げること
+- 初期状態の起動確認を早めに行い、土台を固めること
 
 STEP3で学んだもの:
 
@@ -560,7 +560,7 @@ STEP4で学んだもの:
 STEP5で学んだもの:
 
 - `features/` 中心で機能単位に整理すること
-- 共通処理と注文機能を分けて保守性を上げること
+- 共通処理と注文機能を分けて、保守しやすい構造にすること
 
 STEP6で学んだもの:
 
@@ -619,87 +619,85 @@ STEP16で学んだもの:
 
 STEP17で学んだもの:
 
-- Lambdaの役割
-- ハンドラーの基本
-- イベント入力とレスポンス
-- ローカル実行とデバッグの考え方
-- Next.js フロントエンドとの責務分離
+- Lambda の役割とハンドラーの基本を押さえること
+- イベント入力とレスポンスの契約を明確にすること
+- ローカル実行とデバッグの考え方を整理すること
+- Next.js フロントエンドとは責務を分けて実装すること
 
 STEP18で学んだもの:
 
-- 注文登録APIの入力検証
-- 注文IDの生成
-- 合計金額のサーバー側計算
-- 201レスポンスと400レスポンスの返し分け
+- 注文登録 API の入力検証を行うこと
+- 注文 ID をサーバー側で生成すること
+- 合計金額をサーバー側で再計算すること
+- 201 と 400 を適切に返し分けること
 
 STEP19で学んだもの:
 
-- 一覧取得と詳細取得の責務分離
-- 検索条件をAPI側で受ける設計
-- 404レスポンスの返し方
+- 一覧取得と詳細取得の責務を分離すること
+- 検索条件を API 側で受ける設計にすること
+- 404 レスポンスを適切に返すこと
 
 STEP20で学んだもの:
 
-- 更新APIと削除APIの分離
-- ステータス更新とフル更新の考え方
-- 204ではなく JSON 応答にした場合の設計上の妥協点
+- 更新 API と削除 API を分けて実装すること
+- ステータス更新とフル更新を使い分けること
+- 204 ではなく JSON 応答にした場合の設計上の妥協点を理解すること
 
 STEP21で学んだもの:
 
-- API Gateway の proxy integration の考え方
-- CORS の基本
-- ルートとメソッドで Lambda を振り分ける設計
-- フロントエンドとの接続点をどこに置くか
+- API Gateway の proxy integration の考え方を押さえること
+- CORS の基本を理解すること
+- ルートとメソッドで Lambda を振り分ける設計にすること
+- フロントエンドとの接続点をどこに置くか決めること
 
 STEP22で学んだもの:
 
-- DynamoDB の役割
-- アクセスパターン先行の設計
-- Repository 層を挟む考え方
-- DynamoDB 実装に永続化を集約する考え方
-- 実AWSでの作業手順は `docs/phase2-step21-22-implementation-guide.md` に整理
+- DynamoDB の役割を理解すること
+- アクセスパターン先行で設計すること
+- Repository 層を挟んで永続化を集約すること
+- 実 AWS での作業手順を `docs/phase2-step21-22-implementation-guide.md` に整理したこと
 
 STEP23で学んだもの:
 
-- Next.js、API Gateway、Lambda、Service、Repository の責務分離
-- API のルート、成功レスポンス、エラー契約の整理
-- HTTP 層と永続化層を分離する理由
-- DynamoDB 前提で永続化層を分離する境界
+- Next.js、API Gateway、Lambda、Service、Repository の責務を分離すること
+- API のルート、成功レスポンス、エラー契約を整理すること
+- HTTP 層と永続化層を分ける理由を理解すること
+- DynamoDB 前提で永続化層の境界を決めること
 
 STEP24で学んだもの:
 
-- Next.js から API Gateway への接続方法
-- `/api` prefix と外部APIの切り替え
-- 詳細画面を Server Component のローカルデータ依存から外す考え方
-- 画面から削除するための mutation と再取得の連携
+- Next.js から API Gateway へ接続する方法を確認すること
+- `/api` prefix と外部 API の切り替えを整理すること
+- 詳細画面を Server Component のローカルデータ依存から外すこと
+- 画面削除後の mutation と再取得を連携させること
 
-STEP25で学ぶもの:
+STEP25で学んだもの:
 
-- CDK アプリの入口と Stack の分離
-- まず synth できる最小構成を作る考え方
-- 後続の DynamoDB / Lambda / API Gateway 追加に備えた土台作り
-- 実際の scaffold は `docs/cdk-project-setup.md` に整理
+- CDK アプリの入口と Stack を分離すること
+- まず synth できる最小構成を作ること
+- 後続の DynamoDB / Lambda / API Gateway 追加に備えた土台を作ること
+- 実際の scaffold を `docs/cdk-project-setup.md` に整理したこと
 
-STEP26で学ぶもの:
+STEP26で学んだもの:
 
-- DynamoDB テーブルの基本設計
-- 開発環境での `DESTROY` と `PAY_PER_REQUEST` の使い分け
-- テーブル名とARNを Output に出す考え方
-- 実装の詳細は `docs/dynamodb-cdk-setup.md` に整理
+- DynamoDB テーブルの基本設計を確認すること
+- 開発環境での `DESTROY` と `PAY_PER_REQUEST` の使い分けを整理すること
+- テーブル名と ARN を Output に出すこと
+- 実装の詳細を `docs/dynamodb-cdk-setup.md` に整理したこと
 
-STEP27で学ぶもの:
+STEP27で学んだもの:
 
-- Lambda を CDK から作成する方法
-- `NodejsFunction` を使った TypeScript バンドル
-- DynamoDB への権限付与
-- 実装の詳細は `docs/lambda-cdk-setup.md` に整理
+- Lambda を CDK から作成する方法を確認すること
+- `NodejsFunction` を使って TypeScript をバンドルすること
+- DynamoDB への権限付与を設定すること
+- 実装の詳細を `docs/lambda-cdk-setup.md` に整理したこと
 
-STEP28で学ぶもの:
+STEP28で学んだもの:
 
-- HTTP API を CDK で公開する方法
-- CORS とルート定義の考え方
-- Lambda proxy integration の payload format を合わせる重要性
-- 実装の詳細は `docs/api-gateway-cdk-setup.md` に整理
+- HTTP API を CDK で公開する方法を確認すること
+- CORS とルート定義の考え方を整理すること
+- Lambda proxy integration の payload format を合わせること
+- 実装の詳細を `docs/api-gateway-cdk-setup.md` に整理したこと
 
 STEP29で学んだもの:
 
@@ -842,43 +840,44 @@ STEP55で学んだもの:
 
 STEP56で学んだもの:
 
-- GitHub Actions で lint / test / build を回す基本 CI を作ること
-- `pull_request` と `main` push で品質確認すること
+- `.github/workflows/ci.yml` で lint / test / build を回す基本 CI を作ること
+- `pull_request` と `main` push の両方で品質確認を走らせること
 
 STEP57で学んだもの:
 
-- `npm` キャッシュと `.next/cache` を組み合わせて CI を速くすること
+- `actions/setup-node` の npm キャッシュと `.next/cache` を組み合わせて CI を速くすること
 - Next.js の build キャッシュを継続利用すること
 
 STEP58で学んだもの:
 
-- `npm audit` と secret scan を CI に組み込むこと
+- `npm audit --audit-level=high --omit=dev` を CI に組み込むこと
+- secret-like pattern scan で秘匿情報の混入を検知すること
 - 依存関係と秘匿情報の両方を品質ゲートにすること
 
 STEP59で学んだもの:
 
-- PR テンプレートでレビュー前の確認を標準化すること
+- `.github/PULL_REQUEST_TEMPLATE.md` でレビュー前の確認を標準化すること
 - branch protection で必須チェックと review を強制すること
+- `verify:ci` をローカル確認の基準にそろえること
 
 STEP60で学んだもの:
 
 - GitHub OIDC で長期アクセスキーなしの AWS 認証を実現すること
-- 環境ごとに IAM role を分け、GitHub Environment と repository variables で参照先を切り替えること
+- `AWS_ROLE_ARN_DEV` / `AWS_ROLE_ARN_PROD` を repository variables に置いて環境ごとに参照先を切り替えること
 - `aws sts get-caller-identity` で認証成功を手早く確認すること
 
 STEP61で学んだもの:
 
 - CDK CLI を devDependency に固定し、GitHub Actions でも同じバージョンを使うこと
 - `main` push で dev を自動デプロイし、prod は手動デプロイに分けること
-- デプロイ前に `aws sts get-caller-identity` で認証確認を挟むこと
-- `cdk deploy` の前に `npm ci` で依存関係を揃えること
+- `aws sts get-caller-identity` と `npm ci` を挟んでから `cdk deploy` すること
 - 既存リソースと衝突しやすい S3 バケットは固定名を避け、CDK 管理に寄せること
 
 STEP62で学んだもの:
 
 - dev は自動、prod は手動という運用に分けること
 - GitHub Environment の reviewer で prod 承認を挟むこと
-- workflow_dispatch で明示的に stage を選ばせること
+- `workflow_dispatch` で明示的に stage を選ばせること
 - 環境ごとのデプロイ先と OIDC subject を揃えること
 - 2026-08-28 に `workflow_dispatch` の `stage=prod` 実行が成功し、本番デプロイの運用確認まで完了したこと
 
@@ -897,8 +896,8 @@ STEP64で学んだもの:
 
 STEP65で学んだもの:
 
-- CI/CD の通知先は GitHub Issue に固定すると、外部サービスなしでも履歴を残せること
-- 成功/失敗の両方を workflow_run で拾い、同じ形式で記録すると追いやすいこと
+- CI/CD の通知先を GitHub Issue に固定すると、外部サービスなしでも履歴を残せること
+- 成功/失敗の両方を `workflow_run` で拾い、同じ形式で記録すると追いやすいこと
 - workflow 名、branch、SHA、run URL を残すと後から復旧や調査がしやすいこと
 
 STEP66で学んだもの:

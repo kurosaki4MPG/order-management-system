@@ -144,6 +144,12 @@ Step Functions 失敗アラームが上がったら、`oms-dev-order-processing-
 - CloudWatch の評価は即時ではなく、数分程度の遅延がありうる
 - DLQ の `ApproximateNumberOfMessagesVisible` が 0 でも、アラーム状態がすぐには変わらない場合がある
 
-## 6. 次のSTEP
+## 6. まとめ
+
+- DLQ、キュー滞留、Step Functions 失敗をそれぞれ別アラームで監視できるようにした
+- 実際の確認では `oms-dev-order-processing-dlq-alarm` の遷移を見て、評価遅延があることも確認した
+- CloudWatch と SQS / Step Functions の確認順を手順化し、障害時にどこを見るかを固定した
+
+## 7. 次のSTEP
 
 STEP38 が完了したら、Phase 4 の非同期処理は監視まで含めて一通りそろう。

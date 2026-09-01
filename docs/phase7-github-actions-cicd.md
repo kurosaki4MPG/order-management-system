@@ -258,6 +258,12 @@
 1. GitHub Environment `dev` に開発用 API URL を設定する
 2. GitHub Environment `prod` に本番用 API URL を設定する
 3. `main` push で `dev` image が自動更新されることを確認する
+
+## まとめ
+
+- CI、PR 品質ゲート、GitHub OIDC、CDK 自動デプロイ、フロントエンド配信を段階的につないで、main への push と手動承認の役割を分けた
+- `AWS_ROLE_ARN_DEV` / `AWS_ROLE_ARN_PROD`、`workflow_dispatch`、branch protection を使って、dev / prod の運用ルールを明確にした
+- 詳細なデプロイ手順や確認方法は各 STEP の節に残し、総括はこの Phase に集約した
 4. `workflow_dispatch` で `stage=prod` を選ぶと本番 image が更新される
 5. 配信先ホストは GHCR の image を実行して Next.js サーバーを起動する
 
