@@ -224,11 +224,48 @@
 - メトリクスを確認する
 - 失敗検知を入れる
 
+実施結果:
+- [`infra/lib/order-api-stack.js`](/home/kurosaki/order-management-system/infra/lib/order-api-stack.js) に CloudWatch アラームを追加し、API と Lambda の失敗をまとめて監視できるようにした
+- 監視対象は DLQ、SQS backlog、Step Functions 失敗、API 5xx、各 Lambda エラーの 9 つに整理した
+- 各アラームは 5 分粒度・1 回の失敗で検知し、`treatMissingData` は `NOT_BREACHING` にした
+- [`infra/lib/order-api-stack.test.js`](/home/kurosaki/order-management-system/infra/lib/order-api-stack.test.js) で alarmName と定義数を確認した
+- `AWS_PROFILE=oms-dev AWS_SDK_LOAD_CONFIG=1 npx cdk deploy OmsdevOrderApiStack -c stage=dev --require-approval never` で `no changes` を確認した
+
 確認観点:
 - 異常を早く察知できる
+- どの異常がどのアラームに対応するか分かる
+- コンソールで監視対象をすぐ確認できる
+
+確認結果:
+- CloudWatch のアラーム一覧で、9 つの監視対象を個別に確認できる
+- `oms-dev-order-invoice-generation-error-alarm` は `shouldFailInvoice: true` で発火することを確認した
+
+確認手順:
+1. CloudWatch コンソールを開く
+2. 左メニューの `Alarms` を選ぶ
+3. `All alarms` で `oms-dev-` から始まるアラームを確認する
+4. それぞれのアラームで、対象サービスと alarmName が一致しているかを見る
+5. 必要なら `CloudWatch > Metrics` で `AWS/ApiGateway` の `5XXError`、`AWS/Lambda` の `Errors`、`AWS/SQS` の `ApproximateNumberOfMessagesVisible`、`AWS/States` の失敗系メトリクスを確認する
+6. `oms-dev-order-invoice-generation-error-alarm` を試すときは、Step Functions の `Start execution` に以下を入れる
+   ```json
+   {
+     "workflow": "order-processing",
+     "detailType": "OrderCreated",
+     "orderId": "ORD-TEST-001",
+     "eventId": "evt-test-001",
+     "shouldFailInvoice": true
+   }
+   ```
+   `shouldFail` ではなく `shouldFailInvoice` を使うと、prepare ではなく invoice ステップだけを失敗させられる
+7. 失敗実行後にアラームが `ALARM` へ変化し、Lambda ログに `Simulated invoice generation failure for order ORD-TEST-001` が残ることを確認する
 
 完了条件:
 - 監視が動く
+
+補足:
+- 発火しなかった原因は、失敗確認用 JSON が invoice 生成前の `PrepareOrderWorkflowTask` で止まっていたため
+- 修正として、invoice 生成だけを落とす `shouldFailInvoice` を追加し、workflow と Lambda の両方でそのフラグを扱うようにした
+- これで invoice 生成 Lambda だけを狙って失敗させ、`oms-dev-order-invoice-generation-error-alarm` を再現できるようになった
 
 ## STEP73 障害対応
 

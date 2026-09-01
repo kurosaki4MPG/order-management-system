@@ -100,13 +100,18 @@ Logs Insights では `requestId` で 1 回の処理を追い、`orderId` で注�
 
 ## 8. 監視
 
-- CloudWatch アラーム
-- Lambda エラー
-- API 失敗率
-- DLQ 件数
-- SQS 滞留
-
-を監視対象にする。
+- CloudWatch アラームで API、Lambda、SQS、Step Functions をまとめて監視する
+- 監視対象は 9 つに整理する
+  - `oms-${stage}-order-processing-dlq-alarm`
+  - `oms-${stage}-order-processing-backlog-alarm`
+  - `oms-${stage}-order-processing-workflow-failed-alarm`
+  - `oms-${stage}-order-api-5xx-alarm`
+  - `oms-${stage}-order-api-error-alarm`
+  - `oms-${stage}-order-notification-error-alarm`
+  - `oms-${stage}-order-queue-consumer-error-alarm`
+  - `oms-${stage}-order-workflow-task-error-alarm`
+  - `oms-${stage}-order-invoice-generation-error-alarm`
+- `oms-dev-order-invoice-generation-error-alarm` は `shouldFailInvoice` で invoice ステップだけを失敗させて確認する
 
 ---
 
@@ -145,7 +150,7 @@ Phase 8 は依存関係の強いものから順に進める。
    - 次の監視に必要な観点を整える
 7. STEP72 監視
    - CloudWatch アラームとメトリクスを設定する
-   - 障害の早期検知を可能にする
+   - invoice ステップだけを失敗させてアラーム確認できるようにする
 8. STEP73 障害対応
    - 監視結果を前提に切り分け手順をまとめる
    - 復旧後確認まで含めて完成させる

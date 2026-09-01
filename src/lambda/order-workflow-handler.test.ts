@@ -74,4 +74,22 @@ describe("order-workflow-handler", () => {
     // 既存の prepareCompletedAt がそのまま保持されることを確認する。
     expect(result.prepareCompletedAt).toBe("2026-08-27T03:30:00.000Z")
   })
+
+  // invoice 専用の失敗フラグが、後続ステップまで引き継がれることを確認する。
+  it("preserves shouldFailInvoice on finalize steps", async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date("2026-08-27T05:00:00.000Z"))
+
+    const result = await handler({
+      detailType: "OrderCreated",
+      eventId: "evt-003",
+      orderId: "ORD-001",
+      shouldFailInvoice: "true",
+      step: "finalize",
+      workflow: "order-processing",
+    })
+
+    // finalize の結果に invoice 専用フラグが残ることを確認する。
+    expect(result.shouldFailInvoice).toBe("true")
+  })
 })
