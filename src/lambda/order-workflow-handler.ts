@@ -10,6 +10,7 @@ type WorkflowStepEvent = {
   prepareCompletedAt?: string;
   shippingAddress?: string;
   shouldFail?: boolean | string;
+  shouldFailInvoice?: boolean | string;
   status?: string;
   totalAmount?: number;
   step?: "prepare" | "finalize" | string;
@@ -28,6 +29,7 @@ type WorkflowStepResult = {
   prepareCompletedAt?: string;
   shippingAddress?: string;
   shouldFail?: boolean | string;
+  shouldFailInvoice?: boolean | string;
   status?: string;
   totalAmount?: number;
   step: "prepare" | "finalize";
@@ -100,6 +102,7 @@ export async function handler(
         : completedAt,
     shippingAddress: input.shippingAddress,
     shouldFail: input.shouldFail,
+    shouldFailInvoice: input.shouldFailInvoice,
     source: input.source,
     status: input.status,
     totalAmount: input.totalAmount,

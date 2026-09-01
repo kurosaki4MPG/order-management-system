@@ -346,12 +346,13 @@ class OrderApiStack extends cdk.Stack {
           PDF_INVOICE_AWS_REGION: this.region,
           PDF_INVOICE_BUCKET_NAME: invoicePdfBucket.bucketName,
         },
-        functionName: `oms-${stage}-order-invoice-generation`,
-        handler: "handler",
-        runtime: lambda.Runtime.NODEJS_22_X,
-        timeout: cdk.Duration.seconds(60),
-        memorySize: 1024,
         bundling: {
+          format: lambdaNodejs.OutputFormat.ESM,
+          externalModules: [
+            "@aws-sdk/*",
+            "@react-pdf/renderer",
+            "react",
+          ],
           commandHooks: {
             afterBundling(inputDir, outputDir) {
               return [
@@ -366,7 +367,13 @@ class OrderApiStack extends cdk.Stack {
               return [];
             },
           },
+          nodeModules: ["@react-pdf/renderer", "react"],
         },
+        functionName: `oms-${stage}-order-invoice-generation`,
+        handler: "handler",
+        runtime: lambda.Runtime.NODEJS_22_X,
+        timeout: cdk.Duration.seconds(60),
+        memorySize: 1024,
       },
     );
 
@@ -384,6 +391,9 @@ class OrderApiStack extends cdk.Stack {
           paymentMethod: stepfunctions.JsonPath.stringAt("$.paymentMethod"),
           shippingAddress: stepfunctions.JsonPath.stringAt("$.shippingAddress"),
           shouldFail: stepfunctions.JsonPath.stringAt("$.shouldFail"),
+          shouldFailInvoice: stepfunctions.JsonPath.stringAt(
+            "$.shouldFailInvoice",
+          ),
           status: stepfunctions.JsonPath.stringAt("$.status"),
           totalAmount: stepfunctions.JsonPath.stringAt("$.totalAmount"),
           step: "prepare",
@@ -412,6 +422,9 @@ class OrderApiStack extends cdk.Stack {
           ),
           shippingAddress: stepfunctions.JsonPath.stringAt("$.shippingAddress"),
           shouldFail: stepfunctions.JsonPath.stringAt("$.shouldFail"),
+          shouldFailInvoice: stepfunctions.JsonPath.stringAt(
+            "$.shouldFailInvoice",
+          ),
           status: stepfunctions.JsonPath.stringAt("$.status"),
           totalAmount: stepfunctions.JsonPath.stringAt("$.totalAmount"),
           step: "finalize",
@@ -441,6 +454,9 @@ class OrderApiStack extends cdk.Stack {
           ),
           shippingAddress: stepfunctions.JsonPath.stringAt("$.shippingAddress"),
           shouldFail: stepfunctions.JsonPath.stringAt("$.shouldFail"),
+          shouldFailInvoice: stepfunctions.JsonPath.stringAt(
+            "$.shouldFailInvoice",
+          ),
           source: stepfunctions.JsonPath.stringAt("$.source"),
           status: stepfunctions.JsonPath.stringAt("$.status"),
           step: "invoice",
@@ -566,6 +582,96 @@ class OrderApiStack extends cdk.Stack {
       },
     );
 
+    const orderApiErrorAlarm = new cloudwatch.Alarm(
+      this,
+      "OrderApiErrorAlarm",
+      {
+        alarmDescription: `Order API Lambda errors in ${stage}`,
+        alarmName: `oms-${stage}-order-api-error-alarm`,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+        datapointsToAlarm: 1,
+        evaluationPeriods: 1,
+        metric: orderApiFunction.metricErrors({
+          period: cdk.Duration.minutes(5),
+        }),
+        threshold: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      },
+    );
+
+    const orderNotificationErrorAlarm = new cloudwatch.Alarm(
+      this,
+      "OrderNotificationErrorAlarm",
+      {
+        alarmDescription: `Order notification Lambda errors in ${stage}`,
+        alarmName: `oms-${stage}-order-notification-error-alarm`,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+        datapointsToAlarm: 1,
+        evaluationPeriods: 1,
+        metric: orderNotificationFunction.metricErrors({
+          period: cdk.Duration.minutes(5),
+        }),
+        threshold: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      },
+    );
+
+    const orderQueueConsumerErrorAlarm = new cloudwatch.Alarm(
+      this,
+      "OrderQueueConsumerErrorAlarm",
+      {
+        alarmDescription: `Order queue consumer Lambda errors in ${stage}`,
+        alarmName: `oms-${stage}-order-queue-consumer-error-alarm`,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+        datapointsToAlarm: 1,
+        evaluationPeriods: 1,
+        metric: orderQueueConsumerFunction.metricErrors({
+          period: cdk.Duration.minutes(5),
+        }),
+        threshold: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      },
+    );
+
+    const orderWorkflowTaskErrorAlarm = new cloudwatch.Alarm(
+      this,
+      "OrderWorkflowTaskErrorAlarm",
+      {
+        alarmDescription: `Order workflow task Lambda errors in ${stage}`,
+        alarmName: `oms-${stage}-order-workflow-task-error-alarm`,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+        datapointsToAlarm: 1,
+        evaluationPeriods: 1,
+        metric: orderWorkflowTaskFunction.metricErrors({
+          period: cdk.Duration.minutes(5),
+        }),
+        threshold: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      },
+    );
+
+    const orderInvoiceGenerationErrorAlarm = new cloudwatch.Alarm(
+      this,
+      "OrderInvoiceGenerationErrorAlarm",
+      {
+        alarmDescription: `Order invoice generation Lambda errors in ${stage}`,
+        alarmName: `oms-${stage}-order-invoice-generation-error-alarm`,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+        datapointsToAlarm: 1,
+        evaluationPeriods: 1,
+        metric: orderInvoiceGenerationFunction.metricErrors({
+          period: cdk.Duration.minutes(5),
+        }),
+        threshold: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      },
+    );
+
     const orderWorkflowFailedAlarm = new cloudwatch.Alarm(
       this,
       "OrderWorkflowFailedAlarm",
@@ -629,6 +735,20 @@ class OrderApiStack extends cdk.Stack {
       integration: orderApiIntegration,
       methods: [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH],
       path: "/orders/{id}/status",
+    });
+
+    const orderApi5xxAlarm = new cloudwatch.Alarm(this, "OrderApi5xxAlarm", {
+      alarmDescription: `HTTP API server errors in ${stage}`,
+      alarmName: `oms-${stage}-order-api-5xx-alarm`,
+      comparisonOperator:
+        cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      datapointsToAlarm: 1,
+      evaluationPeriods: 1,
+      metric: orderApi.metricServerError({
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
     });
 
     cdk.Tags.of(this).add("Project", "order-management-system");
@@ -737,6 +857,30 @@ class OrderApiStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "OrderProcessingBacklogAlarmName", {
       value: orderProcessingBacklogAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderApi5xxAlarmName", {
+      value: orderApi5xxAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderApiErrorAlarmName", {
+      value: orderApiErrorAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderNotificationErrorAlarmName", {
+      value: orderNotificationErrorAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderQueueConsumerErrorAlarmName", {
+      value: orderQueueConsumerErrorAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderWorkflowTaskErrorAlarmName", {
+      value: orderWorkflowTaskErrorAlarm.alarmName,
+    });
+
+    new cdk.CfnOutput(this, "OrderInvoiceGenerationErrorAlarmName", {
+      value: orderInvoiceGenerationErrorAlarm.alarmName,
     });
 
     new cdk.CfnOutput(this, "OrderWorkflowFailedAlarmName", {

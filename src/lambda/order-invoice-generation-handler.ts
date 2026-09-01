@@ -18,6 +18,7 @@ type WorkflowInvoiceEvent = {
   prepareCompletedAt?: string;
   shippingAddress?: string;
   shouldFail?: boolean | string;
+  shouldFailInvoice?: boolean | string;
   status?: string;
   step?: string;
   totalAmount?: number;
@@ -63,6 +64,15 @@ export async function handler(
 ): Promise<WorkflowInvoiceResult> {
   const input = assertWorkflowInvoiceInput(event)
   const completedAt = input.completedAt ?? new Date().toISOString()
+  const shouldFailInvoice =
+    input.shouldFailInvoice === true ||
+    input.shouldFailInvoice === "true" ||
+    input.shouldFailInvoice === "1"
+
+  // invoice ステップだけを落とせるようにし、後続の監視確認をしやすくする。
+  if (shouldFailInvoice) {
+    throw new Error(`Simulated invoice generation failure for order ${input.orderId}`)
+  }
 
   const order = await getOrderById(input.orderId)
 

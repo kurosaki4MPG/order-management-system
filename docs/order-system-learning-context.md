@@ -948,6 +948,16 @@ STEP71で学んだもの:
 - Logs Insights では `requestId` は 1 回の操作、`orderId` は 1 件の注文、`level = "error"` は異常系の確認に向くこと
 - 2026-08-31 に構造化ログの共通化を実装したこと
 
+STEP72で学んだもの:
+
+- CloudWatch のアラーム一覧で、9 つの監視対象を個別に確認できること
+- `oms-${stage}-...` で統一すると、dev / prod の確認をしやすいこと
+- 各アラームは 5 分粒度・1 回の失敗で検知し、`treatMissingData = NOT_BREACHING` にすると未実行時間の誤検知を減らせること
+- `oms-dev-order-invoice-generation-error-alarm` は `shouldFailInvoice: true` で発火することを確認したこと
+- 失敗確認用 JSON が invoice 生成前の `PrepareOrderWorkflowTask` で止まると、invoice 生成 Lambda まで到達しないこと
+- 修正として、invoice 生成だけを落とす `shouldFailInvoice` を追加したこと
+- 2026-09-01 に CloudWatch アラームの追加とデプロイ確認を行ったこと
+
 ---
 
 # 12. 学習上の方針
