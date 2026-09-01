@@ -28,6 +28,8 @@ STEP74 の詳細実施手順は [phase9-step74-full-integration.md](./phase9-ste
 
 ## STEP75 注文管理業務フロー完成
 
+STEP75 の詳細実施手順は [phase9-step75-order-management-workflow.md](./phase9-step75-order-management-workflow.md) を参照する。
+
 実施内容:
 - 受注から請求書生成、保存、通知、監視までを通す
 - `admin` / `operator` / `viewer` の役割分担を確認する
