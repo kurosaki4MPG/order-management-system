@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f6f4ef; }
+      .sidebar { fill: #ffffff; stroke: #e6dfd4; stroke-width: 1.5; }
+      .header { fill: #ffffff; stroke: #e4ddd2; stroke-width: 1; }
+      .card { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.5; rx: 12; }
+      .field { fill: #fffdf9; stroke: #d8d0c2; stroke-width: 1.2; rx: 8; }
+      .primary { fill: #201d1a; }
+      .button { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.3; rx: 6; }
+      .title { font: 700 28px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .label { font: 600 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #6f665a; }
+      .value { font: 600 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .invoiceTitle { font: 800 30px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #a24a14; letter-spacing: 1px; }
+      .invoiceSmall { font: 600 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #a24a14; }
+      .invoiceText { font: 500 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7c5c3d; }
+      .invoiceLine { stroke: #d8c8b3; stroke-width: 1; }
+      .softLine { stroke: #e8e1d7; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+
+  <rect class="sidebar" x="0" y="0" width="240" height="860"/>
+  <rect x="16" y="16" width="32" height="32" fill="#201d1a"/>
+  <text class="small" x="58" y="29">Order System</text>
+  <text class="muted" x="58" y="49">注文管理システム</text>
+  <text class="muted" x="24" y="106">メニュー</text>
+  <text class="small" x="48" y="146">ダッシュボード</text>
+  <text class="small" x="48" y="186">注文一覧</text>
+  <text class="small" x="48" y="226">注文登録</text>
+  <text class="small" x="48" y="266">注文詳細</text>
+  <rect x="12" y="284" width="216" height="36" fill="#f3eee6"/>
+  <text class="small" x="48" y="308">帳票プレビュー</text>
+  <text class="muted" x="24" y="812">Order System v0.1.0</text>
+
+  <rect class="header" x="240" y="0" width="1200" height="64"/>
+  <rect x="258" y="20" width="24" height="24" fill="#ffffff" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="26" x2="276" y2="26" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="32" x2="276" y2="32" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="38" x2="276" y2="38" stroke="#1f1a17" stroke-width="1.5"/>
+  <text class="small" x="300" y="27">注文管理システム</text>
+  <text class="muted" x="300" y="47">Order Management System</text>
+  <text class="muted" x="1124" y="28">🔔</text>
+  <text class="small" x="1172" y="24">kenichi.kurosaki@manpowergroup.jp</text>
+  <text class="muted" x="1172" y="43">管理者</text>
+  <rect x="1336" y="10" width="96" height="40" fill="#ffffff" stroke="#d9d2c7" stroke-width="1.5"/>
+  <text class="small" x="1358" y="35">ログアウト</text>
+
+  <text class="title" x="292" y="126">PDF プレビュー</text>
+  <text class="subtitle" x="292" y="154">注文一覧から対象を選び、請求書 PDF を確認します。</text>
+
+  <text class="label" x="292" y="196">対象注文</text>
+  <rect class="field" x="292" y="206" width="292" height="42"/>
+  <text class="value" x="308" y="233">ORD-20260901-797438 / 統合八郎</text>
+  <rect class="primary" x="604" y="206" width="140" height="42" rx="6"/>
+  <text class="small" x="630" y="233" fill="#ffffff">プレビュー更新</text>
+  <rect class="button" x="756" y="206" width="108" height="42"/>
+  <text class="small" x="784" y="233">PDF を開く</text>
+  <rect class="button" x="876" y="206" width="108" height="42"/>
+  <text class="small" x="906" y="233">ダウンロード</text>
+
+  <rect class="card" x="292" y="270" width="836" height="530"/>
+  <text class="small" x="324" y="308">1 ページの請求書プレビュー</text>
+  <text class="muted" x="324" y="330">ツールバーやページ一覧は表示しません。</text>
+
+  <rect x="324" y="350" width="772" height="410" fill="#f8f4ea" stroke="#d9d2c7"/>
+  <rect x="346" y="368" width="728" height="420" fill="#fbf7ef" stroke="#e2d8ca"/>
+  <text class="invoiceTitle" x="368" y="424">ORDER INVOICE</text>
+  <text class="invoiceText" x="368" y="448">注文管理システムの請求書テンプレート</text>
+  <rect x="950" y="384" width="104" height="22" fill="#a24a14"/>
+  <text x="961" y="399" font-size="11" font-weight="700" fill="#ffffff">ACCOUNTING COPY</text>
+
+  <rect x="368" y="466" width="210" height="54" fill="#ffffff" stroke="#e2d8ca"/>
+  <rect x="592" y="466" width="210" height="54" fill="#ffffff" stroke="#e2d8ca"/>
+  <rect x="816" y="466" width="210" height="54" fill="#ffffff" stroke="#e2d8ca"/>
+  <text class="invoiceSmall" x="382" y="486">請求書番号</text>
+  <text class="invoiceText" x="382" y="508">INV-20260826-001</text>
+  <text class="invoiceSmall" x="606" y="486">注文ID</text>
+  <text class="invoiceText" x="606" y="508">ORD-TEST-001</text>
+  <text class="invoiceSmall" x="830" y="486">発行日時</text>
+  <text class="invoiceText" x="830" y="508">2026-08-26 14:00</text>
+
+  <line class="invoiceLine" x1="368" y1="540" x2="1026" y2="540"/>
+  <rect x="368" y="556" width="322" height="128" fill="#fffaf4" stroke="#e2d8ca"/>
+  <rect x="704" y="556" width="322" height="128" fill="#fffaf4" stroke="#e2d8ca"/>
+  <text class="invoiceSmall" x="382" y="586">請求先</text>
+  <text class="invoiceText" x="382" y="618">株式会社オーダー管理システムソリューションズ</text>
+  <text class="invoiceText" x="382" y="640">東京都千代田区丸の内1-1-1 サンプルビル 8F</text>
+  <text class="invoiceText" x="382" y="662">請求管理部 宛</text>
+  <text class="invoiceSmall" x="718" y="586">発行者</text>
+  <text class="invoiceText" x="718" y="618">Order Management System</text>
+  <text class="invoiceText" x="718" y="640">Phase 5 STEP40 請求書テンプレート</text>
+  <text class="invoiceText" x="718" y="662">支払期日: 2026-09-30</text>
+
+  <text class="invoiceSmall" x="368" y="716">明細</text>
+  <rect x="368" y="724" width="658" height="64" fill="#f3ead9" stroke="#e2d8ca"/>
+  <text class="invoiceText" x="384" y="748">品目</text>
+  <text class="invoiceText" x="624" y="748">数量</text>
+  <text class="invoiceText" x="744" y="748">単価</text>
+  <text class="invoiceText" x="970" y="748" text-anchor="end">金額</text>
+  <line class="invoiceLine" x1="368" y1="758" x2="1026" y2="758"/>
+  <text class="invoiceText" x="384" y="780">注文管理システム 初期導入</text>
+  <text class="invoiceText" x="624" y="780">1</text>
+  <text class="invoiceText" x="744" y="780">¥120,000</text>
+  <text class="invoiceText" x="970" y="780" text-anchor="end">¥120,000</text>
+
+  <rect class="card" x="1112" y="270" width="236" height="530"/>
+  <text class="small" x="1144" y="308">保存・配布</text>
+  <text class="muted" x="1144" y="336">S3 保存先を確認できます。</text>
+  <rect class="field" x="1144" y="356" width="172" height="42"/>
+  <text class="muted" x="1158" y="382">orders/ORD-TEST-001/invoice.pdf</text>
+  <rect class="button" x="1144" y="414" width="172" height="38"/>
+  <text class="small" x="1182" y="438">S3 に保存</text>
+  <rect class="button" x="1144" y="462" width="172" height="38"/>
+  <text class="small" x="1166" y="486">署名付き URL を取得</text>
+  <rect class="button" x="1144" y="510" width="172" height="38"/>
+  <text class="small" x="1190" y="534">S3 を開く</text>
+  <line class="softLine" x1="1144" y1="568" x2="1316" y2="568"/>
+  <text class="label" x="1144" y="596">表示方針</text>
+  <text class="muted" x="1144" y="622">1 ページのみ表示</text>
+  <text class="muted" x="1144" y="646">余白を抑えて本文を優先</text>
+  <text class="muted" x="1144" y="670">ページ一覧は表示しない</text>
+</svg>

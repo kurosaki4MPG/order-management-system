@@ -130,3 +130,17 @@
 
 完了条件:
 - フロントとAWSバックエンドが接続される
+
+## 関連資料
+
+- [api-gateway-integration.md](./api-gateway-integration.md)
+- [api-gateway-cdk-setup.md](./api-gateway-cdk-setup.md)
+- [order-management-system-api-design.md](./detailed-design/order-management-system-api-design.md)
+- [frontend-api-list.md](./frontend-api-list.md)
+- [lambda-basics.md](./lambda-basics.md)
+- [lambda-cdk-setup.md](./lambda-cdk-setup.md)
+- [dynamodb-introduction.md](./dynamodb-introduction.md)
+- [dynamodb-cdk-setup.md](./dynamodb-cdk-setup.md)
+- [order-registration-api.md](./order-registration-api.md)
+- [order-retrieval-api.md](./order-retrieval-api.md)
+- [order-update-delete-api.md](./order-update-delete-api.md)

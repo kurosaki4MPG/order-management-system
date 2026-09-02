@@ -6,7 +6,7 @@
 
 ## 1. 依頼の流れ
 
-- `docs/aws-architecture-overview.md` のアーキテクチャ図を Mermaid 化する依頼があった。
+- `docs/detailed-design/order-management-system-aws-design.md` の最終構成図として整理した。
 - 図を縦長にし、判読しやすく大きく表示したいという要望が追加された。
 - その図が `order-management-system` を適切に表しているかレビューを求められた。
 - その後、アーキテクチャ図を修正する流れになった。
@@ -99,7 +99,7 @@
 - `docs/phase5-step41-japanese-fonts.md`
 - `docs/phase5-step42-pdf-api.md`
 - `docs/phase5-react-pdf.md`
-- `docs/phase5-react-pdf-design.md`
+- [詳細設計書](./detailed-design/order-management-system-detailed-design.md)
 
 上記を更新し、STEP39 から STEP42 までの方針と結果を反映した。
 
@@ -138,4 +138,3 @@
 - 途中で `OrderWorkflowFailed` の失敗分岐も確認した。
 - `oms-dev-order-processing-dlq-alarm` のアラーム状態が `OK` に戻ることも確認した。
 - これらの確認は、SQS, Step Functions, CloudWatch, PDF 生成の各レイヤーが期待通りに動くことを見ていくためのものだった。
-

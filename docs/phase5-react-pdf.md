@@ -130,6 +130,16 @@ STEP45 の詳細実施手順は [phase5-step45-step-functions-integration.md](./
 完了条件:
 - 帳票処理がワークフローに統合される
 
+## 関連資料
+
+- [phase5-step39-react-pdf.md](./phase5-step39-react-pdf.md)
+- [phase5-step40-invoice-template.md](./phase5-step40-invoice-template.md)
+- [phase5-step41-japanese-fonts.md](./phase5-step41-japanese-fonts.md)
+- [phase5-step42-pdf-api.md](./phase5-step42-pdf-api.md)
+- [phase5-step43-s3-save.md](./phase5-step43-s3-save.md)
+- [phase5-step44-signed-url.md](./phase5-step44-signed-url.md)
+- [phase5-step45-step-functions-integration.md](./phase5-step45-step-functions-integration.md)
+
 ## まとめ
 
 - 帳票出力は `react-pdf` のテンプレートを土台に、プレビュー・API・S3 保存・署名付き URL を同じ請求書データから扱う構成にした

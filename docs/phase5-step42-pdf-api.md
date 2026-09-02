@@ -31,8 +31,11 @@
 
 次のようなクエリで一部値を上書きできる。
 
-```text
-/api/pdf/invoice?orderId=ORD-20260804-001
+```mermaid
+graph TD;
+  browser["ブラウザ"] --> api["/api/pdf/invoice?orderId=ORD-20260804-001"];
+  api --> pdf["PDF を返す"];
+  pdf --> preview["プレビュー枠"];
 ```
 
 不正な空文字や未定義値が混ざる場合は、API が 400 を返す。

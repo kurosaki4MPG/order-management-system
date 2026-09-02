@@ -35,6 +35,21 @@
 - Cognito/IAM等による認証・認可
 - CloudWatchによる監視
 
+関連する補助資料:
+
+- [conversation-context-2026-08-26.md](./conversation-context-2026-08-26.md)
+- [api-gateway-integration.md](./api-gateway-integration.md)
+- [order-management-system-api-design.md](./detailed-design/order-management-system-api-design.md)
+- [frontend-api-list.md](./frontend-api-list.md)
+- [lambda-basics.md](./lambda-basics.md)
+- [dynamodb-introduction.md](./dynamodb-introduction.md)
+- [order-registration-api.md](./order-registration-api.md)
+- [order-retrieval-api.md](./order-retrieval-api.md)
+- [order-update-delete-api.md](./order-update-delete-api.md)
+- [api-gateway-cdk-setup.md](./api-gateway-cdk-setup.md)
+- [dynamodb-cdk-setup.md](./dynamodb-cdk-setup.md)
+- [lambda-cdk-setup.md](./lambda-cdk-setup.md)
+
 ---
 
 # 3. 現在のプロジェクト構成
@@ -43,32 +58,32 @@ Next.js作成時に「Recommended Next.js defaults」を選択。
 
 現在は、`src`を使わずプロジェクトルートに`app`がある「パターン2」を採用する。
 
-```text
-order-system/
-├── app/                       # Next.js App Router
-├── components/
-│   ├── common/
-│   ├── forms/
-│   ├── layouts/
-│   └── ui/                    # shadcn/ui
-├── features/
-│   └── orders/
-│       ├── components/
-│       ├── hooks/
-│       ├── schemas/
-│       ├── services/
-│       └── types/
-├── hooks/
-├── lib/
-├── services/
-├── types/
-├── utils/
-├── constants/
-├── public/
-├── components.json
-├── next.config.ts
-├── package.json
-└── tsconfig.json
+```mermaid
+graph TD;
+  root["order-system/"] --> app["app/"];
+  root --> components["components/"];
+  root --> features["features/"];
+  root --> hooks["hooks/"];
+  root --> lib["lib/"];
+  root --> services["services/"];
+  root --> types["types/"];
+  root --> utils["utils/"];
+  root --> constants["constants/"];
+  root --> public["public/"];
+  root --> componentsJson["components.json"];
+  root --> nextConfig["next.config.ts"];
+  root --> packageJson["package.json"];
+  root --> tsconfig["tsconfig.json"];
+  components --> common["common/"];
+  components --> forms["forms/"];
+  components --> layouts["layouts/"];
+  components --> ui["ui/"];
+  features --> orders["orders/"];
+  orders --> orderComponents["components/"];
+  orders --> orderHooks["hooks/"];
+  orders --> orderSchemas["schemas/"];
+  orders --> orderServices["services/"];
+  orders --> orderTypes["types/"];
 ```
 
 `src/app`は作成せず、ルートの`app`をApp Routerとして利用する。
@@ -304,13 +319,13 @@ GitHubへPushする。
 
 作成した構成:
 
-```text
-components/
-├── layouts/
-│   ├── app-header.tsx
-│   ├── app-shell.tsx
-│   └── app-sidebar.tsx
-└── ui/
+```mermaid
+graph TD;
+  components["components/"] --> layouts["layouts/"];
+  components --> ui["ui/"];
+  layouts --> appHeader["app-header.tsx"];
+  layouts --> appShell["app-shell.tsx"];
+  layouts --> appSidebar["app-sidebar.tsx"];
 ```
 
 実装内容:
@@ -332,15 +347,14 @@ URL:
 
 STEP10完了後の主要構成:
 
-```text
-app/
-├── globals.css
-├── layout.tsx
-├── page.tsx
-└── orders/
-    ├── page.tsx
-    └── new/
-        └── page.tsx
+```mermaid
+graph TD;
+  app["app/"] --> globals["globals.css"];
+  app --> layout["layout.tsx"];
+  app --> page["page.tsx"];
+  app --> orders["orders/"];
+  orders --> ordersPage["page.tsx"];
+  orders --> newPage["new/page.tsx"];
 ```
 
 ---
@@ -1006,6 +1020,9 @@ STEP78で学ぶもの:
 - 画面仕様、API 仕様、AWS 構成、運用手順、障害対応手順を 1 つにまとめること
 - 第三者がリポジトリだけで全体像を追える状態にすること
 - STEP ごとの確認結果を残すこと
+- README を入口として再構成し、Phase / Design / 学習コンテキストを相互リンクすること
+- 実施結果は各 STEP の文書に残し、学習コンテキストには要点だけを集約すること
+- 2026-09-02 に STEP78 の文書整理として、README の再構成と入口リンクの整備を進めたこと
 
 STEP79で学ぶもの:
 
@@ -1046,7 +1063,7 @@ STEP80で学ぶもの:
 # 13. 次回の開始指示
 
 各Phaseの詳細手順は `docs/phase-index.md` から参照できる。
-各Phaseの詳細設計は `docs/design-index.md` から参照できる。
+各Phaseの詳細設計は [design-index.md](./detailed-design/design-index.md) から参照できる。
 
 次回は以下だけ伝えれば続きから開始できる。
 

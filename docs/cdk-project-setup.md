@@ -10,14 +10,14 @@
 
 ## 作成物
 
-```text
-order-management-system/
-├── cdk.json
-├── infra/
-│   ├── bin/
-│   │   └── app.js
-│   └── lib/
-│       └── order-api-stack.js
+```mermaid
+graph TD;
+  root["order-management-system/"] --> cdkJson["cdk.json"];
+  root --> infra["infra/"];
+  infra --> bin["bin/"];
+  bin --> appJs["app.js"];
+  infra --> lib["lib/"];
+  lib --> stackJs["order-api-stack.js"];
 ```
 
 ## 依存関係

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f6f4ef; }
+      .card { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.5; rx: 14; }
+      .title { font: 700 30px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .panel { fill: #fcfaf6; stroke: #e4ddd2; stroke-width: 1.2; }
+      .thumbTitle { font: 700 16px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .thumbText { font: 500 11px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7c7265; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+  <text class="title" x="56" y="64">画面モック集</text>
+  <text class="subtitle" x="56" y="92">個別画面のイメージを 1440px 幅で揃えた一覧です。</text>
+
+  <g transform="translate(56,126)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">ダッシュボード</text>
+    <text class="thumbText" x="36" y="82">サマリーカード / 最近の注文</text>
+    <rect x="36" y="100" width="96" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="144" y="100" width="96" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="252" y="100" width="96" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="312" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+
+  <g transform="translate(512,126)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">注文一覧</text>
+    <text class="thumbText" x="36" y="82">検索 / 絞り込み / 一覧テーブル</text>
+    <rect x="36" y="100" width="144" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="190" y="100" width="88" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="286" y="100" width="72" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="312" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+
+  <g transform="translate(968,126)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">注文登録</text>
+    <text class="thumbText" x="36" y="82">顧客情報 / 注文商品 / 登録</text>
+    <rect x="36" y="100" width="146" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="194" y="100" width="146" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="304" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+
+  <g transform="translate(56,470)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">注文詳細</text>
+    <text class="thumbText" x="36" y="82">明細 / 顧客情報 / 操作カード</text>
+    <rect x="36" y="100" width="228" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="274" y="100" width="84" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="312" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+
+  <g transform="translate(512,470)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">PDF プレビュー</text>
+    <text class="thumbText" x="36" y="82">1 ページ表示 / S3 保存 / URL 発行</text>
+    <rect x="36" y="100" width="240" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="286" y="100" width="72" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="312" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+
+  <g transform="translate(968,470)">
+    <rect class="card" x="0" y="0" width="416" height="304"/>
+    <rect class="panel" x="20" y="20" width="376" height="224"/>
+    <text class="thumbTitle" x="36" y="52">ログイン / 権限なし</text>
+    <text class="thumbText" x="36" y="82">認証導線とアクセス拒否画面</text>
+    <rect x="36" y="100" width="130" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="176" y="100" width="130" height="34" fill="#fff" stroke="#d9d2c7"/>
+    <rect x="36" y="154" width="312" height="72" fill="#fff" stroke="#d9d2c7"/>
+  </g>
+</svg>

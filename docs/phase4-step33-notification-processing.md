@@ -32,11 +32,11 @@
 
 この手順書では次の構成を推奨する。
 
-```text
-EventBridge rule
-  -> Notification Lambda
-  -> SNS topic
-  -> email subscription
+```mermaid
+graph TD;
+  rule["EventBridge rule"] --> lambda["Notification Lambda"];
+  lambda --> sns["SNS topic"];
+  sns --> email["email subscription"];
 ```
 
 理由:
@@ -149,13 +149,13 @@ Event bus:
 
 ### 通知文の例
 
-```text
-注文が登録されました
-注文ID: ORD-DEV-001
-顧客名: テスト顧客
-合計金額: 6000円
-ステータス: pending
-イベントID: evt-123456
+```mermaid
+graph TD;
+  message["注文が登録されました"] --> orderId["注文ID: ORD-DEV-001"];
+  message --> customer["顧客名: テスト顧客"];
+  message --> total["合計金額: 6000円"];
+  message --> status["ステータス: pending"];
+  message --> eventId["イベントID: evt-123456"];
 ```
 
 ## 7. 冪等性を考える
