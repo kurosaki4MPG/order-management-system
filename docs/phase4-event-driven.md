@@ -14,7 +14,7 @@
 
 このSTEPでは、まだAWSリソースは作らない。
 まず「何をイベント化するか」を、ユーザー自身の手で設計してもらう。
-ここで確定した内容は `docs/phase4-event-driven-design.md` に詳細設計としてまとめる。
+ここで確定した内容は [order-management-system-aws-design.md](./detailed-design/order-management-system-aws-design.md) に詳細設計としてまとめる。
 
 ## 目的
 
@@ -24,7 +24,7 @@
 
 ## 事前に読むもの
 
-- `docs/backend-design.md`
+- [order-management-system-api-design.md](./detailed-design/order-management-system-api-design.md)
 - `docs/api-gateway-integration.md`
 - これまでの注文API実装
 
@@ -118,18 +118,16 @@
 ## 記載例
 
 ```text
-OrderCreated
-  source: oms.orders
-  detail-type: OrderCreated
-  発火点: 注文登録成功後
-  購読先: 通知処理、監査ログ、将来の処理基盤
-
-OrderUpdated
-  source: oms.orders
-  detail-type: OrderUpdated
-  detail: 更新後の注文スナップショット
-  発火点: 注文更新成功後
-  購読先: 通知処理、監査ログ、フロント表示更新
+graph TD;
+  orderCreated["OrderCreated"] --> source["source: oms.orders"];
+  orderCreated --> detailType["detail-type: OrderCreated"];
+  orderCreated --> trigger["発火点: 注文登録成功後"];
+  orderCreated --> subscribers["購読先: 通知処理 / 監査ログ / 将来の処理基盤"];
+  orderUpdated["OrderUpdated"] --> source2["source: oms.orders"];
+  orderUpdated --> detailType2["detail-type: OrderUpdated"];
+  orderUpdated --> snapshot["detail: 更新後の注文スナップショット"];
+  orderUpdated --> trigger2["発火点: 注文更新成功後"];
+  orderUpdated --> subscribers2["購読先: 通知処理 / 監査ログ / フロント表示更新"];
 ```
 
 ## 確認観点
@@ -160,7 +158,7 @@ OrderUpdated
 
 ## 事前に読むもの
 
-- `docs/phase4-event-driven-design.md`
+- [order-management-system-aws-design.md](./detailed-design/order-management-system-aws-design.md)
 - `infra/lib/order-api-stack.js`
 - `src/lambda/order-api-gateway-handler.ts`
 

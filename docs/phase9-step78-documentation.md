@@ -20,10 +20,10 @@
 ### 3.1 入口になる資料
 
 - [phase-index.md](./phase-index.md)
-- [design-index.md](./design-index.md)
+- [design-index.md](./detailed-design/design-index.md)
 - [order-system-learning-context.md](./order-system-learning-context.md)
 - [phase9-final-integration.md](./phase9-final-integration.md)
-- [phase9-final-integration-design.md](./phase9-final-integration-design.md)
+- [詳細設計書](./detailed-design/order-management-system-detailed-design.md)
 
 ### 3.2 実施手順の中心資料
 
@@ -34,14 +34,9 @@
 
 ### 3.3 関連する基礎資料
 
-- [phase1-frontend-foundation.md](./phase1-frontend-foundation.md)
-- [phase2-backend-aws.md](./phase2-backend-aws.md)
-- [phase3-cdk-iac.md](./phase3-cdk-iac.md)
-- [phase4-event-driven.md](./phase4-event-driven.md)
-- [phase5-react-pdf.md](./phase5-react-pdf.md)
-- [phase6-testing.md](./phase6-testing.md)
-- [phase7-github-actions-cicd.md](./phase7-github-actions-cicd.md)
-- [phase8-auth-security-ops.md](./phase8-auth-security-ops.md)
+- [order-management-system-screen-design.md](./detailed-design/order-management-system-screen-design.md)
+- [order-management-system-api-design.md](./detailed-design/order-management-system-api-design.md)
+- [order-management-system-aws-design.md](./detailed-design/order-management-system-aws-design.md)
 
 ---
 

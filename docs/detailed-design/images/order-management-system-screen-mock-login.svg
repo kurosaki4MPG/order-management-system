@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f4f1ea; }
+      .panel { fill: #ffffff; stroke: #ddd4c8; stroke-width: 1.5; rx: 18; }
+      .card { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.5; rx: 14; }
+      .field { fill: #fffdf9; stroke: #d8d0c2; stroke-width: 1.2; rx: 8; }
+      .primary { fill: #201d1a; }
+      .button { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.3; rx: 6; }
+      .title { font: 800 34px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 16px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .brand { font: 700 28px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #201d1a; }
+      .accent { fill: #d9732d; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+  <rect x="96" y="96" width="1248" height="668" class="panel"/>
+
+  <rect x="138" y="142" width="380" height="576" fill="#f8f3ea" rx="16"/>
+  <rect x="172" y="182" width="46" height="46" fill="#201d1a"/>
+  <text class="brand" x="232" y="212">Order System</text>
+  <text class="subtitle" x="172" y="256">注文管理システム</text>
+  <text class="title" x="172" y="328">ログイン</text>
+  <text class="subtitle" x="172" y="358">Cognito を使って認証します。</text>
+  <text class="subtitle" x="172" y="390">ログイン後は注文一覧へ遷移します。</text>
+  <rect x="172" y="436" width="240" height="88" fill="#ffffff" stroke="#eadccc"/>
+  <text class="small" x="192" y="470">認証方式</text>
+  <text class="muted" x="192" y="496">Hosted UI / PKCE / JWT</text>
+  <rect x="172" y="550" width="240" height="48" fill="#fffaf4" stroke="#eadccc"/>
+  <text class="muted" x="192" y="580">SSO セッションを利用します。</text>
+
+  <rect x="606" y="170" width="548" height="520" class="card"/>
+  <text class="title" x="652" y="226">サインイン</text>
+  <text class="subtitle" x="652" y="258">アカウントで認証して、注文管理システムに入ります。</text>
+
+  <text class="small" x="652" y="312">メールアドレス</text>
+  <rect class="field" x="652" y="324" width="456" height="44"/>
+  <text class="muted" x="668" y="351">name@example.com</text>
+
+  <text class="small" x="652" y="402">パスワード</text>
+  <rect class="field" x="652" y="414" width="456" height="44"/>
+  <text class="muted" x="668" y="441">••••••••••••</text>
+
+  <rect class="button" x="652" y="478" width="174" height="38"/>
+  <text class="small" x="684" y="502">パスワードを表示</text>
+
+  <rect class="primary" x="652" y="540" width="456" height="52" rx="8"/>
+  <text class="small" x="812" y="572" fill="#ffffff">Cognito でログイン</text>
+
+  <rect class="button" x="652" y="608" width="456" height="48"/>
+  <text class="small" x="802" y="638">管理者として続行</text>
+
+  <text class="muted" x="652" y="696">ログインに成功すると `/orders` へ遷移します。</text>
+  <text class="muted" x="652" y="724">権限不足時は `/forbidden` を表示します。</text>
+</svg>

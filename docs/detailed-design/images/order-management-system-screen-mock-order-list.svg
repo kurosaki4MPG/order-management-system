@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f6f4ef; }
+      .sidebar { fill: #ffffff; stroke: #e6dfd4; stroke-width: 1.5; }
+      .header { fill: #ffffff; stroke: #e4ddd2; stroke-width: 1; }
+      .card { fill: #fff; stroke: #d9d2c7; stroke-width: 1.5; rx: 12; }
+      .title { font: 700 28px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .muted2 { font: 500 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .label { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .value { font: 700 34px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .nav { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .navMuted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .iconBox { fill: #201d1a; }
+      .button { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.3; rx: 6; }
+      .buttonGhost { fill: #f7f7f7; stroke: #d9d2c7; stroke-width: 1.3; rx: 6; }
+      .badgePending { fill: #fff7e1; stroke: #e0c36a; stroke-width: 1; rx: 5; }
+      .badgeProcessing { fill: #eef6ff; stroke: #8dc0ef; stroke-width: 1; rx: 5; }
+      .badgeShipped { fill: #edf0ff; stroke: #96a4ef; stroke-width: 1; rx: 5; }
+      .badgeDelivered { fill: #ecf8f0; stroke: #8fd2a7; stroke-width: 1; rx: 5; }
+      .rowText { font: 500 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #3d3831; }
+      .orderNo { font: 500 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #3d3831; }
+      .rowMuted { font: 500 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .tableHead { font: 600 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .money { font: 700 16px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .rowLine { stroke: #e8e1d7; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+
+  <rect class="sidebar" x="0" y="0" width="240" height="860"/>
+  <rect class="iconBox" x="16" y="16" width="32" height="32"/>
+  <text class="small" x="58" y="29">Order System</text>
+  <text class="navMuted" x="58" y="49">注文管理システム</text>
+  <text class="navMuted" x="24" y="106">メニュー</text>
+
+  <rect x="12" y="122" width="216" height="36" fill="#f3eee6"/>
+  <text class="nav" x="48" y="145">ダッシュボード</text>
+
+  <rect x="12" y="164" width="216" height="36" fill="#f3eee6" opacity="0.5"/>
+  <text class="nav" x="48" y="187">注文一覧</text>
+
+  <text class="nav" x="48" y="229">注文登録</text>
+  <text class="nav" x="48" y="269">帳票プレビュー</text>
+
+  <text class="navMuted" x="24" y="812">Order System v0.1.0</text>
+
+  <rect class="header" x="240" y="0" width="1200" height="64"/>
+  <rect x="258" y="20" width="24" height="24" fill="#ffffff" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="26" x2="276" y2="26" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="32" x2="276" y2="32" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="38" x2="276" y2="38" stroke="#1f1a17" stroke-width="1.5"/>
+  <text class="small" x="300" y="27">注文管理システム</text>
+  <text class="muted" x="300" y="47">Order Management System</text>
+  <text class="muted" x="1124" y="28">🔔</text>
+  <text class="small" x="1172" y="24">kenichi.kurosaki@manpowergroup.jp</text>
+  <text class="navMuted" x="1172" y="43">管理者</text>
+  <rect x="1336" y="10" width="96" height="40" fill="#ffffff" stroke="#d9d2c7" stroke-width="1.5"/>
+  <text class="small" x="1358" y="35">ログアウト</text>
+
+  <text class="title" x="292" y="126">注文一覧</text>
+  <text class="subtitle" x="292" y="154">注文状況の確認、検索、絞り込みができます。</text>
+
+  <g transform="translate(292,184)">
+    <rect class="card" x="0" y="0" width="248" height="92"/>
+    <rect class="card" x="264" y="0" width="248" height="92"/>
+    <rect class="card" x="528" y="0" width="248" height="92"/>
+    <rect class="card" x="792" y="0" width="248" height="92"/>
+    <rect class="card" x="1056" y="0" width="248" height="92"/>
+
+    <text class="label" x="18" y="28">処理待ち</text>
+    <text class="value" x="18" y="68">2</text>
+    <circle cx="220" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="215" y="31">⏳</text>
+
+    <text class="label" x="282" y="28">処理中</text>
+    <text class="value" x="282" y="68">1</text>
+    <circle cx="484" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="479" y="31">🔄</text>
+
+    <text class="label" x="546" y="28">発送済み</text>
+    <text class="value" x="546" y="68">1</text>
+    <circle cx="748" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="743" y="31">📦</text>
+
+    <text class="label" x="810" y="28">完了</text>
+    <text class="value" x="810" y="68">1</text>
+    <circle cx="1012" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="1007" y="31">✓</text>
+
+    <text class="label" x="1074" y="28">キャンセル</text>
+    <text class="value" x="1074" y="68">0</text>
+    <circle cx="1276" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="1271" y="31">×</text>
+  </g>
+
+  <rect class="card" x="292" y="304" width="1120" height="472"/>
+  <text class="title" x="324" y="356">注文一覧</text>
+  <text class="muted" x="1296" y="356">5 件</text>
+  <line class="rowLine" x1="292" y1="384" x2="1412" y2="384"/>
+
+  <text class="muted" x="324" y="422">🔍 注文番号、顧客名、商品名で検索</text>
+  <rect x="324" y="404" width="660" height="42" fill="#ffffff" stroke="#d9d2c7"/>
+
+  <rect class="button" x="1008" y="404" width="170" height="42"/>
+  <text class="small" x="1030" y="430">すべてのステータス</text>
+
+  <rect class="button" x="1192" y="404" width="170" height="42"/>
+  <text class="small" x="1210" y="430">すべての支払い方法</text>
+
+  <rect class="buttonGhost" x="1374" y="404" width="38" height="42"/>
+  <text class="small" x="1372" y="430" text-anchor="end">解除</text>
+
+  <line class="rowLine" x1="324" y1="468" x2="1388" y2="468"/>
+  <text class="tableHead" x="324" y="456">注文番号</text>
+  <text class="tableHead" x="470" y="456">注文日時</text>
+  <text class="tableHead" x="610" y="456">顧客</text>
+  <text class="tableHead" x="780" y="456">商品</text>
+  <text class="tableHead" x="970" y="456">支払い</text>
+  <text class="tableHead" x="1110" y="456">ステータス</text>
+  <text class="tableHead" x="1260" y="456" text-anchor="end">合計</text>
+  <text class="tableHead" x="1388" y="456" text-anchor="end">操作</text>
+
+  <line class="rowLine" x1="324" y1="516" x2="1388" y2="516"/>
+  <text class="orderNo" x="324" y="500">ORD-20260901-797438</text>
+  <text class="rowMuted" x="470" y="500">09/01 13:59</text>
+  <text class="rowText" x="610" y="496">統合八郎</text>
+  <text class="rowMuted" x="610" y="516">hachiro.togo@hoge.com</text>
+  <text class="rowText" x="780" y="500">全機能統合</text>
+  <text class="rowMuted" x="780" y="516">1 商品 / 合計 1 点</text>
+  <text class="rowText" x="970" y="500">クレジットカード</text>
+  <rect class="badgeProcessing" x="1096" y="482" width="80" height="24"/>
+  <text class="small" x="1112" y="499">処理中</text>
+  <text class="money" x="1260" y="500" text-anchor="end">¥1,000</text>
+  <rect class="button" x="1290" y="478" width="74" height="34"/>
+  <text class="small" x="1310" y="501">詳細</text>
+  <rect class="button" x="1372" y="478" width="40" height="34"/>
+  <text class="small" x="1380" y="501">🗑</text>
+
+  <line class="rowLine" x1="324" y1="588" x2="1388" y2="588"/>
+  <text class="orderNo" x="324" y="572">ORD-20260827-994109</text>
+  <text class="rowMuted" x="470" y="572">08/27 15:26</text>
+  <text class="rowText" x="610" y="568">山田太郎</text>
+  <text class="rowMuted" x="610" y="588">yamada@example.com</text>
+  <text class="rowText" x="780" y="572">商品A</text>
+  <text class="rowMuted" x="780" y="588">1 商品 / 合計 2 点</text>
+  <text class="rowText" x="970" y="572">銀行振込</text>
+  <rect class="badgePending" x="1090" y="554" width="88" height="24"/>
+  <text class="small" x="1106" y="571">処理待ち</text>
+  <text class="money" x="1260" y="572" text-anchor="end">¥3,700</text>
+  <rect class="button" x="1290" y="550" width="74" height="34"/>
+  <text class="small" x="1310" y="573">詳細</text>
+  <rect class="button" x="1372" y="550" width="40" height="34"/>
+  <text class="small" x="1380" y="573">🗑</text>
+
+  <line class="rowLine" x1="324" y1="660" x2="1388" y2="660"/>
+  <text class="orderNo" x="324" y="644">ORD-20260827-371897</text>
+  <text class="rowMuted" x="470" y="644">08/27 13:19</text>
+  <text class="rowText" x="610" y="640">請求書十郎</text>
+  <text class="rowMuted" x="610" y="660">tojiro.seikyu@hoge.com</text>
+  <text class="rowText" x="780" y="644">DBハンドブック</text>
+  <text class="rowMuted" x="780" y="660">1 商品 / 合計 1 点</text>
+  <text class="rowText" x="970" y="644">代金引換</text>
+  <rect class="badgePending" x="1090" y="626" width="88" height="24"/>
+  <text class="small" x="1106" y="643">処理待ち</text>
+  <text class="money" x="1260" y="644" text-anchor="end">¥3,000</text>
+  <rect class="button" x="1290" y="622" width="74" height="34"/>
+  <text class="small" x="1310" y="645">詳細</text>
+  <rect class="button" x="1372" y="622" width="40" height="34"/>
+  <text class="small" x="1380" y="645">🗑</text>
+
+  <line class="rowLine" x1="324" y1="732" x2="1388" y2="732"/>
+  <text class="orderNo" x="324" y="716">ORD-20260825-386384</text>
+  <text class="rowMuted" x="470" y="716">08/25 15:13</text>
+  <text class="rowText" x="610" y="712">通知五郎</text>
+  <text class="rowMuted" x="610" y="732">goro.notify@hoge.com</text>
+  <text class="rowText" x="780" y="716">SNS de 通知</text>
+  <text class="rowMuted" x="780" y="732">1 商品 / 合計 1 点</text>
+  <text class="rowText" x="970" y="716">クレジットカード</text>
+  <rect class="badgeDelivered" x="1098" y="698" width="72" height="24"/>
+  <text class="small" x="1114" y="715">完了</text>
+  <text class="money" x="1260" y="716" text-anchor="end">¥2,000</text>
+  <rect class="button" x="1290" y="694" width="74" height="34"/>
+  <text class="small" x="1310" y="717">詳細</text>
+  <rect class="button" x="1372" y="694" width="40" height="34"/>
+  <text class="small" x="1380" y="717">🗑</text>
+
+  <text class="muted" x="1296" y="798">5 件 / ページ送り</text>
+</svg>

@@ -28,15 +28,10 @@
 
 ### 3.2 設計書
 
-- [phase1-frontend-foundation-design.md](./phase1-frontend-foundation-design.md)
-- [phase2-backend-aws-design.md](./phase2-backend-aws-design.md)
-- [phase3-cdk-iac-design.md](./phase3-cdk-iac-design.md)
-- [phase4-event-driven-design.md](./phase4-event-driven-design.md)
-- [phase5-react-pdf-design.md](./phase5-react-pdf-design.md)
-- [phase6-testing-design.md](./phase6-testing-design.md)
-- [phase7-github-actions-cicd-design.md](./phase7-github-actions-cicd-design.md)
-- [phase8-auth-security-ops-design.md](./phase8-auth-security-ops-design.md)
-- [phase9-final-integration-design.md](./phase9-final-integration-design.md)
+- [order-management-system-screen-design.md](./detailed-design/order-management-system-screen-design.md)
+- [order-management-system-api-design.md](./detailed-design/order-management-system-api-design.md)
+- [order-management-system-aws-design.md](./detailed-design/order-management-system-aws-design.md)
+- [詳細設計書](./detailed-design/order-management-system-detailed-design.md)
 
 ### 3.3 手順書
 

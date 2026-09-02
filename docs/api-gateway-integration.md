@@ -32,15 +32,16 @@
 
 ## このプロジェクトでの想定ルート
 
-```text
-GET    /orders
-GET    /orders/{id}
-GET    /orders/{id}/status
-POST   /orders
-PATCH  /orders/{id}
-PATCH  /orders/{id}/status
-DELETE /orders/{id}
-OPTIONS /*
+```mermaid
+graph TD;
+  gateway["API Gateway"] --> list["GET /orders"];
+  gateway --> detail["GET /orders/{id}"];
+  gateway --> status["GET /orders/{id}/status"];
+  gateway --> create["POST /orders"];
+  gateway --> update["PATCH /orders/{id}"];
+  gateway --> updateStatus["PATCH /orders/{id}/status"];
+  gateway --> delete["DELETE /orders/{id}"];
+  gateway --> options["OPTIONS /*"];
 ```
 
 ## 実装イメージ

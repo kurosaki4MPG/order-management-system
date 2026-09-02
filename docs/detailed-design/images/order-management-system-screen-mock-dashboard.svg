@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f6f4ef; }
+      .sidebar { fill: #ffffff; stroke: #e6dfd4; stroke-width: 1.5; }
+      .header { fill: #ffffff; stroke: #e4ddd2; stroke-width: 1; }
+      .card { fill: #fff; stroke: #d9d2c7; stroke-width: 1.5; rx: 12; }
+      .title { font: 700 28px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .muted2 { font: 500 12px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .label { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .value { font: 700 34px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .nav { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .navMuted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .iconBox { fill: #201d1a; }
+      .accent { fill: #d9732d; }
+      .status { fill: #f8f6f2; stroke: #e0d8cd; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+
+  <rect class="sidebar" x="0" y="0" width="240" height="860"/>
+  <rect class="iconBox" x="16" y="16" width="32" height="32"/>
+  <text class="small" x="58" y="29">Order System</text>
+  <text class="navMuted" x="58" y="49">注文管理システム</text>
+  <text class="navMuted" x="24" y="106">メニュー</text>
+
+  <rect x="12" y="122" width="216" height="36" fill="#f3eee6"/>
+  <text class="nav" x="48" y="145">ダッシュボード</text>
+
+  <text class="nav" x="48" y="185">注文一覧</text>
+  <text class="nav" x="48" y="225">注文登録</text>
+  <text class="nav" x="48" y="265">帳票プレビュー</text>
+
+  <text class="navMuted" x="24" y="812">Order System v0.1.0</text>
+
+  <rect class="header" x="240" y="0" width="1200" height="64"/>
+  <rect x="258" y="20" width="24" height="24" fill="#ffffff" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="26" x2="276" y2="26" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="32" x2="276" y2="32" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="38" x2="276" y2="38" stroke="#1f1a17" stroke-width="1.5"/>
+  <text class="small" x="300" y="27">注文管理システム</text>
+  <text class="muted" x="300" y="47">Order Management System</text>
+  <text class="muted" x="1124" y="28">🔔</text>
+  <text class="small" x="1172" y="24">kenichi.kurosaki@manpowergroup.jp</text>
+  <text class="navMuted" x="1172" y="43">管理者</text>
+  <rect x="1336" y="10" width="96" height="40" fill="#ffffff" stroke="#d9d2c7" stroke-width="1.5"/>
+  <text class="small" x="1358" y="35">ログアウト</text>
+
+  <text class="title" x="292" y="126">ダッシュボード</text>
+  <text class="subtitle" x="292" y="154">注文処理の状況を確認できます。</text>
+
+  <g transform="translate(292,184)">
+    <rect class="card" x="0" y="0" width="248" height="92"/>
+    <rect class="card" x="264" y="0" width="248" height="92"/>
+    <rect class="card" x="528" y="0" width="248" height="92"/>
+    <rect class="card" x="792" y="0" width="248" height="92"/>
+
+    <text class="label" x="18" y="28">本日の注文</text>
+    <text class="value" x="18" y="68">24</text>
+    <text class="muted2" x="18" y="84">前日比 +4件</text>
+    <circle cx="220" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="215" y="31">🛒</text>
+
+    <text class="label" x="282" y="28">処理待ち</text>
+    <text class="value" x="282" y="68">8</text>
+    <text class="muted2" x="282" y="84">対応が必要な注文</text>
+    <circle cx="484" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="479" y="31">⏰</text>
+
+    <text class="label" x="546" y="28">処理完了</text>
+    <text class="value" x="546" y="68">15</text>
+    <text class="muted2" x="546" y="84">本日完了した注文</text>
+    <circle cx="748" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="743" y="31">✓</text>
+
+    <text class="label" x="810" y="28">エラー</text>
+    <text class="value" x="810" y="68">1</text>
+    <text class="muted2" x="810" y="84">確認が必要です</text>
+    <circle cx="1012" cy="26" r="16" fill="#f2ece2"/>
+    <text class="small" x="1007" y="31">!</text>
+  </g>
+
+  <rect class="card" x="292" y="304" width="1120" height="140"/>
+  <text class="small" x="324" y="344">最近の注文</text>
+  <text class="muted" x="324" y="380">次のステップで注文一覧を実装します。</text>
+
+  <rect class="card" x="292" y="470" width="1120" height="120"/>
+  <text class="small" x="324" y="510">運用メモ</text>
+  <text class="muted" x="324" y="540">この画面は概要確認に限定し、詳細操作は注文一覧と注文登録に集約します。</text>
+
+  <rect class="status" x="292" y="622" width="360" height="64"/>
+  <text class="small" x="324" y="650">ステータス</text>
+  <text class="muted" x="404" y="650">全体の遅延・障害は Step Functions と CloudWatch で確認します。</text>
+</svg>

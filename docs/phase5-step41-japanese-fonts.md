@@ -13,7 +13,7 @@
 
 ## 実装ファイル
 
-- [`src/features/pdf/register-invoice-fonts.ts`](../src/features/pdf/register-invoice-fonts.ts)
+- [`src/features/pdf/register-invoice-fonts.server.ts`](../src/features/pdf/register-invoice-fonts.server.ts)
 - [`src/features/pdf/pdf-preview-panel.tsx`](../src/features/pdf/pdf-preview-panel.tsx)
 - [`src/features/pdf/invoice-document.tsx`](../src/features/pdf/invoice-document.tsx)
 

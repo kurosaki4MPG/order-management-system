@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <style>
+      .bg { fill: #f6f4ef; }
+      .sidebar { fill: #ffffff; stroke: #e6dfd4; stroke-width: 1.5; }
+      .header { fill: #ffffff; stroke: #e4ddd2; stroke-width: 1; }
+      .card { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.5; rx: 12; }
+      .field { fill: #fffdf9; stroke: #d8d0c2; stroke-width: 1.2; rx: 8; }
+      .primary { fill: #201d1a; }
+      .button { fill: #ffffff; stroke: #d9d2c7; stroke-width: 1.3; rx: 6; }
+      .badge { fill: #fff4df; stroke: #d9c07a; stroke-width: 1; rx: 6; }
+      .title { font: 700 28px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .subtitle { font: 500 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .small { font: 600 14px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #1f1a17; }
+      .muted { font: 500 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #7f7669; }
+      .label { font: 600 13px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #6f665a; }
+      .value { font: 600 15px "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif; fill: #2e2a25; }
+      .softLine { stroke: #e8e1d7; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="860"/>
+
+  <rect class="sidebar" x="0" y="0" width="240" height="860"/>
+  <rect x="16" y="16" width="32" height="32" fill="#201d1a"/>
+  <text class="small" x="58" y="29">Order System</text>
+  <text class="muted" x="58" y="49">注文管理システム</text>
+  <text class="muted" x="24" y="106">メニュー</text>
+  <text class="small" x="48" y="146">ダッシュボード</text>
+  <text class="small" x="48" y="186">注文一覧</text>
+  <rect x="12" y="204" width="216" height="36" fill="#f3eee6"/>
+  <text class="small" x="48" y="228">注文登録</text>
+  <text class="small" x="48" y="270">注文詳細</text>
+  <text class="small" x="48" y="310">帳票プレビュー</text>
+  <text class="muted" x="24" y="812">Order System v0.1.0</text>
+
+  <rect class="header" x="240" y="0" width="1200" height="64"/>
+  <rect x="258" y="20" width="24" height="24" fill="#ffffff" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="26" x2="276" y2="26" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="32" x2="276" y2="32" stroke="#1f1a17" stroke-width="1.5"/>
+  <line x1="264" y1="38" x2="276" y2="38" stroke="#1f1a17" stroke-width="1.5"/>
+  <text class="small" x="300" y="27">注文管理システム</text>
+  <text class="muted" x="300" y="47">Order Management System</text>
+  <text class="muted" x="1124" y="28">🔔</text>
+  <text class="small" x="1172" y="24">kenichi.kurosaki@manpowergroup.jp</text>
+  <text class="muted" x="1172" y="43">管理者</text>
+  <rect x="1336" y="10" width="96" height="40" fill="#ffffff" stroke="#d9d2c7" stroke-width="1.5"/>
+  <text class="small" x="1358" y="35">ログアウト</text>
+
+  <text class="title" x="292" y="126">注文登録</text>
+  <text class="subtitle" x="292" y="154">顧客情報と注文商品を入力して、新しい注文を登録します。</text>
+
+  <rect class="card" x="292" y="184" width="520" height="548"/>
+  <text class="small" x="324" y="222">顧客情報</text>
+  <line class="softLine" x1="292" y1="240" x2="812" y2="240"/>
+
+  <text class="label" x="324" y="280">顧客名</text>
+  <rect class="field" x="324" y="292" width="456" height="42"/>
+  <text class="value" x="340" y="319">統合 八郎</text>
+
+  <text class="label" x="324" y="360">メールアドレス</text>
+  <rect class="field" x="324" y="372" width="456" height="42"/>
+  <text class="value" x="340" y="399">hachiro.togo@hoge.com</text>
+
+  <text class="label" x="324" y="440">配送先住所</text>
+  <rect class="field" x="324" y="452" width="456" height="76"/>
+  <text class="value" x="340" y="480">東京都港区芝浦10-5-86</text>
+  <text class="muted" x="340" y="503">サンプルビル 8F</text>
+
+  <text class="label" x="324" y="568">支払い方法</text>
+  <rect class="field" x="324" y="580" width="214" height="42"/>
+  <text class="value" x="340" y="607">クレジットカード</text>
+  <rect class="field" x="566" y="580" width="214" height="42"/>
+  <text class="value" x="582" y="607">請求書払い</text>
+
+  <text class="label" x="324" y="648">備考</text>
+  <rect class="field" x="324" y="660" width="456" height="44"/>
+  <text class="muted" x="340" y="687">配送時間の指定がある場合はここに入力</text>
+
+  <rect class="card" x="836" y="184" width="312" height="548"/>
+  <text class="small" x="868" y="222">注文商品</text>
+  <line class="softLine" x1="836" y1="240" x2="1148" y2="240"/>
+  <text class="label" x="868" y="278">商品名</text>
+  <text class="label" x="1014" y="278">数量</text>
+  <text class="label" x="1078" y="278">単価</text>
+
+  <rect class="field" x="868" y="292" width="246" height="42"/>
+  <text class="value" x="884" y="319">注文管理システム 初期導入</text>
+  <text class="value" x="1020" y="319">1</text>
+  <text class="value" x="1084" y="319">¥120,000</text>
+
+  <rect class="field" x="868" y="348" width="246" height="42"/>
+  <text class="value" x="884" y="375">非同期処理ワークフロー設定</text>
+  <text class="value" x="1020" y="375">2</text>
+  <text class="value" x="1084" y="375">¥45,000</text>
+
+  <rect class="field" x="868" y="404" width="246" height="42"/>
+  <text class="value" x="884" y="431">監視アラーム設定</text>
+  <text class="value" x="1020" y="431">1</text>
+  <text class="value" x="1084" y="431">¥30,000</text>
+
+  <rect class="button" x="868" y="468" width="104" height="34"/>
+  <text class="small" x="888" y="490">商品を追加</text>
+  <rect class="button" x="980" y="468" width="84" height="34"/>
+  <text class="small" x="1002" y="490">削除</text>
+
+  <text class="label" x="868" y="548">注文合計</text>
+  <text class="title" x="868" y="596">¥240,000</text>
+  <text class="muted" x="868" y="626">税抜合計と税込合計をサーバー側で再計算します。</text>
+
+  <rect class="primary" x="972" y="656" width="176" height="46" rx="6"/>
+  <text class="small" x="1014" y="684" fill="#ffffff">注文を登録</text>
+
+  <rect class="badge" x="868" y="706" width="166" height="30"/>
+  <text class="small" x="886" y="727">入力エラーは各項目に表示</text>
+</svg>

@@ -89,3 +89,12 @@ STEP25 の詳細実施手順は [phase3-step25-cdk-project-setup.md](./phase3-st
 
 完了条件:
 - 実AWSへ反映できる
+
+## 関連資料
+
+- [cdk-project-setup.md](./cdk-project-setup.md)
+- [dynamodb-cdk-setup.md](./dynamodb-cdk-setup.md)
+- [lambda-cdk-setup.md](./lambda-cdk-setup.md)
+- [api-gateway-cdk-setup.md](./api-gateway-cdk-setup.md)
+- [cdk-environment-separation.md](./cdk-environment-separation.md)
+- [cdk-deploy-guide.md](./cdk-deploy-guide.md)
