@@ -60,10 +60,14 @@ STEP76 の詳細実施手順は [phase9-step76-nonfunctional-review.md](./phase9
 
 ## STEP77 負荷・障害試験
 
+STEP77 の詳細実施手順は [phase9-step77-load-failure-testing.md](./phase9-step77-load-failure-testing.md) を参照する。
+
 実施内容:
 - 注文登録や PDF プレビューに負荷をかける
 - Step Functions、SQS、DLQ、Lambda の失敗を意図的に起こす
 - 復旧後に画面とアラームが戻るかを試す
+- 実機では `shouldFail: true` の Step Functions 実行を起こし、`oms-dev-order-processing-workflow-failed-alarm` の `ALARM` 遷移まで確認した
+- SQS では壊れたメッセージを DLQ に移し、purge と正常メッセージ再投入で `oms-dev-order-processing-dlq-alarm` と `oms-dev-order-queue-consumer-error-alarm` が `OK` に戻ることを確認した
 
 確認観点:
 - どの障害がどのアラームに出るか分かる
@@ -74,6 +78,8 @@ STEP76 の詳細実施手順は [phase9-step76-nonfunctional-review.md](./phase9
 - 耐障害性と復旧手順を確認できる
 
 ## STEP78 ドキュメント作成
+
+STEP78 の詳細実施手順は [phase9-step78-documentation.md](./phase9-step78-documentation.md) を参照する。
 
 実施内容:
 - 画面仕様、API 仕様、AWS 構成、運用手順、障害対応手順をまとめる
@@ -88,6 +94,8 @@ STEP76 の詳細実施手順は [phase9-step76-nonfunctional-review.md](./phase9
 
 ## STEP79 コードレビュー
 
+STEP79 の詳細実施手順は [phase9-step79-code-review.md](./phase9-step79-code-review.md) を参照する。
+
 実施内容:
 - 設計の妥当性、命名、責務分離、テスト、運用のしやすさを見直す
 - 本番運用で困りそうな箇所を洗い出す
@@ -100,6 +108,8 @@ STEP76 の詳細実施手順は [phase9-step76-nonfunctional-review.md](./phase9
 - 改善余地と残す理由が整理される
 
 ## STEP80 成果物整理
+
+STEP80 の詳細実施手順は [phase9-step80-artifact-organization.md](./phase9-step80-artifact-organization.md) を参照する。
 
 実施内容:
 - 最終版の README、設計書、手順書、実装、テストを整理する

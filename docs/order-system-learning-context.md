@@ -528,10 +528,10 @@ STEP52で決めたこと:
 - [STEP74 全機能統合](./phase9-final-integration.md)
 - [STEP75 注文管理業務フロー完成](./phase9-final-integration.md)
 - [STEP76 非機能要件確認](./phase9-final-integration.md)
-- [STEP77 負荷・障害試験](./phase9-final-integration.md)
-- [STEP78 ドキュメント作成](./phase9-final-integration.md)
-- [STEP79 コードレビュー](./phase9-final-integration.md)
-- [STEP80 成果物整理](./phase9-final-integration.md)
+- [STEP77 負荷・障害試験](./phase9-step77-load-failure-testing.md)
+- [STEP78 ドキュメント作成](./phase9-step78-documentation.md)
+- [STEP79 コードレビュー](./phase9-step79-code-review.md)
+- [STEP80 成果物整理](./phase9-step80-artifact-organization.md)
 
 ---
 
@@ -993,6 +993,13 @@ STEP77で学ぶもの:
 - 負荷をかけたときの応答と障害時の動きを確認すること
 - Step Functions、SQS、DLQ、Lambda の失敗を意図的に起こして復旧確認すること
 - アラーム、再実行、再デプロイの流れを試すこと
+- `shouldFail: true` の Step Functions 実行で `FAILED` と `OrderWorkflowFailed` を確認できること
+- `oms-dev-order-processing-workflow-failed-alarm` は 5 分評価後に `ALARM` へ遷移すること
+- `not-json` の SQS メッセージは Consumer で失敗し、DLQ へ移送されること
+- DLQ を purge し、正常な EventBridge 形式のメッセージを流すと `oms-dev-order-processing-dlq-alarm` と `oms-dev-order-queue-consumer-error-alarm` が `OK` に戻ること
+- 2026-09-02 に STEP77 の実機確認として、Step Functions / SQS / DLQ / Lambda の障害再現と復旧確認を完了したこと
+- 2026-09-02 に Playwright で注文登録と PDF プレビューの実機確認を行い、正常系と異常系の 5 件が通過したこと
+- E2E 実行時のみ認証を通して、proxy とサーバー側の両方で検証を成立させたこと
 
 STEP78で学ぶもの:
 

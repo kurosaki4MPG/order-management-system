@@ -6,9 +6,14 @@ import { fileURLToPath } from "node:url"
 const rootDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(rootDir, "..")
 const coverageDir = resolve(projectRoot, ".playwright-coverage")
-const appUrl = "http://localhost:3000"
+const appUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3001"
+const appPort = new URL(appUrl).port || "3001"
 const npmBin = process.platform === "win32" ? "npm.cmd" : "npm"
 const npxBin = process.platform === "win32" ? "npx.cmd" : "npx"
+
+if (!process.env.PLAYWRIGHT_E2E_AUTH_BYPASS) {
+  process.env.PLAYWRIGHT_E2E_AUTH_BYPASS = "1"
+}
 
 async function isServerReady() {
   try {
@@ -40,11 +45,15 @@ async function ensureServer() {
     return null
   }
 
-  const serverProcess = spawn(npmBin, ["run", "dev", "--", "--hostname", "127.0.0.1"], {
-    cwd: projectRoot,
-    env: process.env,
-    stdio: "inherit",
-  })
+  const serverProcess = spawn(
+    npmBin,
+    ["run", "dev", "--", "--hostname", "localhost", "--port", appPort],
+    {
+      cwd: projectRoot,
+      env: process.env,
+      stdio: "inherit",
+    }
+  )
 
   let exited = false
   serverProcess.on("exit", () => {
@@ -68,10 +77,12 @@ async function runPlaywright() {
       {
         cwd: projectRoot,
         env: {
-          ...process.env,
-          PLAYWRIGHT_E2E_COVERAGE: "1",
-          PLAYWRIGHT_WEB_SERVER: "0",
-        },
+        ...process.env,
+        PLAYWRIGHT_E2E_COVERAGE: "1",
+        PLAYWRIGHT_E2E_AUTH_BYPASS: "1",
+        PLAYWRIGHT_BASE_URL: appUrl,
+        PLAYWRIGHT_WEB_SERVER: "0",
+      },
         stdio: "inherit",
       }
     )
