@@ -5,7 +5,18 @@ import { relative, resolve } from "node:path"
 import { createHash } from "node:crypto"
 
 const coverageEnabled = process.env.PLAYWRIGHT_E2E_COVERAGE === "1"
+const authBypassEnabled = process.env.PLAYWRIGHT_E2E_AUTH_BYPASS === "1"
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const coverageDir = resolve(process.cwd(), ".playwright-coverage")
+const authCookie = {
+  name: "oms_auth_id_token",
+  value: "playwright-e2e",
+  domain: new URL(baseURL).hostname,
+  httpOnly: true,
+  sameSite: "Lax" as const,
+  secure: false,
+  path: "/",
+}
 
 function makeSafeSlug(value: string) {
   return value
@@ -56,6 +67,10 @@ async function writeCoverage(
 
 export const test = base.extend({
   page: async ({ page }, use, testInfo) => {
+    if (authBypassEnabled) {
+      await page.context().addCookies([authCookie])
+    }
+
     if (!coverageEnabled) {
       await use(page)
       return

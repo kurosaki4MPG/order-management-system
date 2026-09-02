@@ -12,6 +12,10 @@ const PUBLIC_PATH_PREFIXES = [
 ]
 
 export function proxy(request: NextRequest) {
+  if (process.env.PLAYWRIGHT_E2E_AUTH_BYPASS === "1") {
+    return NextResponse.next()
+  }
+
   const { pathname, search } = request.nextUrl
   const hasSession = Boolean(request.cookies.get(AUTH_COOKIE_NAME)?.value)
   const isPublicPath = PUBLIC_PATH_PREFIXES.some(

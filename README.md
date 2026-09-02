@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Order Management System
 
-## Getting Started
+注文管理システムを題材にした、Next.js + AWS サーバーレス構成の学習プロジェクトです。  
+フロントエンド、API、非同期処理、帳票出力、認証、監視、CI/CD までを一通り扱います。
 
-First, run the development server:
+## 概要
+
+- フロントエンド: Next.js
+- バックエンド: API Gateway / Lambda / DynamoDB / EventBridge / SQS / Step Functions
+- 帳票: React PDF / S3 / signed URL
+- 認証: Cognito
+- 監視: CloudWatch
+- IaC: AWS CDK
+
+## 主要な入口
+
+- [学習コンテキスト](docs/order-system-learning-context.md)
+- [Phase インデックス](docs/phase-index.md)
+- [詳細設計インデックス](docs/design-index.md)
+- [Phase 9 最終統合](docs/phase9-final-integration.md)
+- [Phase 9 詳細設計](docs/phase9-final-integration-design.md)
+
+## ローカル起動
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで `http://localhost:3000` を開きます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## よく使うコマンド
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run test
+npm run test:coverage
+npm run build
+npm run test:e2e
+npm run test:e2e:coverage
+npm run verify:ci
+```
 
-## Learn More
+## 開発時の注意
 
-To learn more about Next.js, take a look at the following resources:
+- 認証が必要な画面は Cognito のセッションが必要です。
+- AWS 実地確認は `oms-dev` などの正しい profile とリージョン設定が必要です。
+- STEP77 以降は CloudWatch / Step Functions / SQS / DLQ / Lambda の実機確認手順を各 STEP にまとめています。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ドキュメントの見方
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. まず [Phase インデックス](docs/phase-index.md) で全体の流れを確認します。
+2. 次に [詳細設計インデックス](docs/design-index.md) で設計の入口を確認します。
+3. 実施結果や学習メモは [学習コンテキスト](docs/order-system-learning-context.md) で辿ります。
+4. 個別の操作手順は各 `phase*-*.md` を参照します。
 
-## Deploy on Vercel
+## デプロイと運用
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- AWS CDK のデプロイ手順は [cdk-deploy-guide.md](docs/cdk-deploy-guide.md) を参照してください。
+- 環境分離やローカル変数は [cdk-environment-separation.md](docs/cdk-environment-separation.md) と [local-environment-variables.md](docs/local-environment-variables.md) を参照してください。
+- AWS 構成の概観は [aws-architecture-overview.md](docs/aws-architecture-overview.md) を参照してください。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 学習の位置づけ
+
+このリポジトリは、実務レベルの注文管理システムを段階的に作るための教材です。  
+各 Phase は機能追加だけでなく、テスト、設計、運用、障害対応まで含めて確認する前提で進めています。

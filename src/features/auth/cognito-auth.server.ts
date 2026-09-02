@@ -28,6 +28,16 @@ export type AuthSession = {
   username: string
 }
 
+const PLAYWRIGHT_E2E_AUTH_BYPASS_SESSION: AuthSession = {
+  authenticated: true,
+  displayName: "Playwright E2E",
+  email: "playwright@example.com",
+  groups: ["admin"],
+  role: "admin",
+  subject: "playwright-e2e",
+  username: "playwright-e2e",
+}
+
 type CognitoAuthConfig = {
   clientId: string
   domainBaseUrl: string
@@ -332,6 +342,10 @@ export async function verifyAndReadAuthSessionFromIdToken(
 }
 
 export async function getAuthSession(): Promise<AuthSession | null> {
+  if (process.env.PLAYWRIGHT_E2E_AUTH_BYPASS === "1") {
+    return PLAYWRIGHT_E2E_AUTH_BYPASS_SESSION
+  }
+
   const cookieStore = await cookies()
   const idToken = cookieStore.get(AUTH_COOKIE_NAMES.idToken)?.value
   if (!idToken) {
