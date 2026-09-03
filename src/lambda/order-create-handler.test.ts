@@ -3,6 +3,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { OrderFormValues } from "@/features/orders/schemas/order-schema"
 import { handler } from "@/lambda/order-create-handler"
 
+const { randomUUIDMock } = vi.hoisted(() => ({
+  randomUUIDMock: vi.fn(),
+}))
+
+vi.mock("node:crypto", () => ({
+  default: {
+    randomUUID: randomUUIDMock,
+  },
+  randomUUID: randomUUIDMock,
+}))
+
 function parseJsonResponse<T>(body: string) {
   return JSON.parse(body) as T
 }
@@ -36,7 +47,7 @@ describe("order-create-handler", () => {
   it("creates an order and returns a 201 response", async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2026-08-27T12:34:56.000Z"))
-    vi.spyOn(Math, "random").mockReturnValue(0.123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const result = await handler({
       body: JSON.stringify(validOrderInput),
@@ -59,8 +70,8 @@ describe("order-create-handler", () => {
 
     // リクエスト ID がレスポンスに含まれることを確認する。
     expect(body.requestId).toBe("req-001")
-    // 注文 ID が日付ベースで生成されることを確認する。
-    expect(body.order.id).toBe("ORD-20260827-123456-123")
+    // 注文 ID が日付 + UUID 8 桁で生成されることを確認する。
+    expect(body.order.id).toBe("ORD-20260827-550e8400")
     // 合計金額がサーバー側で再計算されることを確認する。
     expect(body.order.totalAmount).toBe(3700)
     // 受付日時が現在時刻を使っていることを確認する。
@@ -107,7 +118,7 @@ describe("order-create-handler", () => {
   it("defaults to POST when the method is omitted", async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2026-08-27T12:34:56.000Z"))
-    vi.spyOn(Math, "random").mockReturnValue(0.123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const result = await handler({
       body: JSON.stringify(validOrderInput),

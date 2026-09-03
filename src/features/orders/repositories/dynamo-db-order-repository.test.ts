@@ -191,7 +191,7 @@ describe("dynamoDbOrderRepository", () => {
       status: "pending",
       totalAmount: 3700,
     })
-    expect(order.id).toMatch(/^ORD-20260827-\d{6}$/)
+    expect(order.id).toMatch(/^ORD-20260827-[0-9a-f]{8}$/)
     expect(order.orderedAt).toBe("2026-08-27T12:34:56.789Z")
 
     const command = awsMocks.sendMock.mock.calls[0]?.[0] as {

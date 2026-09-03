@@ -1,4 +1,5 @@
 import type { Order } from "@/features/orders/types/order"
+import { extractOrderIdSuffix } from "@/features/orders/utils/order-id"
 import { getOrderById, getOrders } from "@/features/orders/services/order-service"
 
 import type {
@@ -23,7 +24,7 @@ function addDays(value: Date, days: number) {
 
 function buildInvoiceNumber(orderId: string, issuedAt: Date) {
   const datePart = issuedAt.toISOString().slice(0, 10).replaceAll("-", "")
-  const orderPart = orderId.replaceAll(/[^A-Za-z0-9]/g, "").slice(-6).toUpperCase()
+  const orderPart = extractOrderIdSuffix(orderId)
 
   return `INV-${datePart}-${orderPart || "ORDER"}`
 }

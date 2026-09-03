@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { redirect } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -28,7 +27,7 @@ export default async function LoginPage() {
           <Button
             className="w-full"
             nativeButton={false}
-            render={<Link href="/api/auth/login?returnTo=/" />}
+            render={<a href="/api/auth/login?returnTo=/" />}
           >
             Cognito でログイン
           </Button>

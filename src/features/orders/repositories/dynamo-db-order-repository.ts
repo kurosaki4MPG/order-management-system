@@ -21,6 +21,7 @@ import type {
   OrderQueryFilters,
   OrderRepository,
 } from "@/features/orders/repositories/order-repository";
+import { buildOrderId } from "@/features/orders/utils/order-id";
 import {
   getAwsRegion,
   getOrdersTableName,
@@ -52,13 +53,6 @@ function assertTableName() {
 
 function calculateTotalAmount(items: OrderItem[]) {
   return items.reduce((total, item) => total + item.quantity * item.unitPrice, 0);
-}
-
-function createOrderId(orderedAt: string) {
-  const date = orderedAt.slice(0, 10).replaceAll("-", "");
-  const suffix = String(Date.now()).slice(-6);
-
-  return `ORD-${date}-${suffix}`;
 }
 
 function isPaymentMethod(value: unknown): value is PaymentMethod {
@@ -131,7 +125,7 @@ export const dynamoDbOrderRepository: OrderRepository = {
   async create(values) {
     // サーバー側で採番と集計を行い、その結果をそのまま保存する。
     const orderedAt = new Date().toISOString();
-    const id = createOrderId(orderedAt);
+    const id = buildOrderId(orderedAt);
     const totalAmount = calculateTotalAmount(values.items);
     const order: Order = {
       id,

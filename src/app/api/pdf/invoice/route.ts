@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     )
   }
 
-  const invoice = buildInvoiceDocumentFromOrder(order)
+  const invoice = buildInvoiceDocumentFromOrder(order, order.orderedAt)
   const invoiceKey = JSON.stringify({
     invoice,
     orderId: order.id,
