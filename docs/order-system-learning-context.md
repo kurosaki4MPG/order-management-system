@@ -896,7 +896,6 @@ STEP62で学んだもの:
 - GitHub Environment の reviewer で prod 承認を挟むこと
 - `workflow_dispatch` で明示的に stage を選ばせること
 - 環境ごとのデプロイ先と OIDC subject を揃えること
-- 2026-08-28 に `workflow_dispatch` の `stage=prod` 実行が成功し、本番デプロイの運用確認まで完了したこと
 
 STEP63で学んだもの:
 
@@ -935,7 +934,6 @@ STEP68で学んだもの:
 - `cdk-hnb659fds-lookup-role` のような bootstrap の lookup 用権限は、実運用で不要なら外してよいこと
 - 既存の Lambda / API / S3 / EventBridge の権限は CDK の `grant*` を使うと resource-scoped に保ちやすいこと
 - `cdk deploy` が `no changes` で通ることも、権限整理後の確認材料になること
-- 2026-08-31 に GitHub OIDC role の最小権限化を確認したこと
 
 STEP69で学んだもの:
 
@@ -943,7 +941,6 @@ STEP69で学んだもの:
 - サーバー側の設定取得口を 1 か所に寄せると、どの値をどこで使うか追いやすいこと
 - `.env.example` には秘密そのものではなく、公開設定と非機密の実行設定だけを載せること
 - もし API キーやパスワードが必要になったら、Secrets Manager か GitHub Secrets に逃がす前提を先に決めること
-- 2026-08-31 に設定値の集約と秘密情報の分離方針を実装したこと
 
 STEP70で学んだもの:
 
@@ -951,7 +948,6 @@ STEP70で学んだもの:
 - JSON を受ける API は `Content-Type` を要求すると、雑な呼び出しを減らせること
 - `Origin` / `Sec-Fetch-Site` / `Referer` を見れば、ブラウザ由来の cross-site リクエストをかなり絞れること
 - 失敗理由を `401` / `403` / `415` / `400` に分けると、フロントエンドでの扱いが明確になること
-- 2026-08-31 に API セキュリティの共通ヘルパーを導入したこと
 
 STEP71で学んだもの:
 
@@ -962,7 +958,6 @@ STEP71で学んだもの:
 - `aws logs tail` と Logs Insights を組み合わせると、直近の流れと過去の絞り込みを分けて確認しやすいこと
 - Lambda 単位の `aws logs tail /aws/lambda/... --follow` は、画面操作とログを対応づけるときに有効なこと
 - Logs Insights では `requestId` は 1 回の操作、`orderId` は 1 件の注文、`level = "error"` は異常系の確認に向くこと
-- 2026-08-31 に構造化ログの共通化を実装したこと
 
 STEP72で学んだもの:
 
@@ -972,7 +967,6 @@ STEP72で学んだもの:
 - `oms-dev-order-invoice-generation-error-alarm` は `shouldFailInvoice: true` で発火することを確認したこと
 - 失敗確認用 JSON が invoice 生成前の `PrepareOrderWorkflowTask` で止まると、invoice 生成 Lambda まで到達しないこと
 - 修正として、invoice 生成だけを落とす `shouldFailInvoice` を追加したこと
-- 2026-09-01 に CloudWatch アラームの追加とデプロイ確認を行ったこと
 
 STEP73で学んだもの:
 
@@ -982,7 +976,6 @@ STEP73で学んだもの:
 - 認証・認可の障害は `/login` と `/forbidden`、API の 401 / 403 を見ると確認しやすいこと
 - 帳票生成の障害は `shouldFailInvoice` と invoice generation Lambda のログを組み合わせると再現しやすいこと
 - 復旧後はアラームが `OK` に戻り、同じ入力で再実行したときに成功することを確認すること
-- 2026-09-01 に障害対応の切り分け順と復旧確認の考え方をまとめたこと
 
 STEP74で学ぶもの:
 
@@ -995,7 +988,6 @@ STEP75で学ぶもの:
 - 注文管理の業務フローを、受注から完了まで説明できる形にまとめること
 - `admin` / `operator` / `viewer` の役割分担が業務フローと一致していることを確認すること
 - 実務フローとしてどの画面や API を通るかを整理すること
-- 2026-09-01 に権限制御と注文登録から請求書生成までの実運用確認が完了したこと
 
 STEP76で学ぶもの:
 
@@ -1003,7 +995,6 @@ STEP76で学ぶもの:
 - 画面、API、Lambda、S3、Step Functions のどこがボトルネックや障害点になりやすいかを整理すること
 - CloudWatch Logs、Alarm、DLQ、再実行を使って復旧しやすさを確認すること
 - 改善案と制約を分けて記録すること
-- 2026-09-01 に lint、test、型チェック、production build の実測確認を完了したこと
 
 STEP77で学ぶもの:
 
@@ -1014,8 +1005,6 @@ STEP77で学ぶもの:
 - `oms-dev-order-processing-workflow-failed-alarm` は 5 分評価後に `ALARM` へ遷移すること
 - `not-json` の SQS メッセージは Consumer で失敗し、DLQ へ移送されること
 - DLQ を purge し、正常な EventBridge 形式のメッセージを流すと `oms-dev-order-processing-dlq-alarm` と `oms-dev-order-queue-consumer-error-alarm` が `OK` に戻ること
-- 2026-09-02 に STEP77 の実機確認として、Step Functions / SQS / DLQ / Lambda の障害再現と復旧確認を完了したこと
-- 2026-09-02 に Playwright で注文登録と PDF プレビューの実機確認を行い、正常系と異常系の 5 件が通過したこと
 - E2E 実行時のみ認証を通して、proxy とサーバー側の両方で検証を成立させたこと
 
 STEP78で学ぶもの:
@@ -1025,7 +1014,6 @@ STEP78で学ぶもの:
 - STEP ごとの確認結果を残すこと
 - README を入口として再構成し、Phase / Design / 学習コンテキストを相互リンクすること
 - 実施結果は各 STEP の文書に残し、学習コンテキストには要点だけを集約すること
-- 2026-09-02 に STEP78 の文書整理として、README の再構成と入口リンクの整備を進めたこと
 
 STEP79で学ぶもの:
 
@@ -1035,7 +1023,6 @@ STEP79で学ぶもの:
 - 注文 ID 生成の共通化と、請求書番号の legacy 互換 suffix 抽出をレビューで確認したこと
 - PDF route handler の時刻依存を減らし、同じ注文なら同じ請求書情報になるように揃えたこと
 - Cognito ログイン導線を通常遷移へ直し、CORS エラーを避ける実装に修正したこと
-- 2026-09-03 に STEP79 のレビューを完了し、保留事項なしで整理を終えたこと
 
 STEP80で学ぶもの:
 
@@ -1043,7 +1030,6 @@ STEP80で学ぶもの:
 - 成果物の役割と所在を明確にすること
 - 学習案件として完了した状態にすること
 - README と設計書の入口を揃え、Phase / Design / 学習コンテキストを相互に辿れる状態にしたこと
-- 2026-09-03 に STEP80 の成果物整理を進め、文書の入口と役割分担を整理したこと
 
 ---
 
@@ -1066,16 +1052,3 @@ STEP80で学ぶもの:
 - 障害発生時にどう追跡・復旧するか
 
 各STEP完了時にはGitコミットを行い、実務に近い開発履歴を残す。
-
----
-
-# 13. 次回の開始指示
-
-各Phaseの詳細手順は `docs/phase-index.md` から参照できる。
-各Phaseの詳細設計は [design-index.md](./detailed-design/design-index.md) から参照できる。
-
-次回は以下だけ伝えれば続きから開始できる。
-
-「STEP74から続けてください」
-
-その場合、現在の前提を維持して、最終統合から開始する。

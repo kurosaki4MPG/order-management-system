@@ -140,7 +140,7 @@ Step Functions 失敗アラームが上がったら、`oms-dev-order-processing-
 
 ### 実地確認メモ
 
-- 2026-08-26 時点で `oms-dev-order-processing-dlq-alarm` が `ALARM` になったが、DLQ のメッセージを削除後、しばらくして `OK` に戻ることを確認した
+- `oms-dev-order-processing-dlq-alarm` が `ALARM` になったが、DLQ のメッセージを削除後、しばらくして `OK` に戻ることを確認した
 - CloudWatch の評価は即時ではなく、数分程度の遅延がありうる
 - DLQ の `ApproximateNumberOfMessagesVisible` が 0 でも、アラーム状態がすぐには変わらない場合がある
 

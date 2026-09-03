@@ -231,10 +231,9 @@
 - 失敗確認は、実際に送った JSON と実行履歴を対で残す
 - アラーム確認は、発火条件・解除条件・確認タイミングを分けて記録する
 - 画面確認は、見た目ではなく応答時間と操作可否を優先して記録する
-- 2026-09-02 に Playwright を使って実機確認を実施した
 - 認証は E2E 実行時のみ通るようにし、proxy とサーバー側の両方で検証を成立させた
 - 注文登録フォームの正常系、空送信、サーバー失敗、PDF プレビューの正常系、注文一覧取得失敗の 5 件がすべて通過した
 - `node scripts/run-e2e-coverage.mjs` 実行後、E2E coverage の集計で `new` と `pdf-preview` が 100% になった
 - `aws sts get-caller-identity` はこの環境では `Unable to locate credentials` だったため、AWS 実地確認は認証済み端末または AWS コンソールで行う前提にする
-- 2026-09-02 に Step Functions の失敗実行を実機で確認し、`oms-dev-order-processing-workflow-failed-alarm` の `ALARM` 遷移まで確認した
-- 2026-09-02 に SQS の壊れたメッセージを DLQ へ送って復旧し、`oms-dev-order-processing-dlq-alarm` と `oms-dev-order-queue-consumer-error-alarm` が `OK` に戻ることを確認した
+- Step Functions の失敗実行を実機で確認し、`oms-dev-order-processing-workflow-failed-alarm` の `ALARM` 遷移まで確認した
+- SQS の壊れたメッセージを DLQ へ送って復旧し、`oms-dev-order-processing-dlq-alarm` と `oms-dev-order-queue-consumer-error-alarm` が `OK` に戻ることを確認した
