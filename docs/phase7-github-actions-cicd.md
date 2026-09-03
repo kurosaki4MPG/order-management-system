@@ -205,7 +205,6 @@
 - GitHub Environment `dev` / `prod` を使って、環境ごとの OIDC subject とデプロイ先を一致させた
 - `prod` は GitHub Environment の保護ルールでレビュー承認を入れる前提にし、workflow 側は手動起動にした
 - `dev` は自動、`prod` は手動という運用により、誤って本番へ流すリスクを減らした
-- 2026-08-28 に `workflow_dispatch` で `stage=prod` と `cors_origins=https://app.example.com` を指定して本番デプロイを実行し、`deploy-prod` が成功した
 
 ### 62.1 環境設定
 
@@ -220,7 +219,6 @@
 2. `prod` へ反映する場合は workflow を手動起動し、`stage=prod` を選ぶ
 3. `cors_origins` を本番 URL に設定する
 4. 必要なら GitHub Environment の承認後にデプロイを進める
-5. 2026-08-28 時点で `stage=prod` の本番デプロイが成功している
 
 確認観点:
 
