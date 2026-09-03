@@ -6,6 +6,7 @@
 
 - PDF を S3 に保存する Route Handler を追加する
 - 保存キーを `orders/<orderId>/invoice-<invoiceNumber>.pdf` に統一する
+- `invoiceNumber` は `orderId` の末尾 8 桁と揃うため、保存キーでも注文と請求書の対応が追いやすい
 - 保存結果を JSON で確認できるようにする
 - S3 未設定時は明確に 503 を返す
 

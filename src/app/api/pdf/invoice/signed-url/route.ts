@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     )
   }
 
-  const invoice = buildInvoiceDocumentFromOrder(order)
+  const invoice = buildInvoiceDocumentFromOrder(order, order.orderedAt)
   const pdf = await renderInvoicePdf(invoice)
   const saved = await saveInvoicePdfToS3(invoice, pdf)
 

@@ -15,7 +15,7 @@ import { getOrderById, getOrders } from "@/features/orders/services/order-servic
 
 // 注文データから請求書ドキュメントを組み立てるロジックが、帳票要件どおりに動くことを確認する。
 const sampleOrder: Order = {
-  id: "ORD-TEST-001",
+  id: "ORD-20260826-ABC12345",
   orderedAt: "2026-08-26T14:00:00.000Z",
   customerName: "テスト顧客",
   customerEmail: "test@example.com",
@@ -53,8 +53,8 @@ describe("buildInvoiceDocumentFromOrder", () => {
 
     // 注文データから請求書の各項目が組み立てられることを確認する。
     expect(invoice).toEqual({
-      orderId: "ORD-TEST-001",
-      invoiceNumber: "INV-20260827-EST001",
+      invoiceNumber: "INV-20260827-ABC12345",
+      orderId: "ORD-20260826-ABC12345",
       customerName: "テスト顧客",
       customerAddress: "東京都港区1-2-3",
       issuedAt: "2026-08-27 12:34",
@@ -74,7 +74,7 @@ describe("buildInvoiceDocumentFromOrder", () => {
       ],
       notes: [
         "注文管理システムの注文データから自動生成した請求書です。",
-        "注文ID: ORD-TEST-001",
+        "注文ID: ORD-20260826-ABC12345",
         "顧客名: テスト顧客",
         "支払い方法: credit-card",
         "注文日時: 2026-08-26T14:00:00.000Z",
@@ -92,7 +92,7 @@ describe("buildInvoiceDocumentFromOrder", () => {
     // issuedAt 省略時に現在時刻が使われることを確認する。
     expect(invoice.issuedAt).toBe("2026-08-27 01:00")
     // 請求書番号が注文 ID から安定生成されることを確認する。
-    expect(invoice.invoiceNumber).toBe("INV-20260827-EST001")
+    expect(invoice.invoiceNumber).toBe("INV-20260827-ABC12345")
   })
 
   // 注文 ID に英数字がない場合は、請求書番号の末尾を ORDER に寄せることを確認する。
@@ -121,7 +121,7 @@ describe("buildInvoiceDocumentFromPreviewOrder", () => {
     // previewSeed を元に issuedAt が 1 時間進んだ値になることを確認する。
     expect(invoice.issuedAt).toBe("2026-08-27 01:00")
     // 既存の請求書組み立てロジックがそのまま使われることを確認する。
-    expect(invoice.invoiceNumber).toBe("INV-20260827-EST001")
+    expect(invoice.invoiceNumber).toBe("INV-20260827-ABC12345")
   })
 })
 
@@ -142,6 +142,6 @@ describe("resolveInvoiceOrder", () => {
   it("returns the matching order when order id is provided", async () => {
     vi.mocked(getOrderById).mockResolvedValueOnce(sampleOrder)
 
-    await expect(resolveInvoiceOrder("ORD-TEST-001")).resolves.toEqual(sampleOrder)
+    await expect(resolveInvoiceOrder("ORD-20260826-ABC12345")).resolves.toEqual(sampleOrder)
   })
 })

@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   customerName: {
     fontFamily: "InvoiceJP",
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: 400,
     marginBottom: 6,
   },
   customerAddress: {

@@ -33,10 +33,12 @@
 
 ```mermaid
 graph TD;
-  browser["ブラウザ"] --> api["/api/pdf/invoice?orderId=ORD-20260804-001"];
+  browser["ブラウザ"] --> api["/api/pdf/invoice?orderId=ORD-20260903-ABC12345"];
   api --> pdf["PDF を返す"];
   pdf --> preview["プレビュー枠"];
 ```
+
+注文 ID と請求書番号は末尾 8 桁の suffix をそろえる前提なので、API の入出力でも同じ注文を追跡しやすい。
 
 不正な空文字や未定義値が混ざる場合は、API が 400 を返す。
 

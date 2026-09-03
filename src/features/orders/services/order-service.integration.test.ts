@@ -4,9 +4,11 @@ import type { OrderFormValues } from "@/features/orders/schemas/order-schema"
 
 const {
   documentStore,
+  randomUUIDMock,
   sendMock,
 } = vi.hoisted(() => {
   const documentStore = new Map<string, Record<string, unknown>>()
+  const randomUUIDMock = vi.fn()
   const sendMock = vi.fn(async (command: { input?: Record<string, unknown> }) => {
     const input = command.input ?? {}
     const commandName = command.constructor?.name
@@ -77,8 +79,15 @@ const {
     return {}
   })
 
-  return { documentStore, sendMock }
+  return { documentStore, randomUUIDMock, sendMock }
 })
+
+vi.mock("node:crypto", () => ({
+  default: {
+    randomUUID: randomUUIDMock,
+  },
+  randomUUID: randomUUIDMock,
+}))
 
 vi.mock("@aws-sdk/client-dynamodb", () => ({
   DynamoDBClient: class DynamoDBClient {},
@@ -168,7 +177,7 @@ describe("order-service integration", () => {
   // 登録した注文が、そのまま取得できることを確認する。
   it("creates and retrieves an order through the repository", async () => {
     setSystemClock("2026-08-27T01:00:00.000Z")
-    vi.spyOn(Date, "now").mockReturnValue(1234567890123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const { createOrder, getOrderById } = await import(
       "@/features/orders/services/order-service"
@@ -181,22 +190,20 @@ describe("order-service integration", () => {
     expect(fetched?.id).toBe(created.id)
     // 合計金額が保存時点の値のまま維持されることを確認する。
     expect(fetched?.totalAmount).toBe(1200)
-    // 日時ベースの ID が生成されることを確認する。
-    expect(created.id).toBe("ORD-20260827-890123")
+    // UUID ベースの注文 ID になることを確認する。
+    expect(created.id).toBe("ORD-20260827-550e8400")
   })
 
   // 検索条件を指定すると、Repository の絞り込みが効くことを確認する。
   it("filters orders through searchOrders", async () => {
     setSystemClock("2026-08-27T01:00:00.000Z")
-    vi.spyOn(Date, "now").mockReturnValue(1234567890123)
+    randomUUIDMock
+      .mockReturnValueOnce("550e8400-e29b-41d4-a716-446655440000")
+      .mockReturnValueOnce("660e8400-e29b-41d4-a716-446655440000")
 
     const { createOrder, searchOrders } = await import(
       "@/features/orders/services/order-service"
     )
-
-    vi.spyOn(Date, "now")
-      .mockReturnValueOnce(1234567890123)
-      .mockReturnValueOnce(1234567890456)
 
     await createOrder(
       createOrderInput({
@@ -239,7 +246,7 @@ describe("order-service integration", () => {
   // ステータス更新後に、更新内容が Repository に反映されることを確認する。
   it("updates order status and keeps other fields intact", async () => {
     setSystemClock("2026-08-27T01:00:00.000Z")
-    vi.spyOn(Date, "now").mockReturnValue(1234567890123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const { createOrder, getOrderById, updateOrderStatus } = await import(
       "@/features/orders/services/order-service"
@@ -259,7 +266,7 @@ describe("order-service integration", () => {
   // フル更新後に、計算済み合計金額が更新されることを確認する。
   it("updates the full order payload and recalculates totals", async () => {
     setSystemClock("2026-08-27T01:00:00.000Z")
-    vi.spyOn(Date, "now").mockReturnValue(1234567890123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const { createOrder, getOrderById, updateOrder } = await import(
       "@/features/orders/services/order-service"
@@ -287,7 +294,7 @@ describe("order-service integration", () => {
   // 削除後は、以後取得できないことを確認する。
   it("deletes an order and makes it unavailable", async () => {
     setSystemClock("2026-08-27T01:00:00.000Z")
-    vi.spyOn(Date, "now").mockReturnValue(1234567890123)
+    randomUUIDMock.mockReturnValue("550e8400-e29b-41d4-a716-446655440000")
 
     const { createOrder, deleteOrder, getOrderById } = await import(
       "@/features/orders/services/order-service"

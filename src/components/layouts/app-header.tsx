@@ -40,7 +40,7 @@ export function AppHeader({ session }: AppHeaderProps) {
           </div>
           <Button
             nativeButton={false}
-            render={<Link href={authHref} />}
+            render={session ? <a href={authHref} /> : <Link href={authHref} />}
             variant="outline"
             className="gap-2"
           >

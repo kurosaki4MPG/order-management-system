@@ -132,6 +132,25 @@ describe("OrderDetail", () => {
     })
   })
 
+  // 削除失敗時は画面上にエラーを出し、一覧遷移しないことを確認する。
+  it("shows an error when deleting an order fails", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true)
+    deleteOrderMutationMock.mockRejectedValue(new Error("delete failed"))
+
+    render(<OrderDetail orderId="ORD-001" initialOrder={sampleOrder} />)
+
+    fireEvent.click(screen.getByRole("button", { name: "削除" }))
+
+    await waitFor(() => {
+      // 削除エラーが画面に出ることを確認する。
+      expect(
+        screen.getByText("注文の削除に失敗しました。時間をおいて再実行してください。")
+      ).toBeInTheDocument()
+      // 削除失敗時は一覧へ遷移しないことを確認する。
+      expect(routerPushMock).not.toHaveBeenCalled()
+    })
+  })
+
   // 読み込み中はスケルトンを表示して、画面の揺れを防ぐことを確認する。
   it("shows a loading skeleton while the order is being fetched", () => {
     orderQueryState = {

@@ -178,7 +178,7 @@
 ```json
 {
   "order": {
-    "id": "ORD-20260902-001",
+    "id": "ORD-20260903-ABC12345",
     "status": "pending"
   }
 }

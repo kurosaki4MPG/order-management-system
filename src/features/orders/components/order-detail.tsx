@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import { ApiError } from "@/features/orders/api/order-api";
 import {
   useDeleteOrderMutation,
   useOrderQuery,
@@ -43,6 +45,7 @@ export function OrderDetail({
   orderId,
 }: OrderDetailProps) {
   const router = useRouter();
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
   const { data: currentOrder, isFetching, isLoading, isError } = useOrderQuery(
     orderId,
     initialOrder
@@ -60,8 +63,18 @@ export function OrderDetail({
       return;
     }
 
-    await deleteOrderMutation.mutateAsync(orderId);
-    router.push("/orders");
+    setDeleteErrorMessage("");
+
+    try {
+      await deleteOrderMutation.mutateAsync(orderId);
+      router.push("/orders");
+    } catch (error) {
+      setDeleteErrorMessage(
+        error instanceof ApiError && error.message
+          ? error.message
+          : "注文の削除に失敗しました。時間をおいて再実行してください。"
+      );
+    }
   }
 
   if (!resolvedOrder && isLoading) {
@@ -93,6 +106,12 @@ export function OrderDetail({
 
   return (
     <div className="space-y-6">
+      {deleteErrorMessage && (
+        <div className="border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {deleteErrorMessage}
+        </div>
+      )}
+
       {isError && (
         <div className="border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           注文詳細の再取得に失敗しました。前回の内容を表示しています。

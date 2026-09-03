@@ -16,11 +16,11 @@
 
 - [学習コンテキスト](docs/order-system-learning-context.md)
 - [Phase インデックス](docs/phase-index.md)
-- [詳細設計インデックス](docs/design-index.md)
+- [詳細設計インデックス](docs/detailed-design/design-index.md)
 - [詳細設計書](docs/detailed-design/order-management-system-detailed-design.md)
 - [画面設計書](docs/detailed-design/order-management-system-screen-design.md)
-- [API設計書](docs/order-management-system-api-design.md)
-- [AWS設計書](docs/order-management-system-aws-design.md)
+- [API設計書](docs/detailed-design/order-management-system-api-design.md)
+- [AWS設計書](docs/detailed-design/order-management-system-aws-design.md)
 - [Phase 9 最終統合](docs/phase9-final-integration.md)
 
 ## ローカル起動
@@ -53,7 +53,7 @@ npm run verify:ci
 ## ドキュメントの見方
 
 1. まず [Phase インデックス](docs/phase-index.md) で全体の流れを確認します。
-2. 次に [詳細設計インデックス](docs/design-index.md) で設計の入口を確認します。
+2. 次に [詳細設計インデックス](docs/detailed-design/design-index.md) で設計の入口を確認します。
 3. 実施結果や学習メモは [学習コンテキスト](docs/order-system-learning-context.md) で辿ります。
 4. 個別の操作手順は各 `phase*-*.md` を参照します。詳細設計は `docs/detailed-design/` の統合文書を参照します。
 

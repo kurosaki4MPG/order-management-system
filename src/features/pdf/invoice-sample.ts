@@ -1,8 +1,8 @@
 import type { InvoiceDocumentProps } from "@/features/pdf/invoice-document"
 
 export const sampleInvoice: InvoiceDocumentProps = {
-  orderId: "ORD-TEST-001",
-  invoiceNumber: "INV-20260826-001",
+  orderId: "ORD-20260826-ABC12345",
+  invoiceNumber: "INV-20260826-ABC12345",
   customerName: "株式会社オーダー管理システムソリューションズ",
   customerAddress:
     "東京都千代田区丸の内1-1-1 サンプルビル 8F\n請求管理部 宛",
