@@ -214,12 +214,12 @@ export function OrderList({
             </Button>
           </div>
 
-          <div className="overflow-x-auto border">
-            {isLoading ? (
-              <OrderListSkeleton />
-            ) : (
-              <>
-                <table className="w-full min-w-[980px] border-collapse text-sm">
+          <div className="border">
+            <div className="max-w-full overflow-x-auto">
+              {isLoading ? (
+                <OrderListSkeleton />
+              ) : (
+                <table className="w-max border-collapse text-sm">
                   <thead className="bg-muted/70 text-left text-xs font-semibold text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3">注文番号</th>
@@ -228,8 +228,8 @@ export function OrderList({
                       <th className="px-4 py-3">商品</th>
                       <th className="px-4 py-3">支払い</th>
                       <th className="px-4 py-3">ステータス</th>
-                      <th className="px-4 py-3 text-right">合計</th>
-                      <th className="px-4 py-3 text-right">操作</th>
+                      <th className="px-4 py-3">合計</th>
+                      <th className="px-4 py-3">操作</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -271,7 +271,7 @@ export function OrderList({
                           <div className="flex justify-end gap-2">
                             <Link
                               href={`/orders/${order.id}`}
-                              className="inline-flex h-9 items-center justify-center gap-2 border border-input px-3 text-xs font-semibold transition-colors hover:bg-muted"
+                              className="inline-flex items-center justify-center gap-2 border border-input px-3 text-xs font-semibold transition-colors hover:bg-muted"
                             >
                               <Eye className="size-4" />
                               詳細
@@ -298,14 +298,14 @@ export function OrderList({
                     ))}
                   </tbody>
                 </table>
+              )}
 
-                {orders.length === 0 && (
-                  <div className="border-t bg-card px-4 py-10 text-center text-sm text-muted-foreground">
-                    条件に一致する注文はありません。
-                  </div>
-                )}
-              </>
-            )}
+              {!isLoading && orders.length === 0 && (
+                <div className="border-t bg-card px-4 py-10 text-center text-sm text-muted-foreground">
+                  条件に一致する注文はありません。
+                </div>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -315,13 +315,16 @@ export function OrderList({
 
 function OrderListSkeleton() {
   return (
-    <div className="min-w-[980px]">
+    <div className="w-max">
       <div className="border-b bg-muted/70 px-4 py-3 text-xs font-semibold text-muted-foreground">
         注文一覧
       </div>
       <div className="space-y-3 p-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="grid grid-cols-[120px_180px_1fr_120px_100px_120px_120px_100px] gap-3">
+          <div
+            key={index}
+            className="grid grid-cols-[30ch_16ch_22ch_24ch_12ch_14ch_12ch_16ch] gap-3"
+          >
             <Skeleton className="h-5" />
             <Skeleton className="h-5" />
             <Skeleton className="h-5" />

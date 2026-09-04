@@ -127,6 +127,27 @@
   --sidebar-ring: oklch(0.547 0.021 43.1);
 }
 
+/*注文管理システム カスタムスタイル*/
+.oms {
+  /*フォントファミリー変更*/
+  --font-sans:
+    "Inter", "-apple-system", BlinkMacSystemFont, "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Segoe UI", "Yu Gothic UI", "Meiryo", "Noto Sans JP",
+    sans-serif;
+  --font-geist-mono:
+    "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas,
+    "Hiragino Sans", "BIZ UDGothic", "Meiryo UI",
+    monospace;
+  --font-heading:
+    "Playfair Display", "Georgia", "Noto Serif JP", "Shippori Mincho",
+    "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho",
+    serif;
+  /*サイドバー背景色変更：Slate-400*/
+  --sidebar: oklch(0.71 0.04 257);
+  /*サイドバーホバー色変更：Slate-300*/
+  --sidebar-accent: oklch(0.87 0.02 253);
+}
+
 /* 基本スタイルは最小限にして、各コンポーネント側の見た目を優先する。 */
 @layer base {
   * {

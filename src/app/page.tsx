@@ -60,7 +60,7 @@ export default function HomePage() {
               <CardTitle className="text-sm font-medium">
                 {item.title}
               </CardTitle>
-              <item.icon className="size-5 text-muted-foreground" />
+              <item.icon className="size-5 text-sky-700" />
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{item.value}</p>

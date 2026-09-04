@@ -256,8 +256,10 @@
 - モックは「境界」に置く
 - 画面テストは API ではなく Query hook をモックする
 - Query hook のテストは `fetch` 層や API 関数をモックする
-- Lambda 単体テストは Repository や AWS SDK をモックする
+- Lambda 単体テストは Service / Repository / AWS SDK をモックする
 - Service テストでは Repository を差し替える
+- `vi.mock` の hoist 問題は `vi.hoisted` で回避する
+- テスト後の `mockReset` と環境変数の後始末を徹底する
 - 純粋関数はモックしない
 
 ### 52.2 モック対象の優先順位

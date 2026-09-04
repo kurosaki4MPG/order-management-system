@@ -120,13 +120,13 @@ export default function PdfPreviewPanel() {
     : "注文を選択してください"
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="border-b border-border/70">
+    <Card className="overflow-hidden py-0">
+      {/* <CardHeader className="border-b border-border/70">
         <CardTitle className="flex items-center gap-2 text-base">
           <FileText className="size-4" />
           注文連携 PDF プレビュー
         </CardTitle>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent className="space-y-4 p-4">
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -149,7 +149,6 @@ export default function PdfPreviewPanel() {
               </option>
             ))}
           </select>
-          <p className="text-xs text-muted-foreground">{previewLabel}</p>
           {orderError ? (
             <p className="text-xs text-destructive">{orderError}</p>
           ) : null}
@@ -181,29 +180,9 @@ export default function PdfPreviewPanel() {
             <FileDown className="size-4" />
             PDF を開く
           </a>
-        </div>
 
-        <div className="rounded-lg border border-border bg-muted/20 p-3">
-          <div className="mb-3 text-sm text-muted-foreground">
-            注文一覧から選んだ実データをそのまま請求書に反映します。
-          </div>
-
-          <div
-            className="overflow-hidden rounded-md border border-border bg-background"
-            style={{ aspectRatio: "210 / 297" }}
-          >
-            <iframe
-              key={previewUrl}
-              title="PDF プレビュー"
-              src={previewUrl}
-              className="block h-full w-full border-0"
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
           <a
-            className="inline-flex h-10 items-center justify-center border border-border px-4 text-xs font-semibold tracking-widest uppercase text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+            className="ms-auto inline-flex h-10 items-center justify-center border border-border px-4 text-xs font-semibold tracking-widest uppercase text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
             href={savePdfUrl}
             target="_blank"
             rel="noreferrer"
@@ -216,6 +195,7 @@ export default function PdfPreviewPanel() {
           >
             S3 に保存
           </a>
+
           <a
             className="inline-flex h-10 items-center justify-center border border-border px-4 text-xs font-semibold tracking-widest uppercase text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
             href={signedUrl}
@@ -230,6 +210,18 @@ export default function PdfPreviewPanel() {
           >
             署名付き URL
           </a>
+        </div>
+
+        <div
+          className="overflow-hidden rounded-md border border-border bg-background"
+          style={{ aspectRatio: "210 / 297" }}
+        >
+          <iframe
+            key={previewUrl}
+            title="PDF プレビュー"
+            src={previewUrl}
+            className="block h-full w-full border-0"
+          />
         </div>
       </CardContent>
     </Card>

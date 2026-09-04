@@ -65,8 +65,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 px-2 py-2">
+      <SidebarHeader className="justify-center h-16 border-b px-4">
+        <div className="flex items-center gap-2 ">
           <div className="flex size-9 items-center justify-center bg-primary text-primary-foreground">
             <ShoppingCart className="size-5" />
           </div>

@@ -232,5 +232,9 @@ describe("OrderList", () => {
     expect(within(table).getByText("ステータス")).toBeInTheDocument()
     expect(within(table).getByText("合計")).toBeInTheDocument()
     expect(within(table).getByText("操作")).toBeInTheDocument()
+    // テーブルがコンテナ幅に引き伸ばされず、横スクロール用ラッパーに入っていることを確認する。
+    expect(table).toHaveClass("w-max")
+    expect(table).not.toHaveClass("w-full")
+    expect(table.parentElement).toHaveClass("max-w-full", "overflow-x-auto")
   })
 })

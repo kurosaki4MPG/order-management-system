@@ -22,8 +22,8 @@ export default async function AppShell({ children }: AppShellProps) {
           <AppSidebar session={session} />
           <SidebarInset>
             <AppHeader session={session} />
-            <div className="flex-1 bg-muted/30">
-              <div className="mx-auto w-full max-w-screen-2xl p-4 md:p-6">
+            <div className="min-w-0 flex-1 overflow-x-hidden bg-muted/30">
+              <div className="mx-auto w-full max-w-screen-2xl min-w-0 p-4 md:p-6">
                 {children}
               </div>
             </div>

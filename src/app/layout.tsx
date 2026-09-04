@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={cn("h-full", "antialiased", "font-sans")}>
+    <html lang="ja" className={cn("oms h-full", "antialiased", "font-sans")}>
       <body className="min-h-full">
         <AppShell>{children}</AppShell>
       </body>

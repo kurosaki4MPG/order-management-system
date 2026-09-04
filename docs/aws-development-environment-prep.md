@@ -67,6 +67,64 @@ NEXT_PUBLIC_API_BASE_URL=
 - `npx aws-cdk bootstrap` を実行できる権限がある
 - `.env.local` が Git 管理されていない
 
+## LAN 共有する場合
+
+LAN 共有では、Next.js を WSL 内で HTTP で起動し、Windows ホスト側で HTTPS の reverse proxy を立てる。
+この構成にすると、ホスト PC からも他 PC からも同じ入口で確認しやすい。
+
+### 手順
+
+1. WSL 側で Next.js の standalone サーバーを起動する
+
+```bash
+npm run build
+npm run start
+```
+
+2. Windows ホストで Caddy を起動する
+
+```powershell
+caddy run --config .\Caddyfile.lan
+```
+
+3. Windows ホストまたは LAN 内の別端末から `https://192.168.3.8:3443` を開く
+
+### 注意点
+
+- `Caddyfile.lan` は `https://192.168.3.8:3443` を HTTPS の入口にして、`127.0.0.1:3000` の WSL サーバーへ reverse proxy する
+- `next build` の後に `postbuild` で `.next/static` と `public` を `standalone` 配下へコピーするため、画面崩れを防ぎやすい
+- Caddy の `tls internal` は開発用の内部 CA を使うため、他 PC では CA を信頼しないと証明書警告が出る
+- もし Caddy から WSL の `127.0.0.1:3000` に届かない場合は、`scripts/setup-wsl-portproxy.ps1` で Windows localhost から WSL へ中継する
+- LAN 共有の確認では `NEXT_PUBLIC_API_BASE_URL` を外して same-origin `/api` に寄せると切り分けしやすい
+
+## standalone での起動
+
+`output: "standalone"` を使う場合、`next start` ではなく `node .next/standalone/server.js` を起動する。
+この起動方式は基本的に HTTP であり、`next dev --experimental-https` のような HTTPS は提供しない。
+
+### 起動例
+
+```bash
+npm run build
+HOSTNAME=0.0.0.0 PORT=3000 npm run start
+```
+
+PowerShell の場合は次のようにする。
+
+```powershell
+npm run build
+$env:HOSTNAME = "0.0.0.0"
+$env:PORT = "3000"
+npm run start
+```
+
+### 補足
+
+- LAN 公開で HMR が不要なら、`dev` より `standalone + start` のほうが安定しやすい
+- 起動後の直接アクセス先は `http://127.0.0.1:3000` になる
+- 外部公開は `Caddyfile.lan` の reverse proxy を通して `https://192.168.3.8:3443` を使う
+- Cognito の callback / logout を HTTPS のまま維持したい場合は、reverse proxy の公開 URL を登録する
+
 ## 追加の環境変数
 
 後続ステップでイベント駆動や通知を確認するときは、次の値も使う。

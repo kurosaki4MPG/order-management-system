@@ -468,14 +468,6 @@ graph TD;
 - [STEP44 署名付きURL](./phase5-step44-signed-url.md)
 - [STEP45 Step Functionsとの統合](./phase5-step45-step-functions-integration.md)
 
-- 帳票プレビューは注文一覧から対象注文を選び、その注文データをそのまま請求書へ反映する。
-- 請求書番号は注文 ID の末尾 8 桁と揃えることで、一覧・詳細・帳票・S3 保存を同じ注文として追いやすくした。
-- `STEP42` でサーバー生成 PDF を安定化した。
-- `STEP43` では `GET /api/pdf/invoice/store` で S3 保存を確認できるようにした。
-- `STEP44` では `GET /api/pdf/invoice/signed-url` で署名付き URL を発行できるようにした。
-- 保存キーは `orders/<orderId>/invoice-<invoiceNumber>.pdf` に統一した。
-- 請求先名の太字描画では先頭文字が欠ける現象が出たため、`fontWeight` を通常値へ戻して改善し、公式 Fonts ドキュメントと既知 issue で裏付けを取った。
-
 ## Phase 6：テスト設計
 
 - [STEP46 テスト方針策定](./phase6-testing.md)
@@ -488,32 +480,6 @@ graph TD;
 - [STEP53 統合テスト](./phase6-testing.md)
 - [STEP54 E2Eテスト](./phase6-testing.md)
 - [STEP55 カバレッジ・品質基準](./phase6-testing.md)
-
-STEP53で学んだもの:
-
-- Service から Repository への呼び出し経路
-- DynamoDB Repository の create / list / update / delete の一連の流れ
-- AWS SDK はモックしても、Repository の変換ロジックは通せること
-
-STEP54で学んだもの:
-
-- Playwright で注文登録のブラウザ導線を確認できること
-- PDF プレビューは API を route モックしても画面遷移と URL 生成を確認できること
-- 画面テストでは hidden な option ではなく、実際の表示ラベルを locator で絞る必要があること
-
-STEP55で学んだもの:
-
-- Vitest の coverage gate を数値で固定できること
-- E2E は Vitest と分離し、Playwright で別コマンドとして運用すること
-- 実測カバレッジを基準にして、品質基準を過不足なく定義すること
-
-STEP52で決めたこと:
-
-- UI テストは Query hook をモックする
-- Query テストは API 関数をモックする
-- Lambda 単体テストは Service / Repository / AWS SDK をモックする
-- `vi.mock` の hoist 問題は `vi.hoisted` で回避する
-- テスト後の `mockReset` と環境変数の後始末を徹底する
 
 ## Phase 7：GitHub Actions CI/CD
 
@@ -839,21 +805,29 @@ STEP52で学んだもの:
 
 - `vi.mock` と `vi.hoisted` を使い分けること
 - 層ごとにモックする対象を絞ること
+- 画面テストは Query hook をモックし、Query テストは API 関数をモックすること
+- Lambda 単体テストは Service / Repository / AWS SDK をモックすること
+- テスト後の `mockReset` と環境変数の後始末を徹底すること
 
 STEP53で学んだもの:
 
 - Service と Repository をつないだ統合テストを持つこと
 - DynamoDB の実装差し替えを前提に疎結合を保つこと
+- DynamoDB Repository の create / list / update / delete の一連の流れ
+- AWS SDK はモックしても、Repository の変換ロジックは通せること
 
 STEP54で学んだもの:
 
 - Playwright でブラウザ上の業務導線を確認すること
 - 画面表示、異常系、レイアウトを E2E で見切ること
+- PDF プレビューは API を route モックしても画面遷移と URL 生成を確認できること
+- 画面テストでは hidden な option ではなく、実際の表示ラベルを locator で絞る必要があること
 
 STEP55で学んだもの:
 
 - カバレッジ基準を数値で固定し、品質ゲートにすること
 - 100% を目的にせず、重要分岐を優先すること
+- E2E は Vitest と分離し、Playwright で別コマンドとして運用すること
 
 STEP56で学んだもの:
 
