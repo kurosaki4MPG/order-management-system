@@ -129,10 +129,8 @@ describe("PdfPreviewPanel", () => {
     render(<PdfPreviewPanel />)
 
     await waitFor(() => {
-      // プレビューの見出しが表示されることを確認する。
-      expect(
-        screen.getByText("注文連携 PDF プレビュー")
-      ).toBeInTheDocument()
+      // 初期表示で最初の注文が選択されることを確認する。
+      expect(screen.getByRole("combobox")).toHaveValue("ORD-001")
     })
 
     const previewFrame = screen.getByTitle("PDF プレビュー")
@@ -145,8 +143,11 @@ describe("PdfPreviewPanel", () => {
     )
     // iframe が枠いっぱいに広がる設定であることを確認する。
     expect(previewFrame).toHaveClass("block", "h-full", "w-full", "border-0")
-    // 操作ボタン群が表示されることを確認する。
+    // 操作ボタン群と入力欄が表示されることを確認する。
+    expect(screen.getByText("対象注文")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "プレビューを更新" })).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "PDF を開く" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "S3 に保存" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "署名付き URL" })).toBeInTheDocument()
   })
 })
