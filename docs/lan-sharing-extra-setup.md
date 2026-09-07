@@ -24,7 +24,7 @@ Browser
   -> https://192.168.3.8:3443
   -> Windows Caddy
   -> http://127.0.0.1:3000
-  -> WSL Next.js standalone server
+  -> WSL Next.js dev server
 ```
 
 ## 使うファイル
@@ -60,14 +60,50 @@ COGNITO_LOGOUT_URI=https://192.168.3.8:3443/login
 - Cognito の callback / logout は `https://192.168.3.8:3443` に完全一致させる
 - `dev:lan` は Node ラッパーで `LAN_SHARE=1` を付けて起動する
 - `dev:lan` は reverse proxy との相性を優先して webpack を使う
+- `allowedDevOrigins` は LAN の公開ホスト `192.168.3.8` を許可する
+
+## 起動手順
+
+このファイルで説明する LAN 共有の通常運用は `npm run dev:lan` で起動する。
+`build:lan` / `start:lan` は standalone 出力の確認用であり、ライブ更新ありの LAN 共有では使わない。
+
+### 1. WSL の IP を Windows 側へ向ける
+
+WSL の IP が変わったとき、または初回起動前に、管理者権限の PowerShell で portproxy を設定する。
+
+```powershell
+.\scripts\setup-wsl-portproxy.ps1
+```
+
+### 2. Windows 側で Caddy を起動する
+
+別の PowerShell を開き、リポジトリ直下で Caddy を起動する。
+
+```powershell
+c:\tools\caddy\caddy run --config .\Caddyfile.lan
+```
+
+### 3. WSL 側で Next.js の LAN 共有用 dev を起動する
+
+WSL 側のリポジトリ直下で次を実行する。
+
+```bash
+npm run dev:lan
+```
+
+### 4. ブラウザで公開 URL にアクセスする
+
+ホスト PC でも他 PC でも、`https://192.168.3.8:3443` を開く。
 
 ## Next.js 起動
 
-`output: "standalone"` のため、`next start` ではなく standalone server を起動する。
+通常の LAN 共有では `dev:lan` で Next dev server を起動する。
+`output: "standalone"` を確認する場合だけ `build:lan` と `start:lan` を使う。
 
 ### `package.json`
 
 ローカル起動は元の `build` / `start` を保ち、LAN 共有用だけ別スクリプトに分ける。
+`start` は既存のローカル向け設定として残しているが、この LAN 共有フローでは使わない。
 
 ```json
 {
@@ -89,16 +125,6 @@ COGNITO_LOGOUT_URI=https://192.168.3.8:3443/login
 - `.env.local` を読み込む
 - `.next/standalone/server.js` を起動する
 
-### 起動コマンド
-
-WSL 側で実行する。
-
-```bash
-npm run dev:lan
-npm run build:lan
-npm run start:lan
-```
-
 ### 開発時の使い分け
 
 ```bash
@@ -108,7 +134,7 @@ npm run dev
 # LAN 共有用の dev
 npm run dev:lan
 
-# LAN 共有用の build / start
+# standalone の確認用
 npm run build:lan
 npm run start:lan
 ```
@@ -117,6 +143,7 @@ npm run start:lan
 
 standalone 出力は、`public` と `.next/static` を自動では含まない。
 そのため `build:lan` の後続処理で次のコピーを行う。
+`dev:lan` では standalone 出力を使わないため、このコピーは不要。
 
 - `public` -> `.next/standalone/public`
 - `.next/static` -> `.next/standalone/.next/static`
@@ -139,7 +166,11 @@ Windows 側で Caddy を起動し、`https://192.168.3.8:3443` を入口にす�
 
 https://192.168.3.8:3443 {
 	tls internal
-	reverse_proxy 127.0.0.1:3000
+	reverse_proxy 127.0.0.1:3000 {
+		header_up Host {host}
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
 }
 ```
 
@@ -152,11 +183,14 @@ https://192.168.3.8:3443 {
 - `tls internal`
   - 開発用の内部 CA を使う
 - `reverse_proxy 127.0.0.1:3000`
-  - WSL の Next.js へ転送する
+  - WSL の Next.js dev server へ転送する
+- `header_up Host {host}`
+  - Next dev に外側のホスト名を渡す
 
 ### Windows 側の起動
 
-PowerShell でリポジトリを開き、Caddy を起動する。
+まず `scripts/setup-wsl-portproxy.ps1` を管理者 PowerShell で実行して、Windows の `127.0.0.1:3000` を WSL 側へ転送できるようにする。
+その後、通常の PowerShell で Caddy を起動する。
 
 ```powershell
 c:\tools\caddy\caddy run --config .\Caddyfile.lan
@@ -203,3 +237,5 @@ c:\tools\caddy\caddy run --config .\Caddyfile.lan
 
 - この設定は通常の開発手順ではなく、LAN 共有のための追加設定として扱う
 - 既存の `docs` は変更せず、このファイルだけを参照すればよい
+- ライブ更新ありの LAN 共有は `npm run dev:lan` を使う
+- `npm run build:lan` / `npm run start:lan` は standalone の確認用である

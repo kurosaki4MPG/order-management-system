@@ -5,5 +5,9 @@
 
 https://192.168.3.8:3443 {
 	tls internal
-	reverse_proxy 127.0.0.1:3000
+	reverse_proxy 127.0.0.1:3000 {
+		header_up Host {host}
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
 }
