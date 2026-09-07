@@ -69,30 +69,35 @@ NEXT_PUBLIC_API_BASE_URL=
 
 ## LAN 共有する場合
 
-LAN 共有では、Next.js を WSL 内で HTTP で起動し、Windows ホスト側で HTTPS の reverse proxy を立てる。
+LAN 共有では、WSL 内で Next.js の `dev:lan` を起動し、Windows ホスト側で HTTPS の reverse proxy を立てる。
 この構成にすると、ホスト PC からも他 PC からも同じ入口で確認しやすい。
 
 ### 手順
 
-1. WSL 側で Next.js の standalone サーバーを起動する
+1. WSL の IP が変わったとき、または初回起動前に、管理者権限の PowerShell で portproxy を設定する
 
-```bash
-npm run build
-npm run start
+```powershell
+.\scripts\setup-wsl-portproxy.ps1
 ```
 
-2. Windows ホストで Caddy を起動する
+2. WSL 側で Next.js の LAN 共有用 dev を起動する
+
+```bash
+npm run dev:lan
+```
+
+3. Windows ホストで Caddy を起動する
 
 ```powershell
 caddy run --config .\Caddyfile.lan
 ```
 
-3. Windows ホストまたは LAN 内の別端末から `https://192.168.3.8:3443` を開く
+4. Windows ホストまたは LAN 内の別端末から `https://192.168.3.8:3443` を開く
 
 ### 注意点
 
-- `Caddyfile.lan` は `https://192.168.3.8:3443` を HTTPS の入口にして、`127.0.0.1:3000` の WSL サーバーへ reverse proxy する
-- `next build` の後に `postbuild` で `.next/static` と `public` を `standalone` 配下へコピーするため、画面崩れを防ぎやすい
+- `Caddyfile.lan` は `https://192.168.3.8:3443` を HTTPS の入口にして、`127.0.0.1:3000` の WSL 側 dev server へ reverse proxy する
+- `dev:lan` はライブ更新ありの LAN 共有向けで、`build:lan` / `start:lan` は standalone の確認用として使う
 - Caddy の `tls internal` は開発用の内部 CA を使うため、他 PC では CA を信頼しないと証明書警告が出る
 - もし Caddy から WSL の `127.0.0.1:3000` に届かない場合は、`scripts/setup-wsl-portproxy.ps1` で Windows localhost から WSL へ中継する
 - LAN 共有の確認では `NEXT_PUBLIC_API_BASE_URL` を外して same-origin `/api` に寄せると切り分けしやすい
@@ -105,22 +110,20 @@ caddy run --config .\Caddyfile.lan
 ### 起動例
 
 ```bash
-npm run build
-HOSTNAME=0.0.0.0 PORT=3000 npm run start
+npm run build:lan
+npm run start:lan
 ```
 
 PowerShell の場合は次のようにする。
 
 ```powershell
-npm run build
-$env:HOSTNAME = "0.0.0.0"
-$env:PORT = "3000"
-npm run start
+npm run build:lan
+npm run start:lan
 ```
 
 ### 補足
 
-- LAN 公開で HMR が不要なら、`dev` より `standalone + start` のほうが安定しやすい
+- LAN 公開で HMR が不要なら、`dev:lan` より `standalone + start:lan` のほうが安定しやすい
 - 起動後の直接アクセス先は `http://127.0.0.1:3000` になる
 - 外部公開は `Caddyfile.lan` の reverse proxy を通して `https://192.168.3.8:3443` を使う
 - Cognito の callback / logout を HTTPS のまま維持したい場合は、reverse proxy の公開 URL を登録する

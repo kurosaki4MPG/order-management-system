@@ -1,7 +1,7 @@
 # LAN 共有エクストラ設定
 
 このファイルは、`order-management-system` を WSL + Windows で LAN 共有するための追加設定だけをまとめたものです。
-既存ドキュメントは更新せず、このファイルを独立した補足として扱います。
+LAN 共有に関する起動手順と補足を、このファイルに集約します。
 
 ## 目的
 
@@ -186,6 +186,10 @@ https://192.168.3.8:3443 {
   - WSL の Next.js dev server へ転送する
 - `header_up Host {host}`
   - Next dev に外側のホスト名を渡す
+- `header_up X-Forwarded-Host {host}`
+  - 外側のホスト名をアプリ側へ渡す
+- `header_up X-Forwarded-Proto {scheme}`
+  - HTTPS であることをアプリ側へ渡す
 
 ### Windows 側の起動
 
@@ -225,7 +229,7 @@ c:\tools\caddy\caddy run --config .\Caddyfile.lan
 
 ### 3. 画面が崩れる
 
-- `npm run build` 後に `postbuild` が走っているか確認する
+- `npm run build:lan` 後に standalone 配下へ静的資産がコピーされているか確認する
 - `public` と `.next/static` が standalone 配下へコピーされているか確認する
 
 ### 4. 他 PC で証明書警告が出る
