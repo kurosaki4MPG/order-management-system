@@ -38,9 +38,11 @@
 
 まずログインして、注文画面に入る。
 
+会社 LAN で確認する場合は `http://localhost:3000/login`、自宅 LAN で確認する場合は `https://192.168.3.8:3443/login` を開く。
+
 ### 確認手順
 
-1. `http://localhost:3000/login` を開く
+1. 開いている環境の `login` URL を開く
 2. Cognito でログインする
 3. `注文一覧` を開く
 4. `新規注文`、`詳細`、`帳票プレビュー` に遷移できることを確認する
@@ -152,6 +154,7 @@ CloudWatch の観点で、失敗と復旧が追えることを確認する。
 
 - Cognito の callback URL が一致しているか
 - `COGNITO_USER_POOL_ID`、`COGNITO_USER_POOL_CLIENT_ID` などの設定値が入っているか
+- Cognito の callback / logout URL が、開いている環境の origin と一致しているか
 - `proxy.ts` の未ログインリダイレクトが正しいか
 
 ### 注文登録後に一覧へ戻らない

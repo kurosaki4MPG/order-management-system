@@ -18,13 +18,13 @@
 - フロントエンドと接続する
 
 実施結果:
-- [infra/lib/order-api-stack.js](/home/kurosaki/order-management-system/infra/lib/order-api-stack.js) に Cognito User Pool / App Client / Hosted UI domain を追加し、`dev` は `http://localhost:3000/api/auth/callback`、`prod` は `https://app.example.com/api/auth/callback` を callback URL として持たせた
+- [infra/lib/order-api-stack.js](/home/kurosaki/order-management-system/infra/lib/order-api-stack.js) に Cognito User Pool / App Client / Hosted UI domain を追加し、`dev` は `http://localhost:3000` と `https://192.168.3.8:3443` の両方を callback / logout URL として持たせた
 - [`src/features/auth/cognito-auth.server.ts`](/home/kurosaki/order-management-system/src/features/auth/cognito-auth.server.ts) を追加し、Cognito の authorize / token / logout URL 生成、PKCE、JWT の署名検証と payload の読み取りを共通化した
 - [`src/app/api/auth/login/route.ts`](/home/kurosaki/order-management-system/src/app/api/auth/login/route.ts) で Cognito Hosted UI へ遷移し、[`src/app/api/auth/callback/route.ts`](/home/kurosaki/order-management-system/src/app/api/auth/callback/route.ts) で code を token に交換して cookie に保存するようにした
 - [`src/app/login/page.tsx`](/home/kurosaki/order-management-system/src/app/login/page.tsx) を追加し、未ログイン時の入口を用意した
 - [`src/proxy.ts`](/home/kurosaki/order-management-system/src/proxy.ts) で未ログインの画面アクセスを `/login` にリダイレクトするようにした
 - [`src/components/layouts/app-shell.tsx`](/home/kurosaki/order-management-system/src/components/layouts/app-shell.tsx) と [`src/components/layouts/app-header.tsx`](/home/kurosaki/order-management-system/src/components/layouts/app-header.tsx) を更新し、セッション表示とログイン/ログアウト導線を追加した
-- 実行時に必要な環境変数は `COGNITO_USER_POOL_ID`、`COGNITO_USER_POOL_CLIENT_ID`、`COGNITO_DOMAIN_BASE_URL`、`COGNITO_REDIRECT_URI`、`COGNITO_LOGOUT_URI` の5つに整理した
+- 実行時に必要な環境変数は `COGNITO_USER_POOL_ID`、`COGNITO_USER_POOL_CLIENT_ID`、`COGNITO_DOMAIN_BASE_URL` の3つに整理した
 
 確認観点:
 - ログイン導線がある

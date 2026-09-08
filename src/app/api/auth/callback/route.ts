@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 import {
   AUTH_COOKIE_NAMES,
+  buildAppCallbackUrl,
   buildAuthCookieOptions,
   exchangeCodeForTokens,
-  getCognitoAuthConfig,
   sanitizeReturnTo,
 } from "@/features/auth/cognito-auth.server"
 
@@ -28,12 +28,10 @@ export async function GET(request: NextRequest) {
     const tokenResponse = await exchangeCodeForTokens({
       code,
       codeVerifier,
+      redirectUri: buildAppCallbackUrl(request.url),
     })
 
-    const config = getCognitoAuthConfig()
-    const redirectResponse = NextResponse.redirect(
-      new URL(state ?? "/", config.redirectUri),
-    )
+    const redirectResponse = NextResponse.redirect(new URL(state ?? "/", request.url))
 
     if (tokenResponse.id_token) {
       redirectResponse.cookies.set(

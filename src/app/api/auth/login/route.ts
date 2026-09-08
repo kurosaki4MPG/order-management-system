@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import {
   AUTH_COOKIE_NAMES,
   buildAuthorizeUrl,
+  buildAppCallbackUrl,
   buildAuthCookieOptions,
   createPkceChallenge,
   createPkceVerifier,
@@ -17,6 +18,7 @@ export async function GET(request: NextRequest) {
   const config = getCognitoAuthConfig()
   const redirectUrl = buildAuthorizeUrl(config, {
     codeChallenge,
+    redirectUri: buildAppCallbackUrl(request.url),
     returnTo,
   })
 

@@ -55,6 +55,30 @@ NEXT_PUBLIC_API_BASE_URL=
 - 例: `https://<api-id>.execute-api.ap-northeast-1.amazonaws.com`
 - 備考: 未設定なら Next.js の同一オリジン `/api` を呼ぶ
 
+## Cognito 認証で必要な項目
+
+### `COGNITO_USER_POOL_ID`
+
+- 役割: Cognito User Pool の ID
+- 例: `ap-northeast-1_xxxxx`
+
+### `COGNITO_USER_POOL_CLIENT_ID`
+
+- 役割: Cognito App Client の ID
+- 例: `xxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+### `COGNITO_DOMAIN_BASE_URL`
+
+- 役割: Cognito Hosted UI のドメイン
+- 例: `https://xxxx.auth.ap-northeast-1.amazoncognito.com`
+- 備考: callback / logout は request origin から組み立てるため、`COGNITO_REDIRECT_URI` と `COGNITO_LOGOUT_URI` は不要
+
+### 補足
+
+- `next dev` では `http://localhost:3000`
+- LAN 共有では `https://192.168.3.8:3443`
+- Cognito の app client には両方の callback / logout URL を登録しておく
+
 ## フェーズ別の追加項目
 
 ### `ORDER_EVENTS_BUS_NAME`

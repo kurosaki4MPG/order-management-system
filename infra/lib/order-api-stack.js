@@ -56,11 +56,17 @@ class OrderApiStack extends cdk.Stack {
     const cognitoCallbackUrls =
       stage === "prod"
         ? ["https://app.example.com/api/auth/callback"]
-        : ["http://localhost:3000/api/auth/callback"]
+        : [
+            "http://localhost:3000/api/auth/callback",
+            "https://192.168.3.8:3443/api/auth/callback",
+          ]
     const cognitoLogoutUrls =
       stage === "prod"
         ? ["https://app.example.com/login"]
-        : ["http://localhost:3000/login"]
+        : [
+            "http://localhost:3000/login",
+            "https://192.168.3.8:3443/login",
+          ]
     const cognitoDomainPrefix = `oms-${stage}-order-auth-${this.account}`
 
     const authUserPool = new cognito.UserPool(this, "AuthUserPool", {

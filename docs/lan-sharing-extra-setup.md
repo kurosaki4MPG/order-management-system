@@ -15,7 +15,7 @@ LAN 共有に関する起動手順と補足を、このファイルに集約し�
 - Next.js 本体は WSL で起動する
 - Windows 側で reverse proxy を起動する
 - ブラウザは Windows 側の HTTPS 入口にアクセスする
-- Cognito はその公開 URL を callback / logout に使う
+- Cognito の callback / logout は request origin から組み立てる
 
 ### 構成図
 
@@ -49,15 +49,13 @@ PDF_INVOICE_BUCKET_NAME=oms-dev-invoice-pdfs
 COGNITO_USER_POOL_ID=ap-northeast-1_eAkW18T0X
 COGNITO_USER_POOL_CLIENT_ID=3o1bc01tvqqujdd420eptdmuei
 COGNITO_DOMAIN_BASE_URL=https://oms-dev-order-auth-686910912663.auth.ap-northeast-1.amazoncognito.com
-COGNITO_REDIRECT_URI=https://192.168.3.8:3443/api/auth/callback
-COGNITO_LOGOUT_URI=https://192.168.3.8:3443/login
 ```
 
 ### 方針
 
 - `NEXT_PUBLIC_API_BASE_URL` は使わない
 - フロントエンドは same-origin の `/api` を使う
-- Cognito の callback / logout は `https://192.168.3.8:3443` に完全一致させる
+- Cognito の callback / logout は request origin に合わせて自動生成する
 - `dev:lan` は Node ラッパーで `LAN_SHARE=1` を付けて起動する
 - `dev:lan` は reverse proxy との相性を優先して webpack を使う
 - `allowedDevOrigins` は LAN の公開ホスト `192.168.3.8` を許可する
@@ -94,6 +92,7 @@ npm run dev:lan
 ### 4. ブラウザで公開 URL にアクセスする
 
 ホスト PC でも他 PC でも、`https://192.168.3.8:3443` を開く。
+会社 LAN では `http://localhost:3000` を開く。
 
 ## Next.js 起動
 
@@ -236,6 +235,11 @@ c:\tools\caddy\caddy run --config .\Caddyfile.lan
 
 - `tls internal` の内部 CA を信頼していない可能性がある
 - 必要なら各 PC で証明書を信頼する
+
+### 5. Cognito で callback / logout の不一致が出る
+
+- Cognito の app client に `http://localhost:3000/api/auth/callback` と `https://192.168.3.8:3443/api/auth/callback` を登録する
+- Cognito の logout URL に `http://localhost:3000/login` と `https://192.168.3.8:3443/login` を登録する
 
 ## 補足
 

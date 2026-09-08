@@ -42,10 +42,8 @@ type CognitoAuthConfig = {
   clientId: string
   domainBaseUrl: string
   issuerUrl: string
-  logoutUri: string
   jwksUrl: string
   userPoolId: string
-  redirectUri: string
 }
 
 type TokenResponse = {
@@ -94,10 +92,16 @@ export function getCognitoAuthConfig(): CognitoAuthConfig {
     domainBaseUrl: requireEnv("COGNITO_DOMAIN_BASE_URL").replace(/\/+$/, ""),
     issuerUrl,
     jwksUrl: `${issuerUrl}/.well-known/jwks.json`,
-    logoutUri: requireEnv("COGNITO_LOGOUT_URI"),
     userPoolId,
-    redirectUri: requireEnv("COGNITO_REDIRECT_URI"),
   }
+}
+
+export function buildAppCallbackUrl(requestUrl: string) {
+  return new URL("/api/auth/callback", requestUrl).toString()
+}
+
+export function buildAppLogoutUrl(requestUrl: string) {
+  return new URL("/login", requestUrl).toString()
 }
 
 function normalizeBase64Url(input: string) {
@@ -147,13 +151,17 @@ export async function createPkceChallenge(verifier: string) {
 
 export function buildAuthorizeUrl(
   config: CognitoAuthConfig,
-  options: { codeChallenge: string; returnTo?: string },
+  options: {
+    codeChallenge: string
+    redirectUri: string
+    returnTo?: string
+  },
 ) {
   const url = new URL("/oauth2/authorize", config.domainBaseUrl)
   url.searchParams.set("client_id", config.clientId)
   url.searchParams.set("code_challenge", options.codeChallenge)
   url.searchParams.set("code_challenge_method", "S256")
-  url.searchParams.set("redirect_uri", config.redirectUri)
+  url.searchParams.set("redirect_uri", options.redirectUri)
   url.searchParams.set("response_type", "code")
   url.searchParams.set("scope", "openid email profile")
   url.searchParams.set("state", sanitizeReturnTo(options.returnTo))
@@ -161,10 +169,10 @@ export function buildAuthorizeUrl(
   return url.toString()
 }
 
-export function buildLogoutUrl(config: CognitoAuthConfig) {
+export function buildLogoutUrl(config: CognitoAuthConfig, logoutUri: string) {
   const url = new URL("/logout", config.domainBaseUrl)
   url.searchParams.set("client_id", config.clientId)
-  url.searchParams.set("logout_uri", config.logoutUri)
+  url.searchParams.set("logout_uri", logoutUri)
 
   return url.toString()
 }
@@ -362,6 +370,7 @@ export async function getAuthSession(): Promise<AuthSession | null> {
 export async function exchangeCodeForTokens(params: {
   code: string
   codeVerifier: string
+  redirectUri: string
 }) {
   const config = getCognitoAuthConfig()
   const response = await fetch(new URL("/oauth2/token", config.domainBaseUrl), {
@@ -370,7 +379,7 @@ export async function exchangeCodeForTokens(params: {
       code: params.code,
       code_verifier: params.codeVerifier,
       grant_type: "authorization_code",
-      redirect_uri: config.redirectUri,
+      redirect_uri: params.redirectUri,
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

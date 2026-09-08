@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import {
   AUTH_COOKIE_NAMES,
   buildAuthorizeUrl,
+  buildAppCallbackUrl,
+  buildAppLogoutUrl,
   buildLogoutUrl,
   createPkceChallenge,
   createPkceVerifier,
@@ -75,8 +77,6 @@ beforeEach(() => {
   vi.stubEnv("COGNITO_USER_POOL_CLIENT_ID", "client-123")
   vi.stubEnv("COGNITO_USER_POOL_ID", "ap-northeast-1_testpool")
   vi.stubEnv("COGNITO_DOMAIN_BASE_URL", "https://auth.example.com/")
-  vi.stubEnv("COGNITO_LOGOUT_URI", "http://localhost:3000/login")
-  vi.stubEnv("COGNITO_REDIRECT_URI", "http://localhost:3000/api/auth/callback")
   mockedCookies.mockReset()
   vi.unstubAllGlobals()
 })
@@ -111,10 +111,13 @@ describe("cognito auth helpers", () => {
 
   it("builds Cognito authorize and logout URLs from the shared config", () => {
     const config = getCognitoAuthConfig()
+    const redirectUri = "http://localhost:3000/api/auth/callback"
+    const logoutUri = "http://localhost:3000/login"
 
     const authorizeUrl = new URL(
       buildAuthorizeUrl(config, {
         codeChallenge: "challenge-123",
+        redirectUri,
         returnTo: "/orders",
       }),
     )
@@ -123,9 +126,7 @@ describe("cognito auth helpers", () => {
     expect(authorizeUrl.searchParams.get("client_id")).toBe("client-123")
     expect(authorizeUrl.searchParams.get("code_challenge")).toBe("challenge-123")
     expect(authorizeUrl.searchParams.get("code_challenge_method")).toBe("S256")
-    expect(authorizeUrl.searchParams.get("redirect_uri")).toBe(
-      "http://localhost:3000/api/auth/callback",
-    )
+    expect(authorizeUrl.searchParams.get("redirect_uri")).toBe(redirectUri)
     expect(authorizeUrl.searchParams.get("response_type")).toBe("code")
     expect(authorizeUrl.searchParams.get("scope")).toBe("openid email profile")
     expect(authorizeUrl.searchParams.get("state")).toBe("/orders")
@@ -137,12 +138,25 @@ describe("cognito auth helpers", () => {
       "https://cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_testpool/.well-known/jwks.json",
     )
 
-    const logoutUrl = new URL(buildLogoutUrl(config))
+    const logoutUrl = new URL(buildLogoutUrl(config, logoutUri))
     // ログアウト URL も Cognito Hosted UI の形式になっていることを確認する。
     expect(logoutUrl.pathname).toBe("/logout")
     expect(logoutUrl.searchParams.get("client_id")).toBe("client-123")
-    expect(logoutUrl.searchParams.get("logout_uri")).toBe(
+    expect(logoutUrl.searchParams.get("logout_uri")).toBe(logoutUri)
+  })
+
+  it("builds app callback and logout urls from the current request origin", () => {
+    expect(buildAppCallbackUrl("http://localhost:3000/login")).toBe(
+      "http://localhost:3000/api/auth/callback",
+    )
+    expect(buildAppCallbackUrl("https://192.168.3.8:3443/login")).toBe(
+      "https://192.168.3.8:3443/api/auth/callback",
+    )
+    expect(buildAppLogoutUrl("http://localhost:3000/api/auth/login")).toBe(
       "http://localhost:3000/login",
+    )
+    expect(buildAppLogoutUrl("https://192.168.3.8:3443/api/auth/login")).toBe(
+      "https://192.168.3.8:3443/login",
     )
   })
 
