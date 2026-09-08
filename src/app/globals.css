@@ -127,25 +127,39 @@
   --sidebar-ring: oklch(0.547 0.021 43.1);
 }
 
-/*注文管理システム カスタムスタイル*/
+/* 注文管理システム カスタムスタイル */
 .oms {
-  /*フォントファミリー変更*/
+  /* フォントファミリー変更 */
   --font-sans:
-    "Inter", "-apple-system", BlinkMacSystemFont, "Hiragino Sans",
-    "Hiragino Kaku Gothic ProN", "Segoe UI", "Yu Gothic UI", "Meiryo", "Noto Sans JP",
-    sans-serif;
+    "Noto Sans JP", "Inter", system-ui, -apple-system, "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", Meiryo, "Segoe UI", Roboto, sans-serif;
   --font-geist-mono:
-    "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas,
-    "Hiragino Sans", "BIZ UDGothic", "Meiryo UI",
-    monospace;
+    "JetBrains Mono", "Source Han Code JP", "M PLUS 1 Code", ui-monospace,
+    SFMono-Regular, Menlo, Consolas, monospace;
   --font-heading:
-    "Playfair Display", "Georgia", "Noto Serif JP", "Shippori Mincho",
-    "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho",
-    serif;
-  /*サイドバー背景色変更：Slate-400*/
+    "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", "MS PMincho", serif;
+  /* サイドバー背景色変更：Slate-400 */
   --sidebar: oklch(0.71 0.04 257);
-  /*サイドバーホバー色変更：Slate-300*/
+  /* サイドバーホバー色変更：Slate-300 */
   --sidebar-accent: oklch(0.87 0.02 253);
+  /* サイドバー内カスタム */
+  div[data-sidebar="sidebar"] {
+    div[data-sidebar="header"],
+    div[data-sidebar="footer"] {
+      .text-muted-foreground {
+        color: oklch(0.93 0.03 273);
+      }
+    }
+  }
+  /* 削除ボタンアイコン色 */
+  button svg.lucide.lucide-trash2 {
+    /* ボタンアイコン色変更：Red-700 */
+    color: oklch(0.51 0.19 28);
+  }
+  /* 等幅フォントクラス */
+  .font-mono {
+    font-family: var(--font-geist-mono);
+  }
 }
 
 /* 基本スタイルは最小限にして、各コンポーネント側の見た目を優先する。 */

@@ -50,12 +50,12 @@ describe("PdfPreviewPanel", () => {
   it("loads orders and keeps the preview actions in sync with the selected order", async () => {
     render(<PdfPreviewPanel />)
 
-    const orderSelect = screen.getByRole("combobox")
-
-    await waitFor(() => {
-      // 初期表示で最初の注文が選択されることを確認する。
-      expect(orderSelect).toHaveValue("ORD-001")
+    const orderPickerButton = await screen.findByRole("button", {
+      name: /ORD-001/,
     })
+
+    // 初期表示で最初の注文が選択されることを確認する。
+    expect(orderPickerButton).toBeEnabled()
 
     const previewFrame = screen.getByTitle("PDF プレビュー")
     // 初期プレビュー URL に注文 ID と seed が入ることを確認する。
@@ -78,13 +78,18 @@ describe("PdfPreviewPanel", () => {
       )
     })
 
-    fireEvent.change(orderSelect, {
-      target: { value: "ORD-002" },
+    fireEvent.click(orderPickerButton)
+
+    const orderListbox = await screen.findByRole("listbox", {
+      name: "対象注文一覧",
     })
+    expect(orderListbox).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("option", { name: /ORD-002/ }))
 
     await waitFor(() => {
       // 注文切り替えで選択値が更新されることを確認する。
-      expect(orderSelect).toHaveValue("ORD-002")
+      expect(screen.getByRole("button", { name: /ORD-002/ })).toBeInTheDocument()
     })
 
     const openLink = screen.getByRole("link", { name: "PDF を開く" })
@@ -128,10 +133,10 @@ describe("PdfPreviewPanel", () => {
   it("renders the preview frame with the expected layout structure", async () => {
     render(<PdfPreviewPanel />)
 
-    await waitFor(() => {
-      // 初期表示で最初の注文が選択されることを確認する。
-      expect(screen.getByRole("combobox")).toHaveValue("ORD-001")
-    })
+    // 初期表示で最初の注文が選択されることを確認する。
+    expect(
+      await screen.findByRole("button", { name: /ORD-001/ })
+    ).toBeInTheDocument()
 
     const previewFrame = screen.getByTitle("PDF プレビュー")
     const frameContainer = previewFrame.parentElement

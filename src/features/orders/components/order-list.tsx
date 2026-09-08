@@ -20,8 +20,8 @@ import type {
 import { orderStatuses, paymentMethods } from "@/features/orders/types/order";
 import {
   currencyFormatter,
+  dateTimeFormatter,
   paymentMethodLabels,
-  shortDateTimeFormatter,
 } from "@/features/orders/utils/order-formatters";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -235,9 +235,9 @@ export function OrderList({
                   <tbody>
                     {orders.map((order) => (
                       <tr key={order.id} className="border-t bg-card">
-                        <td className="px-4 py-4 font-medium">{order.id}</td>
+                        <td className="px-4 py-4 font-medium font-mono">{order.id}</td>
                         <td className="px-4 py-4 text-muted-foreground">
-                          {shortDateTimeFormatter.format(new Date(order.orderedAt))}
+                          {dateTimeFormatter.format(new Date(order.orderedAt))}
                         </td>
                         <td className="px-4 py-4">
                           <div className="font-medium">{order.customerName}</div>

@@ -53,6 +53,21 @@ const menuItems = [
   },
 ] as const;
 
+export function isMenuItemActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  if (href === "/orders") {
+    return (
+      pathname === "/orders" ||
+      (pathname.startsWith("/orders/") && !pathname.startsWith("/orders/new"))
+    );
+  }
+
+  return pathname === href;
+}
+
 export function AppSidebar({ session }: AppSidebarProps) {
   const pathname = usePathname();
   const visibleMenuItems = menuItems.filter((item) => {
@@ -84,10 +99,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
           <SidebarGroupContent>
             <SidebarMenu>
               {visibleMenuItems.map((item) => {
-                const isActive =
-                  item.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(item.href);
+                const isActive = isMenuItemActive(pathname, item.href);
 
                 return (
                   <SidebarMenuItem key={item.href}>
@@ -108,7 +120,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
       </SidebarContent>
       <SidebarFooter className="border-t">
         <div className="px-2 py-2 text-xs text-muted-foreground">
-          Order System v0.1.0
+          Order System v0.8.0
         </div>
       </SidebarFooter>
     </Sidebar>
